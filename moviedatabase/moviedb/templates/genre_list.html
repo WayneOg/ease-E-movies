@@ -1,0 +1,18 @@
+<!-- genre_list.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Genres</title>
+</head>
+<body>
+    <h1>Movie Genres</h1>
+    <ul>
+        {% for genre in genres %}
+        <li><a href="{% url 'genre_movies' genre_id=genre.tmdb_id %}">{{ genre.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

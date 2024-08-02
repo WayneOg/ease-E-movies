@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ series.title }} - Series Details</title>
     <style>
-        /* Reset and basic styles */
+        /* Your existing styles */
         body, html {
             margin: 0;
             padding: 0;
@@ -195,44 +195,6 @@
             }
         }
     </style>
-    <script>
-    function fetchEpisodes(seasonNumber) {
-        updateEpisodeButtons(seasonNumber);
-    }
-
-    function updateEpisodeButtons(seasonNumber) {
-        const episodesContainer = document.getElementById('episodes');
-        episodesContainer.innerHTML = ''; // Clear previous episodes
-        
-        // Fetch the number of episodes for this season (you may need to adjust this based on your data)
-        const numberOfEpisodes = 20; // Example: assume 20 episodes per season
-        
-        for (let i = 1; i <= numberOfEpisodes; i++) {
-            let button = document.createElement('button');
-            button.className = 'episode-button';
-            button.textContent = `Episode ${i}`;
-            button.onclick = () => updateIframe(seasonNumber, i);
-            episodesContainer.appendChild(button);
-        }
-        
-        // Load the first episode in the list by default
-        if (numberOfEpisodes > 0) {
-            updateIframe(seasonNumber, 1);
-        }
-    }
-
-    function updateIframe(seasonNumber, episodeNumber) {
-        const playerIframe = document.getElementById('player');
-        const seriesName = encodeURIComponent("{{ series.title }}".replace(/\s+/g, '-').toLowerCase());
-        playerIframe.src = `https://multiembed.mov/?video_id=${seriesName}&s=${seasonNumber}&e=${episodeNumber}`;
-    }
-
-    document.addEventListener('DOMContentLoaded', (event) => {
-        // Fetch episodes for the default season when the page loads
-        const selectedSeason = document.getElementById('seasons').value;
-        fetchEpisodes(selectedSeason);
-    });
-</script>
 </head>
 <body>
     <header>
@@ -259,32 +221,22 @@
             </div>
             <div class="series-details-content">
                 <h2>{{ series.title }}</h2>
-                <p>{{ series.summary }}</p>
-                <p><strong>Genres:</strong>
-                    {% for genre in series.genres.all %}
-                        {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                <p>{{ series.summary|safe }}</p>
+
+                <h3>Seasons</h3>
+                <select id="seasons" onchange="fetchEpisodes(this.value)">
+                    {% for season in seasons %}
+                        <option value="{{ season.number }}">Season {{ season.number }}</option>
                     {% endfor %}
-                </p>
-                <p><strong>Language:</strong> {{ series.language }}</p>
-                <p><strong>Network:</strong> {{ series.network }}</p>
-                <p><strong>Status:</strong> {{ series.status }}</p>
-                <p><strong>Runtime:</strong> {{ series.runtime }} minutes</p>
-                <a href="#" class="watch-button">Watch Now</a>
+                </select>
+
+                <h3>Episodes</h3>
+                <div id="episodes" class="episode-buttons"></div>
+
+                <h3>Watch</h3>
+                <iframe id="player" src="{{ streaming_link }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
             </div>
         </div>
-        
-        <label for="seasons">Select Season:</label>
-        <select id="seasons" onchange="fetchEpisodes(this.value)">
-            {% for season in seasons %}
-            <option value="{{ season.number }}">Season {{ season.number }}</option>
-            {% endfor %}
-        </select>
-
-        <div id="episodes" class="episode-buttons">
-            <!-- Episode buttons will be dynamically inserted here -->
-        </div>
-
-        <iframe id="player" frameborder="0" allowfullscreen></iframe>
 
         <h2>More Like This</h2>
         <div class="recommended-series">
@@ -300,5 +252,38 @@
             {% endfor %}
         </div>
     </div>
+
+    <script>
+        function fetchEpisodes(seasonNumber) {
+            // Ensure we have the correct series ID
+            var seriesId = "{{ series.tmdb_id }}";  // Make sure this matches your Series model field
+            
+            fetch(`/fetch_episodes/${seriesId}/${seasonNumber}/`)
+                .then(response => response.json())
+                .then(data => {
+                    const episodesContainer = document.getElementById('episodes');
+                    episodesContainer.innerHTML = '';
+                    data.episodes.forEach(episode => {
+                        const button = document.createElement('button');
+                        button.className = 'episode-button';
+                        button.textContent = `Episode ${episode.number}: ${episode.name}`;
+                        button.onclick = () => updateIframe(episode.streaming_link);
+                        episodesContainer.appendChild(button);
+                    });
+                })
+                .catch(error => console.error('Error:', error));  // Add error handling
+        }
+    
+        function updateIframe(streamingLink) {
+            const playerIframe = document.getElementById('player');
+            playerIframe.src = streamingLink;
+        }
+    
+        // Fetch episodes for the first season when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            var initialSeason = document.getElementById('seasons').value;
+            fetchEpisodes(initialSeason);
+        });
+    </script>
 </body>
 </html>

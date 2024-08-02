@@ -15,6 +15,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 import hashlib
 from django.http import JsonResponse
+import urllib.parse
 
 
 # Store API key as an environment variable
@@ -544,47 +545,56 @@ def series_details(request, pk, season=1):
     episodes_response.raise_for_status()
     episodes_data = episodes_response.json()
 
-    # Example fields to retrieve from the API response
     series_name = series_data.get('name')
     series_summary = series_data.get('summary', '')
     series_image = series_data.get('image', {}).get('medium', '')
 
-    # Assuming you have a Series model to save or retrieve details
+    # Save or retrieve series details
     series, created = Series.objects.get_or_create(
         tmdb_id=pk,
         defaults={
             'title': series_name,
             'summary': series_summary,
             'poster': series_image,
-            # Add other fields as needed
         }
     )
+
+    # Generate the streaming link
+    encoded_series_name = urllib.parse.quote(series_name.replace(' ', '-').lower())
+    streaming_link = f"https://multiembed.mov/?video_id={encoded_series_name}&s={season}&e=1"
 
     context = {
         'series': series,
         'seasons': seasons_data,
         'season': season,
-        'episodes': episodes_data
+        'episodes': episodes_data,
+        'streaming_link': streaming_link
     }
     return render(request, 'series_details.html', context)
 
-def fetch_episodes(request, pk, season, series_id, season_number):
-    episodes_url = f'http://api.tvmaze.com/seasons/{season}/episodes'
-    episodes_response = requests.get(episodes_url)
-    episodes_response.raise_for_status()
-    episodes_data = episodes_response.json()
+def fetch_episodes(request, series_id, season_number):
+    # Note: we're using series_id instead of pk
+    series = get_object_or_404(Series, tmdb_id=series_id)
     
-    series = get_object_or_404(Series, id=series_id)
-    season = get_object_or_404(Season, series=series, number=season_number)
-    episodes = Episode.objects.filter(season=season).order_by('number')
+    # Fetch episodes from TVMaze API
+    episodes_url = f'http://api.tvmaze.com/shows/{series_id}/episodes'
+    response = requests.get(episodes_url)
+    response.raise_for_status()
+    all_episodes = response.json()
+    
+    # Filter episodes for the specific season
+    season_episodes = [ep for ep in all_episodes if ep['season'] == int(season_number)]
+    
+    encoded_series_name = urllib.parse.quote(series.title.replace(' ', '-').lower())
     
     episodes_data = [
         {
-            'id': episode.id,
-            'number': episode.number,
-            'name': episode.name,
+            'id': episode['id'],
+            'number': episode['number'],
+            'name': episode['name'],
+            'streaming_link': f"https://multiembed.mov/?video_id={encoded_series_name}&s={season_number}&e={episode['number']}"
         }
-        for episode in episodes
+        for episode in season_episodes
     ]
     
     return JsonResponse({'episodes': episodes_data})

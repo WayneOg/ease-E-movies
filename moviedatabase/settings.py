@@ -30,6 +30,8 @@ ALLOWED_HOSTS = [
     'https://9pxz8dlq-8000.use.devtunnels.ms/',
     '127.0.0.1',
     'localhost',
+    '.vercel.app',
+    '.now.sh',
 ]
 
 
@@ -126,6 +128,7 @@ STATICFILES_DIRS = [
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 STATIC_URL = '/static/' 
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field

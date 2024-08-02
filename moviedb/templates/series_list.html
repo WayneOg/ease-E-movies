@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Series List</title>
+    <style>
+        /* Reset and basic styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Header styles */
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px 4%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e50914;
+        }
+
+        .navbar {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .navbar a {
+            font-size: 0.9rem;
+            color: #e5e5e5;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #fff;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container input[type=text] {
+            padding: 8px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        .search-container button {
+            padding: 8px 12px;
+            background-color: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Sidebar styles */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1001;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidebar a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 18px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidebar .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        .openbtn {
+            font-size: 20px;
+            cursor: pointer;
+            background-color: transparent;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+        }
+
+        .openbtn:hover {
+            background-color: #444;
+        }
+
+        /* Main content styles */
+        .main {
+            padding: 20px 4%;
+            margin-top: 80px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        /* Series grid styles */
+        .series {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .series-item {
+            position: relative;
+            width: 100%;
+            transition: transform 0.3s;
+        }
+
+        .series-item:hover {
+            transform: scale(1.1);
+            z-index: 2;
+        }
+
+        .series-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .series-info {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
+
+        .series-item:hover .series-info {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .series-info h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .series-info p {
+            margin: 5px 0 0;
+            font-size: 0.8rem;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .series {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .series {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="openbtn" onclick="openNav()">☰</button>
+        <div class="logo">Wayne's Series</div>
+        <div class="navbar">
+            <a href="#">Home</a>
+            <a href="#">TV Shows</a>
+            <a href="#">Movies</a>
+            <a href="#">New & Popular</a>
+            <div class="search-container">
+                <form action="{% url 'search_results' %}" method="GET">
+                    <input type="text" placeholder="Search..." name="query">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </header>
+
+    <!-- Off-canvas Sidebar -->
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="#">Home</a>
+        <a href="{% url 'series_movies' %}">All Series</a>
+        <!-- Add more sidebar links as needed -->
+    </div>
+
+    <div class="container main">
+        <h2 class="section-title">Best Series of the Year</h2>
+        <div class="series">
+            {% for show in series %}
+            <div class="series-item">
+                <a href="{% url 'series_details' show.id %}">
+                    <img src="{% if show.image %}{{ show.image.medium }}{% else %}https://via.placeholder.com/200x300.png?text=No+Image{% endif %}" alt="{{ show.name }} Poster">
+                    <div class="series-info">
+                        <h3>{{ show.name }}</h3>
+                        <p>Language: {{ show.language }}</p>
+                        <p>Genres: {% for genre in show.genres %}{{ genre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+                    </div>
+                </a>
+            </div>
+            {% empty %}
+            <p>No series found.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.querySelector('.main').style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.querySelector('.main').style.marginLeft= "0";
+        }
+    </script>
+</body>
+</html>

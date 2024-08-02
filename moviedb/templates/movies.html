@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ category }} Movies</title>
+    <style>
+        /* Reset and basic styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        /* Header styles */
+        header {
+            background-color: #000;
+            color: #fff;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+        }
+
+        /* Movie grid styles */
+        .movies {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            justify-items: center;
+        }
+
+        .movie {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.2s ease-in-out;
+        }
+
+        .movie:hover {
+            transform: scale(1.05);
+        }
+
+        .movie img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .movie-title {
+            padding: 10px;
+            text-align: center;
+            background-color: #333;
+            color: #fff;
+            margin-top: -5px; /* Overlaps with image border radius */
+            border-radius: 0 0 8px 8px;
+        }
+
+        .movie-title h2 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .movies {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .movies {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ category }} Movies</h1>
+    </header>
+
+    <div class="container">
+        <div class="movies">
+            {% for movie in movies %}
+            <div class="movie">
+                {% if movie.poster_path %}
+                <a href="{% url 'movie_details' pk=movie.id %}">
+                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
+                </a>
+                {% else %}
+                <p>No poster available</p>
+                {% endif %}
+                <div class="movie-title">
+                    <h2>{{ movie.title }}</h2>
+                </div>
+            </div>
+            {% empty %}
+            <p>No movies found for {{ category }}.</p>
+            {% endfor %}
+        </div>
+    </div>
+
+    
+    <!-- Pagination links -->
+    <div class="pagination">
+        <span class="step-links">
+            {% if movies.has_previous %}
+                <a href="?page=1">&laquo; First</a>
+                <a href="?page={{ movies.previous_page_number }}">Previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ movies.number }} of {{ movies.paginator.num_pages }}.
+            </span>
+
+            {% if movies.has_next %}
+                <a href="?page={{ movies.next_page_number }}">Next</a>
+                <a href="?page={{ movies.paginator.num_pages }}">Last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+
+</body>
+</html>

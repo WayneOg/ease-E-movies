@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ movie.title }} - Movie Details</title>
+    <style>
+        /* Reset and basic styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+        }
+
+        /* Header styles */
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px 0;
+            position: fixed;
+            width: 100%;
+            z-index: 1000;
+        }
+
+        /* Navbar styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .navbar a {
+            color: #e5e5e5;
+            text-decoration: none;
+            margin-right: 20px;
+            padding: 10px;
+            transition: color 0.3s ease;
+        }
+
+        .navbar a:hover {
+            color: #fff;
+        }
+
+        .search-container input[type="text"] {
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #333;
+            color: #fff;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .search-container button {
+            padding: 10px 20px;
+            background-color: #e50914;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            outline: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-container button:hover {
+            background-color: #f40612;
+        }
+
+        /* Container styles */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 80px 20px 20px;
+        }
+
+        /* Movie details container */
+        .movie-details-container {
+            display: flex;
+            margin-bottom: 40px;
+        }
+
+        /* Movie poster */
+        .movie-poster {
+            flex: 0 0 30%;
+            padding-right: 30px;
+        }
+
+        .movie-poster img {
+            width: 100%;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Movie details content */
+        .movie-details-content {
+            flex: 1;
+        }
+
+        .movie-details-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .movie-details-content p {
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        /* Watch button */
+        .watch-button {
+            display: inline-block;
+            background-color: #e50914;
+            color: #fff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+
+        .watch-button:hover {
+            background-color: #f40612;
+        }
+
+        /* Recommended movies section */
+        .recommended-movies {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .recommended-movie {
+            position: relative;
+            transition: transform 0.3s ease;
+        }
+
+        .recommended-movie:hover {
+            transform: scale(1.05);
+        }
+
+        .recommended-movie img {
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .recommended-movie-title {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+            padding: 10px;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .recommended-movie-title h3 {
+            margin: 0;
+            font-size: 1rem;
+            color: #fff;
+        }
+
+        /* Responsive styles */
+        @media screen and (max-width: 768px) {
+            .movie-details-container {
+                flex-direction: column;
+            }
+
+            .movie-poster {
+                margin-bottom: 20px;
+                padding-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="navbar">
+            <div>
+                <a href="{% url 'home' %}">Home</a>
+                <a href="#">TV Shows</a>
+                <a href="#">Movies</a>
+                <a href="#">My List</a>
+            </div>
+            <div class="search-container">
+                <form action="{% url 'search_results' %}" method="GET">
+                    <input type="text" placeholder="Titles, people, genres" name="query" value="{{ request.GET.query }}">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </header>
+    <div class="container">
+        <div class="movie-details-container">
+            <div class="movie-poster">
+                <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+            </div>
+            <div class="movie-details-content">
+                <h2>{{ movie.title }}</h2>
+                <p><strong>{{ movie.tagline }}</strong></p>
+                <p>{{ movie.overview }}</p>
+                <p><strong>Release Date:</strong> {{ movie.release_date }}</p>
+                <p><strong>Rating:</strong> {{ movie.vote_average }} / 10</p>
+                <p><strong>Genres:</strong>
+                {% for genre in movie.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                </p>
+                <p><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
+                <a href="#" class="watch-button">Watch Now</a>
+            </div>
+        </div>
+        
+        <!-- Embed Movie -->
+        {% if movie.tmdb_id or movie.imdb_id %}
+            <div style="margin-bottom: 40px;">
+                {% if movie.tmdb_id %}
+                    <iframe src="https://multiembed.mov/?video_id={{ movie.tmdb_id }}&tmdb=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                {% elif movie.imdb_id %}
+                    <iframe src="https://multiembed.mov/?video_id=tt{{ movie.imdb_id }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                {% endif %}
+            </div>
+        {% endif %}
+
+        <h2 style="margin-bottom: 20px;">More Like This</h2>
+        <div class="recommended-movies">
+            {% for recommended_movie in recommended_movies %}
+                <div class="recommended-movie">
+                    <a href="{% url 'movie_details' pk=recommended_movie.id %}">
+                        <img src="{{ recommended_movie.poster }}" alt="{{ recommended_movie.title }} Poster">
+                        <div class="recommended-movie-title">
+                            <h3>{{ recommended_movie.title }}</h3>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
+</html>

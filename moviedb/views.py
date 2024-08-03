@@ -208,77 +208,71 @@ def genre_movies(request, genre_id):
 def search_results(request):
     query = request.GET.get('query', '').strip()
     if not query:
-        return render(request, 'search_results.html', {'movies': [], 'series': []})  # Render empty page if no query
+        return render(request, 'search_results.html', {'movies': [], 'series': [], 'error': 'Please enter a search term.'})
 
-    # Check if movie and series already exist in the database
-    movies = list(Movie.objects.filter(title__icontains=query))
-    series = list(Series.objects.filter(title__icontains=query))
+    movies = []
+    series = []
 
-    # Fetch data from TMDb API for movies if not found in the database
-    if not movies:
-        tmdb_api_key = API_KEY
-        movie_url = 'https://api.themoviedb.org/3/search/movie'
-        movie_params = {
-            'api_key': tmdb_api_key,
-            'language': 'en-US',
-            'query': query
-        }
+    # Search for movies
+    tmdb_api_key = API_KEY
+    movie_url = 'https://api.themoviedb.org/3/search/movie'
+    movie_params = {
+        'api_key': tmdb_api_key,
+        'language': 'en-US',
+        'query': query
+    }
 
-        try:
-            movie_response = requests.get(movie_url, params=movie_params)
-            movie_response.raise_for_status()  # Raise an exception for bad status codes
-            movie_results = movie_response.json().get('results', [])
+    try:
+        movie_response = requests.get(movie_url, params=movie_params)
+        movie_response.raise_for_status()
+        movie_results = movie_response.json().get('results', [])
 
-            for result in movie_results:
-                if result.get('poster_path'):  # Only process movies with posters
-                    movie, created = Movie.objects.update_or_create(
-                        id=result['id'],
-                        defaults={
-                            'title': result['title'],
-                            'overview': result.get('overview', ''),
-                            'release_date': result.get('release_date', None),
-                            'poster_path': result.get('poster_path', ''),
-                        }
-                    )
-                    movies.append(movie)
+        for result in movie_results:
+            if result.get('poster_path'):
+                movie, created = Movie.objects.update_or_create(
+                    id=result['id'],
+                    defaults={
+                        'title': result['title'],
+                        'overview': result.get('overview', ''),
+                        'release_date': result.get('release_date', None),
+                        'poster_path': result.get('poster_path', ''),
+                    }
+                )
+                movies.append(movie)
 
-        except requests.RequestException:
-            return HttpResponseServerError("Error fetching movie data from API")
+    except requests.RequestException as e:
+        return render(request, 'search_results.html', {'error': f"Error fetching movie data: {str(e)}"})
 
-    # Fetch data from TVmaze API for series if not found in the database
-    if not series:
-        series_url = 'http://api.tvmaze.com/search/shows'
-        series_params = {'q': query}
+    # Search for series
+    series_url = 'http://api.tvmaze.com/search/shows'
+    series_params = {'q': query}
 
-        try:
-            series_response = requests.get(series_url, params=series_params)
-            series_response.raise_for_status()  # Raise an exception for bad status codes
-            series_results = series_response.json()
+    try:
+        series_response = requests.get(series_url, params=series_params)
+        series_response.raise_for_status()
+        series_results = series_response.json()
 
-            for result in series_results:
-                show = result['show']
-                if show.get('image') and show['image'].get('medium'):  # Only process series with posters
-                    serie, created = Series.objects.update_or_create(
-                        tmdb_id=show['id'],
-                        defaults={
-                            'title': show['name'],
-                            'summary': show.get('summary', ''),
-                            'release_date': show.get('premiered', None),
-                            'poster': show.get('image', {}).get('medium', ''),
-                        }
-                    )
-                    series.append(serie)
+        for result in series_results:
+            show = result['show']
+            if show.get('image') and show['image'].get('medium'):
+                serie, created = Series.objects.update_or_create(
+                    tmdb_id=show['id'],
+                    defaults={
+                        'title': show['name'],
+                        'summary': show.get('summary', ''),
+                        'release_date': show.get('premiered', None),
+                        'poster': show.get('image', {}).get('medium', ''),
+                    }
+                )
+                series.append(serie)
 
-        except requests.RequestException:
-            return HttpResponseServerError("Error fetching series data from API")
+    except requests.RequestException as e:
+        return render(request, 'search_results.html', {'error': f"Error fetching series data: {str(e)}"})
 
-    # Filter out movies and series without posters
-    movies = [movie for movie in movies if movie.poster_path]
-    series = [serie for serie in series if serie.poster]
+    if not movies and not series:
+        return render(request, 'search_results.html', {'error': 'No results found for your search.'})
 
     return render(request, 'search_results.html', {'movies': movies, 'series': series})
-
-
 
 # Utility function to generate a unique token
 def generate_movie_token(movie_id):

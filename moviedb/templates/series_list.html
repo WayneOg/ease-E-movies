@@ -97,14 +97,113 @@ header {
     cursor: pointer;
 }
 
-.openbtn {
-    display: none;
-    font-size: 20px;
-    cursor: pointer;
-    background-color: transparent;
-    color: white;
-    padding: 10px 15px;
-    border: none;
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+    header {
+        padding: 10px 2%;
+    }
+
+    .navbar {
+        display: none;
+    }
+
+    .search-container {
+        position: relative;
+    }
+
+    .search-container input[type=text] {
+        width: 30px;
+        padding-right: 30px;
+        cursor: pointer;
+        transition: width 0.4s;
+    }
+
+    .search-container form {
+        position: relative;
+        width: 30px;
+        overflow: hidden;
+        transition: width 0.4s;
+    }
+
+    .search-container form:focus-within {
+        width: calc(100vw - 120px);
+    }
+
+    .search-container input[type=text] {
+        width: 100%;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+
+    .search-container button {
+        position: absolute;
+        right: 0;
+        background: transparent;
+        border: none;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-container form:focus-within button {
+        background-color: #e50914;
+        right: -40px;
+    }
+
+    .search-container form:focus-within button .search-icon {
+        display: none;
+    }
+
+    .search-container form:focus-within button::after {
+        content: "Search";
+        color: #fff;
+    }
+
+    .search-container input[type=text]:focus {
+        width: calc(100vw - 80px);
+        cursor: text;
+    }
+
+    .search-container button {
+        position: absolute;
+        right: 0;
+        background: transparent;
+        border: none;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-container .search-icon {
+        color: #fff;
+        font-size: 18px;
+    }
+
+    .search-container input[type=text]:focus + button {
+        background-color: #e50914;
+        right: -40px;
+    }
+
+    .search-container input[type=text]:focus + button .search-icon {
+        display: none;
+    }
+
+    .search-container input[type=text]:focus + button::after {
+        content: "Search";
+        color: #fff;
+    }
+
+    .openbtn {
+        display: block;
+    }
 }
 
 /* Sidebar styles */
@@ -141,6 +240,20 @@ header {
     font-size: 36px;
     margin-left: 50px;
 }
+
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+
 
 /* Main content styles */
 .main {
@@ -219,65 +332,8 @@ header {
     }
 
 
-    .navbar {
-        display: none;
-    }
-
     .openbtn {
         display: block;
-    }
-
-    .search-container {
-        position: relative;
-    }
-
-    .search-container form {
-        display: flex;
-        align-items: center;
-        width: auto;
-    }
-
-    .search-container input[type=text] {
-        width: 30px;
-        padding: 8px;
-        padding-right: 30px;
-        border: none;
-        background-color: transparent;
-        color: #fff;
-        border-radius: 4px;
-        transition: width 0.4s ease, background-color 0.4s ease;
-    }
-
-    .search-container input[type=text]:focus {
-        width: calc(100vw - 120px);
-        background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    .search-container button {
-        position: absolute;
-        right: 0;
-        background: transparent;
-        border: none;
-        padding: 8px;
-        cursor: pointer;
-    }
-
-    .search-container .search-icon {
-        color: #fff;
-        font-size: 18px;
-    }
-
-    .search-container input[type=text]:focus + button {
-        background-color: #e50914;
-    }
-
-    .search-container input[type=text]:focus + button .search-icon {
-        display: none;
-    }
-
-    .search-container input[type=text]:focus + button::after {
-        content: "Search";
-        color: #fff;
     }
 
     .series {

@@ -25,65 +25,192 @@
             color: inherit;
         }
 
-        /* Header styles */
-        header {
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 20px 4%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background-color 0.3s;
-        }
+        /* Existing styles remain mostly the same */
 
-        .logo {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #e50914;
-        }
+/* Header styles */
+header {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px 4%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.3s;
+}
 
-        .navbar {
-            display: flex;
-            gap: 20px;
-            align-items: center;
-        }
+.logo {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #e50914;
+}
 
-        .navbar a {
-            font-size: 0.9rem;
-            color: #e5e5e5;
-            transition: color 0.3s;
-        }
+.navbar {
+    display: flex;
+    gap: 20px;
+}
 
-        .navbar a:hover {
-            color: #fff;
-        }
+.navbar a {
+    font-size: 0.9rem;
+    color: #e5e5e5;
+    transition: color 0.3s;
+}
 
-        .search-container {
-            display: flex;
-            align-items: center;
-        }
+.navbar a:hover {
+    color: #fff;
+}
 
-        .search-container input[type=text] {
-            padding: 8px;
-            border: none;
-            background-color: rgba(255, 255, 255, 0.2);
-            color: #fff;
-            border-radius: 4px;
-        }
+.search-container {
+    display: flex;
+    align-items: center;
+}
 
-        .search-container button {
-            padding: 8px 12px;
-            background-color: #e50914;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            margin-left: 10px;
-            cursor: pointer;
-        }
+
+.search-container form {
+    display: flex;
+    align-items: center;
+}
+
+.search-container input[type=text] {
+    padding: 8px;
+    border: none;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border-radius: 4px;
+    width: 200px;
+}
+
+.search-container button {
+    padding: 8px 12px;
+    background-color: #e50914;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin-left: 10px;
+    cursor: pointer;
+}
+
+
+.openbtn {
+    display: none; /* Hidden by default, shown on mobile */
+    font-size: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+/* Mobile styles */
+@media screen and (max-width: 768px) {
+    header {
+        padding: 10px 2%;
+    }
+
+    .navbar {
+        display: none; /* Hide navbar items on mobile */
+    }
+
+    .openbtn {
+        display: block; /* Show sidebar toggle on mobile */
+    }
+
+    .search-container {
+        position: relative;
+    }
+    
+    .search-container form {
+        position: relative;
+        width: 30px;
+        overflow: hidden;
+        transition: width 0.4s;
+    }
+
+    .search-container form:focus-within {
+        width: calc(100vw - 120px);
+    }
+
+    .search-container input[type=text] {
+        width: 100%;
+        padding-right: 30px;
+        cursor: pointer;
+    }
+
+    .search-container button {
+        position: absolute;
+        right: 0;
+        background: transparent;
+        border: none;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-container form:focus-within button {
+        background-color: #e50914;
+        right: -40px;
+    }
+
+    .search-container form:focus-within button .search-icon {
+        display: none;
+    }
+
+    .search-container form:focus-within button::after {
+        content: "Search";
+        color: #fff;
+    }
+
+    .search-container input[type=text] {
+        width: 30px;
+        padding-right: 30px;
+        cursor: pointer;
+        transition: width 0.4s;
+    }
+
+    .search-container input[type=text]:focus {
+        width: calc(100vw - 120px); /* Adjusted to account for logo and menu button */
+        cursor: text;
+    }
+
+    .search-container button {
+        position: absolute;
+        right: 0;
+        background: transparent;
+        border: none;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .search-container .search-icon {
+        color: #fff;
+        font-size: 18px;
+    }
+
+    .search-container input[type=text]:focus + button {
+        background-color: #e50914;
+        right: -40px;
+    }
+
+    .search-container input[type=text]:focus + button .search-icon {
+        display: none;
+    }
+
+    .search-container input[type=text]:focus + button::after {
+        content: "Search";
+        color: #fff;
+    }
+}
 
         /* Sidebar styles */
         .sidebar {
@@ -225,8 +352,10 @@
             <a href="#">New & Popular</a>
             <div class="search-container">
                 <form action="{% url 'search_results' %}" method="GET">
-                    <input type="text" placeholder="Search..." name="query">
-                    <button type="submit">Search</button>
+                    <input type="text" name="query" placeholder="Search...">
+                    <button type="submit">
+                        <span class="search-icon">🔍</span>
+                    </button>
                 </form>
             </div>
         </div>
@@ -270,6 +399,29 @@
             document.getElementById("mySidebar").style.width = "0";
             document.querySelector('.main').style.marginLeft= "0";
         }
+        
+    document.addEventListener('DOMContentLoaded', (event) => {
+    const searchForm = document.querySelector('.search-container form');
+    const searchInput = document.querySelector('.search-container input');
+    const searchButton = document.querySelector('.search-container button');
+
+    searchInput.addEventListener('focus', () => {
+        searchButton.style.backgroundColor = '#e50914';
+    });
+
+    searchInput.addEventListener('blur', () => {
+        if (searchInput.value === '') {
+            searchButton.style.backgroundColor = 'transparent';
+        }
+    });
+
+    // Prevent form submission when the input is empty
+    searchForm.addEventListener('submit', (e) => {
+        if (searchInput.value.trim() === '') {
+            e.preventDefault();
+        }
+    });
+});
     </script>
 </body>
 </html>

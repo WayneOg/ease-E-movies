@@ -72,6 +72,12 @@ header {
     align-items: center;
 }
 
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
+
 .search-container input[type=text] {
     padding: 8px;
     border: none;
@@ -230,20 +236,25 @@ header {
     }
 
     .search-container form {
-        position: relative;
-        width: 30px;
-        overflow: hidden;
-        transition: width 0.4s;
-    }
-
-    .search-container form:focus-within {
-        width: calc(100vw - 120px);
+        display: flex;
+        align-items: center;
+        width: auto;
     }
 
     .search-container input[type=text] {
-        width: 100%;
+        width: 30px;
+        padding: 8px;
         padding-right: 30px;
-        cursor: pointer;
+        border: none;
+        background-color: transparent;
+        color: #fff;
+        border-radius: 4px;
+        transition: width 0.4s ease, background-color 0.4s ease;
+    }
+
+    .search-container input[type=text]:focus {
+        width: calc(100vw - 120px);
+        background-color: rgba(255, 255, 255, 0.2);
     }
 
     .search-container button {
@@ -251,24 +262,24 @@ header {
         right: 0;
         background: transparent;
         border: none;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        padding: 8px;
+        cursor: pointer;
     }
 
-    .search-container form:focus-within button {
+    .search-container .search-icon {
+        color: #fff;
+        font-size: 18px;
+    }
+
+    .search-container input[type=text]:focus + button {
         background-color: #e50914;
-        right: -40px;
     }
 
-    .search-container form:focus-within button .search-icon {
+    .search-container input[type=text]:focus + button .search-icon {
         display: none;
     }
 
-    .search-container form:focus-within button::after {
+    .search-container input[type=text]:focus + button::after {
         content: "Search";
         color: #fff;
     }

@@ -169,6 +169,24 @@
             color: #fff;
         }
 
+        .download-button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-top: 20px;
+            margin-left: 10px;
+            transition: background-color 0.3s ease;
+        }
+        
+        .download-button:hover {
+            background-color: #45a049;
+        }
+
         /* Responsive styles */
         @media screen and (max-width: 768px) {
             .movie-details-container {
@@ -219,6 +237,7 @@
                 </p>
                 <p><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
                 <a href="#" class="watch-button">Watch Now</a>
+                <a href="#" class="download-button" id="downloadButton">Download</a>
             </div>
         </div>
         
@@ -247,5 +266,27 @@
             {% endfor %}
         </div>
     </div>
+    <script>
+        document.getElementById('downloadButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            {% if movie.tmdb_id %}
+                var videoId = '{{ movie.tmdb_id }}';
+                var type = 'tmdb';
+            {% elif movie.imdb_id %}
+                var videoId = 'tt{{ movie.imdb_id }}';
+                var type = 'imdb';
+            {% else %}
+                alert('Download link not available for this movie.');
+                return;
+            {% endif %}
+        
+            // Open MultiEmbed in a new window
+            var multiembedWindow = window.open('https://multiembed.mov/?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : ''), '_blank');
+        
+            // Inform the user about the next steps
+            alert('A new window has opened with the movie. To download, right-click on the video player and select "Save video as" or use a video downloader extension in your browser.');
+        });
+        </script>
 </body>
 </html>

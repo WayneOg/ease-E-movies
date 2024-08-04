@@ -231,7 +231,8 @@
     <div class="container">
         <div class="movie-details-container">
             <div class="movie-poster">
-                <img src="{{ movie.poster }}" alt="{{ movie.title }}">
+                
+                <img class="full-width-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
             </div>
             <div class="movie-details-content">
                 <h2>{{ movie.title }}</h2>

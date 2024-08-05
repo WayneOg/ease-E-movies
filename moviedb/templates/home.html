@@ -314,69 +314,62 @@ header {
             position: relative;
             margin-bottom: 40px;
         }
-
+        
         .latest-movies {
             display: flex;
             transition: transform 0.5s ease;
         }
-
+        
         .latest-movie {
             flex: 0 0 100%;
             position: relative;
-            height: 400px; /* Set a fixed height or use a responsive approach */
+            height: 600px; /* Adjust this value as needed */
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
         }
         
-        .full-width-poster-container {
-            width: 100%;
-            height: 400px;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        .full-width-poster {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            object-position: center;
+        .latest-movie::before {
+            content: '';
             position: absolute;
             top: 0;
             left: 0;
-        }
-
-        .poster-content {
-            position: absolute;
-            bottom: 0;
-            left: 0;
             right: 0;
-            padding: 20px;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
-            color: white;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
         }
-
+        
         .latest-movie-info {
             position: absolute;
             bottom: 0;
             left: 0;
             right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
             padding: 20px;
             display: flex;
             align-items: flex-end;
+            z-index: 1;
         }
-
+        
         .small-poster {
             width: 150px;
             margin-right: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
-
-        .movie-details {
+        
+        .poster-content {
             flex: 1;
+            color: white;
         }
-
-        .movie-details h3 {
+        
+        .poster-content h3 {
             font-size: 2rem;
             margin: 0 0 10px 0;
         }
+        
+        .poster-content p {
+            margin: 5px 0;
+        }
+       
 
         /* Footer styles */
         footer {
@@ -403,32 +396,16 @@ header {
     }
 
     /* Latest Movies Section adjustments */
-    .full-width-poster {
-        height: 300px;
-    }
-
-    .full-width-poster-container {
-        height: 300px;
-    }
-
-    .latest-movie-info {
-        flex-direction: column;
-        align-items: flex-start;
-        padding: 15px;
+    .latest-movie {
+        height: 400px;
     }
 
     .small-poster {
         width: 100px;
-        margin-right: 0;
-        margin-bottom: 10px;
     }
 
-    .movie-details h3 {
+    .poster-content h3 {
         font-size: 1.5rem;
-    }
-
-    .movie-details p {
-        font-size: 0.9rem;
     }
 }
 
@@ -448,28 +425,20 @@ header {
         padding: 8px;
     }
 
-    .full-width-poster-container {
-        height: 250px;
-    }
-
-    .movie {
-        width: 120px;
-    }
-
-    .full-width-poster {
-        height: 250px;
+    .latest-movie {
+        height: 300px;
     }
 
     .small-poster {
         width: 80px;
     }
 
-    .movie-details h3 {
+    .poster-content h3 {
         font-size: 1.2rem;
     }
 
-    .movie-details p {
-        font-size: 0.8rem;
+    .poster-content p {
+        font-size: 0.9rem;
     }
 }
 
@@ -546,17 +515,16 @@ header {
         <div class="latest-movies-wrapper">
             <div class="latest-movies">
                 {% for movie in latest_movies %}
-                <div class="latest-movie">
+                <div class="latest-movie" style="background-image: url('https://image.tmdb.org/t/p/original{{ movie.poster_path }}');">
                     <a href="{% url 'movie_details' pk=movie.id %}">
-                    <img class="full-width-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
-                    <div class="latest-movie-info">
-                        <img class="small-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
-                        <div class="poster-content">
-                            <h3>{{ movie.title }}</h3>
-                            <p>{{ movie.release_date }}</p>
-                            <p>{{ movie.overview }}</p>
+                        <div class="latest-movie-info">
+                            <img class="small-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
+                            <div class="poster-content">
+                                <h3>{{ movie.title }}</h3>
+                                <p>{{ movie.release_date }}</p>
+                                <p>{{ movie.overview }}</p>
+                            </div>
                         </div>
-                    </div>
                     </a>
                 </div>
                 {% endfor %}

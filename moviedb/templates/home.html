@@ -323,12 +323,34 @@ header {
         .latest-movie {
             flex: 0 0 100%;
             position: relative;
+            height: 400px; /* Set a fixed height or use a responsive approach */
         }
-
-        .full-width-poster {
+        
+        .full-width-poster-container {
             width: 100%;
             height: 400px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .full-width-poster {
+            width: 100%;
+            height: 100%;
             object-fit: cover;
+            object-position: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+        .poster-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 100%);
+            color: white;
         }
 
         .latest-movie-info {
@@ -385,6 +407,10 @@ header {
         height: 300px;
     }
 
+    .full-width-poster-container {
+        height: 300px;
+    }
+
     .latest-movie-info {
         flex-direction: column;
         align-items: flex-start;
@@ -421,6 +447,11 @@ header {
     .search-container button {
         padding: 8px;
     }
+
+    .full-width-poster-container {
+        height: 250px;
+    }
+
     .movie {
         width: 120px;
     }
@@ -512,7 +543,7 @@ header {
         
         <!-- Latest Movies Section -->
         <h2 class="section-title">Latest Movies</h2>
-        <div class="latest-movies-wrapper">
+        <div class="full-width-poster-container">
             <div class="latest-movies">
                 {% for movie in latest_movies %}
                 <div class="latest-movie">
@@ -520,7 +551,7 @@ header {
                     <img class="full-width-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
                     <div class="latest-movie-info">
                         <img class="small-poster" src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
-                        <div class="movie-details">
+                        <div class="poster-content">
                             <h3>{{ movie.title }}</h3>
                             <p>{{ movie.release_date }}</p>
                             <p>{{ movie.overview }}</p>

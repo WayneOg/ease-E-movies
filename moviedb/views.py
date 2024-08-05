@@ -712,7 +712,7 @@ def fetch_streaming_link(movie_title):
 
     return None
 
-def get_tvdb_token():
+'''def get_tvdb_token():
     url = f"{TVDB_BASE_URL}/login"
     headers = {"Content-Type": "application/json"}
     data = {
@@ -753,4 +753,4 @@ def popular_series(request):
     except requests.RequestException as e:
         return render(request, 'popular_series.html', {'error': f"Error fetching series data: {str(e)}"})
 
-    return render(request, 'series_list.html', {'series': series_list})
+    return render(request, 'series_list.html', {'series': series_list})'''

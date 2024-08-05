@@ -21,9 +21,6 @@ import urllib.parse
 # Store API key as an environment variable
 TRAKT_CLIENT_ID = settings.TRAKT_CLIENT_ID
 
-TVDB_BASE_URL = "https://api.thetvdb.com"
-TVDB_API_KEY = '7ee79d95-9736-4260-9f8e-1b4ec2e37c8b'
-
 os.environ['TMDb_API_KEY'] = '6bd5cd084c256cd81499c0dfc1e050d2'
 API_KEY = os.environ.get('TMDb_API_KEY')
 
@@ -111,9 +108,6 @@ def fetch_comedy_movies(page=1):
     else:
         response.raise_for_status()
         
-
-
-        
 def fetch_latest_movies(page=1):
     today = datetime.today().strftime('%Y-%m-%d')
     url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&sort_by=release_date.desc&release_date.lte={today}&page={page}'
@@ -141,11 +135,7 @@ def home(request):
     drama_movies = fetch_drama_movies()
     comedy_movies = fetch_comedy_movies()
     latest_movies = fetch_latest_movies()
-    '''family_movies = fetch_family_movies()
-    history_movies = fetch_history_movies()
-    documentary_movies = fetch_documentary_movies()
-    thriller_movies = fetch_thriller_movies()
-    '''
+    
     posters = [movie['poster_path'] for movie in movies]
     posters = [movie['poster_path'] for movie in action_movies]
     posters = [movie['poster_path'] for movie in horror_movies]
@@ -156,7 +146,6 @@ def home(request):
     posters = [movie['poster_path'] for movie in drama_movies]
     posters = [movie['poster_path'] for movie in comedy_movies]
     posters = [movie['poster_path'] for movie in latest_movies]
-
     
     context = {
         'movies': movies,
@@ -520,8 +509,6 @@ def investigative_movies(request):
         return HttpResponseServerError('Error fetching data from TMDb.')
     
     return render(request, 'movies.html', {'movies': movies, 'category': 'Investigative'})
-
-
 
 def series_list(request):
     

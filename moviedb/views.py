@@ -155,6 +155,14 @@ def fetch_adventure_movies(page=1):
         return response.json().get('results', [])
     else:
         response.raise_for_status()
+
+def fetch_crime_movies(page=1):
+    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=80&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
         
 def fetch_latest_movies(page=1):
     today = datetime.today().strftime('%Y-%m-%d')
@@ -189,6 +197,7 @@ def home(request):
     thriller_movies = fetch_thriller_movies()
     fantasy_movies = fetch_fantasy_movies()
     adventure_movies = fetch_adventure_movies()
+    crime_movies = fetch_crime_movies()
     
     posters = [movie['poster_path'] for movie in movies]
     posters = [movie['poster_path'] for movie in action_movies]
@@ -206,6 +215,7 @@ def home(request):
     posters = [movie['poster_path'] for movie in thriller_movies]
     posters = [movie['poster_path'] for movie in fantasy_movies]
     posters = [movie['poster_path'] for movie in adventure_movies]
+    posters = [movie['poster_path'] for movie in crime_movies]
     
     context = {
         'movies': movies,
@@ -224,6 +234,7 @@ def home(request):
         'thriller_movies': thriller_movies,
         'documentary_movies': documentary_movies,
         'history_movies': history_movies,
+        'crime_movies': crime_movies,
         'posters': posters,
     }
     
@@ -507,6 +518,18 @@ def animation_movies(request):
         return HttpResponseServerError('Error fetching data from TMDb.')
     
     return render(request, 'movies.html', {'movies': movies, 'category': 'Animation'})
+
+def crime_movies(request):
+    category_id = 80  # Crime movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        movies = get_movies_by_category(category_id, page_number)
+        movies = paginate_movies(request, movies)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'movies': movies, 'category': 'Crime'})
 
 def comedy_movies(request):
     category_id = 35  # Comedy movies

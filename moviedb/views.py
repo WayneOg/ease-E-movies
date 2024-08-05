@@ -397,13 +397,15 @@ def movie_details(request, pk):
         # Generate a token for the movie
         movie_token = generate_movie_token(pk)
 
-        
+        # Fetch recommended movies
+        recommended_movies = get_recommended_movies(pk)
     
 
         context = {
             'movie': movie,
             'genres': movie_genres,
             'movie_token': movie_token,
+            'recommended_movies': recommended_movies;
         }
         return render(request, 'movie_details.html', context)
 
@@ -778,22 +780,17 @@ def fetch_streaming_link(movie_title):
 
     return None
 
-def get_recommended_movies(movie_id, page=1):
-    # Create a cache key
-    cache_key = f'recommended_movies_{movie_id}_{page}'
-    
-    # Try to get the results from cache
+def get_recommended_movies(movie_id, max_results=6):
+    cache_key = f'recommended_movies_{movie_id}'
     cached_results = cache.get(cache_key)
     if cached_results:
         return cached_results
 
-    # If not in cache, fetch from the API
     api_key = API_KEY
     url = f'https://api.themoviedb.org/3/movie/{movie_id}/recommendations'
     params = {
         'api_key': api_key,
         'language': 'en-US',
-        'page': page
     }
 
     try:
@@ -801,30 +798,20 @@ def get_recommended_movies(movie_id, page=1):
         response.raise_for_status()
         data = response.json()
 
-        # Process the results
-        recommended_movies = []
-        for movie in data.get('results', []):
-            recommended_movies.append({
+        recommended_movies = [
+            {
                 'id': movie['id'],
                 'title': movie['title'],
-                'poster_path': movie.get('poster_path'),
-                'release_date': movie.get('release_date'),
-                'vote_average': movie.get('vote_average')
-            })
+                'poster_path': f'https://image.tmdb.org/t/p/w200{movie.get("poster_path")}' if movie.get('poster_path') else None,
+            }
+            for movie in data.get('results', [])[:max_results]
+        ]
 
-        # Cache the results for 1 hour (3600 seconds)
-        cache.set(cache_key, recommended_movies, 3600)
-
+        cache.set(cache_key, recommended_movies, 3600)  # Cache for 1 hour
         return recommended_movies
 
     except requests.RequestException as e:
         print(f"Error fetching recommended movies: {str(e)}")
         return []
 
-# Usage in a view
-def movie_recommendations(request, movie_id):
-    recommended_movies = get_recommended_movies(movie_id)
-    context = {
-        'recommended_movies': recommended_movies
-    }
-    return render(request, 'movie_details.html', context)
+

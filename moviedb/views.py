@@ -112,7 +112,7 @@ def fetch_comedy_movies(page=1):
         response.raise_for_status()
         
         
-def fetch_family_movies(page=1):
+'''def fetch_family_movies(page=1):
     url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=10751&page={page}'
     response = requests.get(url)
     if response.status_code == 200:
@@ -142,7 +142,7 @@ def fetch_thriller_movies(page=1):
     if response.status_code == 200:
         return response.json().get('results', [])
     else:
-        response.raise_for_status()
+        response.raise_for_status()'''
         
 
         
@@ -173,11 +173,11 @@ def home(request):
     drama_movies = fetch_drama_movies()
     comedy_movies = fetch_comedy_movies()
     latest_movies = fetch_latest_movies()
-    family_movies = fetch_family_movies()
+    '''family_movies = fetch_family_movies()
     history_movies = fetch_history_movies()
     documentary_movies = fetch_documentary_movies()
     thriller_movies = fetch_thriller_movies()
-    
+    '''
     posters = [movie['poster_path'] for movie in movies]
     posters = [movie['poster_path'] for movie in action_movies]
     posters = [movie['poster_path'] for movie in horror_movies]
@@ -188,10 +188,10 @@ def home(request):
     posters = [movie['poster_path'] for movie in drama_movies]
     posters = [movie['poster_path'] for movie in comedy_movies]
     posters = [movie['poster_path'] for movie in latest_movies]
-    posters = [movie['poster_path'] for movie in family_movies]
+    '''posters = [movie['poster_path'] for movie in family_movies]
     posters = [movie['poster_path'] for movie in history_movies]
     posters = [movie['poster_path'] for movie in documentary_movies]
-    posters = [movie['poster_path'] for movie in thriller_movies]
+    posters = [movie['poster_path'] for movie in thriller_movies]'''
     
     context = {
         'movies': movies,
@@ -560,7 +560,7 @@ def investigative_movies(request):
     
     return render(request, 'movies.html', {'movies': movies, 'category': 'Investigative'})
 
-def family_movies(request):
+'''def family_movies(request):
     category_id = 10751  # Family movies
     page_number = request.GET.get('page', 1)
     
@@ -606,7 +606,7 @@ def thriller_movies(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'movies': movies, 'category': 'Thriller'})
+    return render(request, 'movies.html', {'movies': movies, 'category': 'Thriller'})'''
 
 def series_list(request):
     

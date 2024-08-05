@@ -116,6 +116,46 @@ def fetch_comedy_movies(page=1):
     else:
         response.raise_for_status()
         
+def fetch_history_movies(page=1):
+    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=36&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_thriller_movies(page=1):
+    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=53&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_documentary_movies(page=1):
+    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=99&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_fantasy_movies(page=1):
+    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=14&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_adventure_movies(page=1):
+    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=12&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
 def fetch_latest_movies(page=1):
     today = datetime.today().strftime('%Y-%m-%d')
     url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&sort_by=release_date.desc&release_date.lte={today}&page={page}'
@@ -144,6 +184,11 @@ def home(request):
     comedy_movies = fetch_comedy_movies()
     latest_movies = fetch_latest_movies()
     family_movies = fetch_family_movies()
+    history_movies = fetch_history_movies()
+    documentary_movies = fetch_documentary_movies()
+    thriller_movies = fetch_thriller_movies()
+    fantasy_movies = fetch_fantasy_movies()
+    adventure_movies = fetch_adventure_movies()
     
     posters = [movie['poster_path'] for movie in movies]
     posters = [movie['poster_path'] for movie in action_movies]
@@ -156,6 +201,11 @@ def home(request):
     posters = [movie['poster_path'] for movie in comedy_movies]
     posters = [movie['poster_path'] for movie in latest_movies]
     posters = [movie['poster_path'] for movie in family_movies]
+    posters = [movie['poster_path'] for movie in history_movies]
+    posters = [movie['poster_path'] for movie in documentary_movies]
+    posters = [movie['poster_path'] for movie in thriller_movies]
+    posters = [movie['poster_path'] for movie in fantasy_movies]
+    posters = [movie['poster_path'] for movie in adventure_movies]
     
     context = {
         'movies': movies,
@@ -524,6 +574,66 @@ def scifi_movies(request):
         return HttpResponseServerError('Error fetching data from TMDb.')
     
     return render(request, 'movies.html', {'movies': movies, 'category': 'Science Fiction'})
+
+def history_movies(request):
+    category_id = 36  # History Fiction movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        movies = get_movies_by_category(category_id, page_number)
+        movies = paginate_movies(request, movies)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'movies': movies, 'category': 'History'})
+
+def documentary_movies(request):
+    category_id = 99  # Documentary Fiction movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        movies = get_movies_by_category(category_id, page_number)
+        movies = paginate_movies(request, movies)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'movies': movies, 'category': 'Documentary'})
+
+def thriller_movies(request):
+    category_id = 53  #  Thriller movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        movies = get_movies_by_category(category_id, page_number)
+        movies = paginate_movies(request, movies)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'movies': movies, 'category': 'Thriller'})
+
+def fantasy_movies(request):
+    category_id = 14  # Fantasy movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        movies = get_movies_by_category(category_id, page_number)
+        movies = paginate_movies(request, movies)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'movies': movies, 'category': 'Fantasy'})
+
+def adventure_movies(request):
+    category_id = 12  # Adventure movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        movies = get_movies_by_category(category_id, page_number)
+        movies = paginate_movies(request, movies)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'movies': movies, 'category': 'Adventure'})
 
 def investigative_movies(request):
     category_id = 9648  # Mystery movies (closest match for investigative)

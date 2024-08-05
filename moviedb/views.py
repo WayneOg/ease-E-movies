@@ -278,7 +278,7 @@ def search_results(request):
 def generate_movie_token(movie_id):
     return hashlib.sha256(f"{movie_id}".encode()).hexdigest()
 
-def movie_details(request, pk):
+def movie_details(request, pk, movie_id):
     try:
         # Fetch movie details from the TMDB API
         tmdb_api_key = API_KEY  # Replace with your actual API key
@@ -319,11 +319,15 @@ def movie_details(request, pk):
 
         # Generate a token for the movie
         movie_token = generate_movie_token(pk)
+        
+        # Fetch recommended movies
+        recommended_movies = fetch_recommended_movies(movie_id)
 
         context = {
             'movie': movie,
             'genres': movie_genres,
             'movie_token': movie_token,
+            'recommended_movies': recommended_movies,
         }
         return render(request, 'movie_details.html', context)
 
@@ -614,3 +618,55 @@ def fetch_streaming_link(movie_title):
 
     return None
 
+
+def fetch_recommended_movies(movie_id, page=1):
+    """
+    Fetch recommended movies from TMDb API based on a given movie ID.
+    
+    :param movie_id: ID of the movie to get recommendations for
+    :param page: Page number of results (default is 1)
+    :return: List of recommended movies
+    """
+    # Use the API key from your Django settings
+    api_key = API_KEY
+    
+    # Create a cache key
+    cache_key = f'recommended_movies_{movie_id}_page_{page}'
+    
+    # Try to get the data from cache first
+    cached_data = cache.get(cache_key)
+    if cached_data:
+        return cached_data
+    
+    # If not in cache, make the API request
+    url = f'https://api.themoviedb.org/3/movie/{movie_id}/recommendations'
+    params = {
+        'api_key': api_key,
+        'language': 'en-US',
+        'page': page
+    }
+    
+    try:
+        response = requests.get(url, params=params)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        data = response.json()
+        
+        # Extract the relevant movie information
+        recommended_movies = []
+        for movie in data.get('results', []):
+            recommended_movies.append({
+                'id': movie['id'],
+                'title': movie['title'],
+                'poster_path': movie.get('poster_path'),
+                'release_date': movie.get('release_date'),
+                'vote_average': movie.get('vote_average')
+            })
+        
+        # Cache the results for 1 hour (3600 seconds)
+        cache.set(cache_key, recommended_movies, 3600)
+        
+        return recommended_movies
+    
+    except requests.RequestException as e:
+        print(f"Error fetching recommended movies: {str(e)}")
+        return []

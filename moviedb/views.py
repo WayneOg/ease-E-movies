@@ -788,7 +788,7 @@ def get_recommended_movies(movie_id, page=1):
         return cached_results
 
     # If not in cache, fetch from the API
-    api_key = _API_KEY
+    api_key = API_KEY
     url = f'https://api.themoviedb.org/3/movie/{movie_id}/recommendations'
     params = {
         'api_key': api_key,

@@ -204,10 +204,10 @@ def home(request):
         'drama_movies': drama_movies,
         'comedy_movies': comedy_movies,
         'latest_movies': latest_movies,
-        'thriller_movies': thriller_movies,
+        ''''thriller_movies': thriller_movies,
         'documentary_movies': documentary_movies,
         'history_movies': history_movies,
-        'family_movies': family_movies,
+        'family_movies': family_movies,'''
         'posters': posters,
     }
     

@@ -775,3 +775,375 @@ def fetch_streaming_link(movie_title):
 
     return None
 
+
+def get_series_by_category(category_id, page_number):
+    url = f'https://api.themoviedb.org/3/discover/tv'
+    params = {
+        'api_key': API_KEY,
+        'with_genres': category_id,
+        'page': page_number
+    }
+    
+    response = requests.get(url, params=params)
+    response.raise_for_status()  # Raise an exception for bad status codes
+    data = response.json()
+    series = data.get('results', [])
+    
+    return series
+
+def paginate_series(request, series):
+    paginator = Paginator(series, 20)  # Show 20 movies per page
+    page_number = request.GET.get('page')
+    
+    try:
+        series = paginator.page(page_number)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        series = paginator.page(1)
+    except EmptyPage:
+        # If page is out of range (e.g. 9999), deliver last page of results.
+        series = paginator.page(paginator.num_pages)
+    
+    return series
+
+def fetch_latest_series(page=1):
+    today = datetime.today().strftime('%Y-%m-%d')
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&sort_by=release_date.desc&release_date.lte={today}&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        series = response.json().get('results', [])
+        # Filter out movies without posters
+        series_with_posters = [series for series in series if series.get('poster_path')]
+        return series_with_posters
+    else:
+        response.raise_for_status()
+
+def fetch_action_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=10759&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_soap_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=10766&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_animation_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=16&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_scifi_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=10765&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_kids_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=10762&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_family_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=10751&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_drama_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=18&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_comedy_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=35&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_politics_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=10768&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+        
+def fetch_mystery_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=9648&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+
+        
+def fetch_reality_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=10764&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+
+def fetch_crime_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=80&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+
+def fetch_documentary_series(page=1):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&with_genres=99&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('results', [])
+    else:
+        response.raise_for_status()
+
+
+
+
+def action_series(request):
+    category_id = 10759  # Action movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        # Assuming get_movies_by_category retrieves movies based on category_id and page_number
+        action_series = get_movies_by_category(category_id, page_number)
+        
+        # Assuming paginate_movies paginates the movies list
+        action_series = paginate_movies(request, action_movies)
+    
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    context = {
+        'action_series': action_series,
+        'category': 'Action',
+    }
+    
+    return render(request, 'movies.html', context)
+
+def animation_series(request):
+    category_id = 16  # Animation movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Animation'})
+
+def crime_series(request):
+    category_id = 80  # Crime movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Crime'})
+
+def comedy_series(request):
+    category_id = 35  # Comedy movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_movies_by_category(category_id, page_number)
+        series = paginate_movies(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Comedy'})
+
+def drama_series(request):
+    category_id = 18  # Drama movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Drama'})
+
+def reality_series(request):
+    category_id = 10764  # Reality movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Horror'})
+
+def family_series(request):
+    category_id = 10751  # Family movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Family'})
+
+def kids_series(request):
+    category_id = 10762 # kids movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Kids'})
+
+def scifi_series(request):
+    category_id = 10765  # Science Fiction movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Science Fiction'})
+
+def mystery_series(request):
+    category_id = 9648  # Mystery movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Mystery'})
+
+def documentary_series(request):
+    category_id = 99  # Documentary Fiction movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Documentary'})
+
+def politics_series(request):
+    category_id = 10768  #  series movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'War&Politics'})
+
+def soap_series(request):
+    category_id = 10766  # Soap movies
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        series = get_series_by_category(category_id, page_number)
+        series = paginate_series(request, series)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from TMDb.')
+    
+    return render(request, 'movies.html', {'series': series, 'category': 'Fantasy'})
+
+def home_series(request):
+    url = f'https://api.themoviedb.org/3/tv/popular?api_key={API_KEY}&language=en-US&page=1'
+    data = make_api_request(url)
+    series = data['results']
+    
+    action_series = fetch_action_series()
+    reality_series = fetch_reality_series()
+    animation_series = fetch_animation_series()
+    scifi_series = fetch_scifi_series()
+    mystery_series = fetch_mystery_series()
+    drama_series = fetch_drama_series()
+    comedy_series = fetch_comedy_series()
+    latest_series = fetch_latest_series()
+    family_series = fetch_family_series()
+    politics_series = fetch_politics_series()
+    kids_series = fetch_kids_series()
+    soap_series = fetch_soap_series()
+    crime_series = fetch_crime_series()
+    documentary_series = fetch_documentary_series()
+    
+    posters = [serie['poster_path'] for serie in series]
+    posters = [serie['poster_path'] for serie in action_series]
+    posters = [serie['poster_path'] for serie in kids_series]
+    posters = [serie['poster_path'] for serie in animation_series]
+    posters = [serie['poster_path'] for serie in scifi_series]
+    posters = [serie['poster_path'] for serie in soap_series]
+    posters = [serie['poster_path'] for serie in mystery_series]
+    posters = [serie['poster_path'] for serie in drama_series]
+    posters = [serie['poster_path'] for serie in comedy_series]
+    posters = [serie['poster_path'] for serie in latest_series]
+    posters = [serie['poster_path'] for serie in family_series]
+    posters = [serie['poster_path'] for serie in reality_series]
+    posters = [serie['poster_path'] for serie in politics_series]
+    posters = [serie['poster_path'] for serie in crime_series]
+    posters = [serie['poster_path'] for serie in documentary_series]
+    
+    context = {
+        'series': series,
+        'action_series': action_series,
+        'politics_series': politics_series,
+        'animation_movies': animation_series,
+        'scifi_movies': scifi_series,
+        'drama_movies': drama_series,
+        'comedy_movies': comedy_series,
+        'latest_movies': latest_series,
+        'family_movies': family_series,
+        'reality_series': reality_series,
+        'soap_series': soap_series,
+        'kids_series': kids_series,
+        'mystery_series': mystery_series,
+        'crime_series': crime_series,
+        'documentary': documentary_series,
+        'posters': posters,
+    }
+    
+    return render(request, 'series.html', context)

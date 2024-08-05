@@ -21,6 +21,9 @@ import urllib.parse
 # Store API key as an environment variable
 TRAKT_CLIENT_ID = settings.TRAKT_CLIENT_ID
 
+TVDB_BASE_URL = "https://api.thetvdb.com"
+TVDB_API_KEY = '7ee79d95-9736-4260-9f8e-1b4ec2e37c8b'
+
 os.environ['TMDb_API_KEY'] = '6bd5cd084c256cd81499c0dfc1e050d2'
 API_KEY = os.environ.get('TMDb_API_KEY')
 
@@ -709,3 +712,45 @@ def fetch_streaming_link(movie_title):
 
     return None
 
+def get_tvdb_token():
+    url = f"{TVDB_BASE_URL}/login"
+    headers = {"Content-Type": "application/json"}
+    data = {
+        "apikey": TVDB_API_KEY,
+        # If needed, add username and userkey:
+        # "username": TVDB_USERNAME,
+        # "userkey": TVDB_USER_KEY,
+    }
+
+    response = requests.post(url, json=data, headers=headers)
+    response.raise_for_status()
+    return response.json()["token"]
+
+def make_tvdb_request(endpoint, params=None):
+    token = get_tvdb_token()
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
+
+    url = f"{TVDB_BASE_URL}/{endpoint}"
+    response = requests.get(url, headers=headers, params=params)
+    response.raise_for_status()
+    return response.json()
+
+def get_popular_series():
+    endpoint = "series"
+    series_data = make_tvdb_request(endpoint).get("data", [])
+    
+    # Sort series data by a chosen metric, e.g., 'siteRating'
+    series_data.sort(key=lambda x: x.get('siteRating', 0), reverse=True)
+    
+    return series_data
+
+def popular_series(request):
+    try:
+        series_list = get_popular_series()
+    except requests.RequestException as e:
+        return render(request, 'popular_series.html', {'error': f"Error fetching series data: {str(e)}"})
+
+    return render(request, 'series_list.html', {'series': series_list})

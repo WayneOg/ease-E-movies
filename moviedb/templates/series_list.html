@@ -442,6 +442,18 @@ header {
         </div>
     </div>
 
+    <h1>Popular Series</h1>
+
+    {% if error %}
+        <p>{{ error }}</p>
+    {% else %}
+        <ul>
+            {% for series in series %}
+                <li>{{ series.seriesName }} ({{ series.firstAired }}) - Rating: {{ series.siteRating }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
     <script>
         function openNav() {
             document.getElementById("mySidebar").style.width = "250px";

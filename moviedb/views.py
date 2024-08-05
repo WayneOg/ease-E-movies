@@ -397,8 +397,6 @@ def movie_details(request, pk):
         # Generate a token for the movie
         movie_token = generate_movie_token(pk)
 
-
-        recommended_movies = get_recommended_movies()
         
     
 
@@ -406,7 +404,6 @@ def movie_details(request, pk):
             'movie': movie,
             'genres': movie_genres,
             'movie_token': movie_token,
-            'recommended_movies': recommended_movies,
         }
         return render(request, 'movie_details.html', context)
 

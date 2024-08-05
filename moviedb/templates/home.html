@@ -603,24 +603,6 @@ header {
             {% endfor %}
         </div>
 
-        <!-- Adventure Movies Section -->
-        <h2 class="section-title">Adventure Movies</h2>
-        <div class="movies">
-            {% for movie in adventure_movies %}
-                <div class="movie">
-                    <a href="{% url 'movie_details' pk=movie.id %}">
-                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
-                        <div class="movie-info">
-                            <h3>{{ movie.title }}</h3>
-                            <p>{{ movie.release_date }}</p>
-                        </div>
-                    </a>
-                    <div class="recommended-movie-title">
-                        <h2>{{ movie.title }}</h2>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
 
         <!-- Fantasy Movies Section -->
         <h2 class="section-title">Fantasy Movies</h2>
@@ -736,24 +718,7 @@ header {
             {% endfor %}
         </div>
 
-        <!-- Thriller Movies Section -->
-        <h2 class="section-title">Thriller Movies</h2>
-        <div class="movies">
-            {% for movie in thriller_movies %}
-                <div class="movie">
-                    <a href="{% url 'movie_details' pk=movie.id %}">
-                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
-                        <div class="movie-info">
-                            <h3>{{ movie.title }}</h3>
-                            <p>{{ movie.release_date }}</p>
-                        </div>
-                    </a>
-                    <div class="recommended-movie-title">
-                        <h2>{{ movie.title }}</h2>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+       
 
         <!-- Sci-fi Movies Section -->
         <h2 class="section-title">Sci-fi Movies</h2>
@@ -774,43 +739,6 @@ header {
             {% endfor %}
         </div>
 
-        <!-- Documentary Movies Section -->
-        <h2 class="section-title">Documentary Movies</h2>
-        <div class="movies">
-            {% for movie in documentary_movies %}
-                <div class="movie">
-                    <a href="{% url 'movie_details' pk=movie.id %}">
-                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
-                        <div class="movie-info">
-                            <h3>{{ movie.title }}</h3>
-                            <p>{{ movie.release_date }}</p>
-                        </div>
-                    </a>
-                    <div class="recommended-movie-title">
-                        <h2>{{ movie.title }}</h2>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-
-        <!-- History Movies Section -->
-        <h2 class="section-title">History Movies</h2>
-        <div class="movies">
-            {% for movie in history_movies %}
-                <div class="movie">
-                    <a href="{% url 'movie_details' pk=movie.id %}">
-                        <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
-                        <div class="movie-info">
-                            <h3>{{ movie.title }}</h3>
-                            <p>{{ movie.release_date }}</p>
-                        </div>
-                    </a>
-                    <div class="recommended-movie-title">
-                        <h2>{{ movie.title }}</h2>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
 
 
         <!-- Repeat for other movie categories -->

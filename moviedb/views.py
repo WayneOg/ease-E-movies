@@ -355,7 +355,7 @@ def search_results(request):
 def generate_movie_token(movie_id):
     return hashlib.sha256(f"{movie_id}".encode()).hexdigest()
 
-def movie_details(request, pk):
+def movie_details(request, pk, movie_id):
     try:
         # Fetch movie details from the TMDB API
         tmdb_api_key = API_KEY  # Replace with your actual API key
@@ -396,6 +396,9 @@ def movie_details(request, pk):
 
         # Generate a token for the movie
         movie_token = generate_movie_token(pk)
+
+
+        recommended_movies = get_recommended_movies(movie_id)
         
     
 
@@ -403,6 +406,7 @@ def movie_details(request, pk):
             'movie': movie,
             'genres': movie_genres,
             'movie_token': movie_token,
+            'recommended_movies': recommended_movies,
         }
         return render(request, 'movie_details.html', context)
 

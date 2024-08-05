@@ -398,7 +398,7 @@ def movie_details(request, pk):
         movie_token = generate_movie_token(pk)
 
 
-        recommended_movies = get_recommended_movies(movie_id)
+        recommended_movies = get_recommended_movies()
         
     
 

@@ -219,6 +219,11 @@ def home(request):
         'comedy_movies': comedy_movies,
         'latest_movies': latest_movies,
         'family_movies': family_movies,
+        'fantasy_movies': fantasy_movies,
+        'adventure_movies': adventure_movies,
+        'thriller_movies': thriller_movies,
+        'documentary_movies': documentary_movies,
+        'history_movies': history_movies,
         'posters': posters,
     }
     

@@ -319,6 +319,21 @@
             {% endfor %}
         </div>
 
+        <!-- Action Series -->
+        <h2 class="section-title">Action Series</h2>
+        <div class="movies">
+            {% for serie in action_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
         <!-- Genre-specific series sections -->
         {% for genre, series_list in genre_series.items %}
         <h2 class="section-title">{{ genre }} Series</h2>

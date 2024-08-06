@@ -1,47 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV Series</title>
+    <style>
+        /* Reset and basic styles */
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+            background-color: #141414;
+            color: #fff;
+            overflow-x: hidden;
+        }
 
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
 
-{% block content %}
-<h1>TV Series</h1>
+        /* Header styles */
+        header {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px 4%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s;
+        }
 
-<!-- Popular Series -->
-<h2>Popular Series</h2>
-<div class="series-container">
-    {% for serie in series %}
-    <div class="series-item">
-        <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
-        <h3>{{ serie.name }}</h3>
-        <p>{{ serie.first_air_date|date:"Y" }}</p>
-        <a href="{% url 'series_details' serie.id %}">View Details</a>
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #e50914;
+        }
+
+        .navbar {
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar a {
+            font-size: 0.9rem;
+            color: #e5e5e5;
+            transition: color 0.3s;
+        }
+
+        .navbar a:hover {
+            color: #fff;
+        }
+
+        .search-container form {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container input[type=text] {
+            padding: 8px;
+            border: none;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .search-container button {
+            padding: 8px 12px;
+            background-color: #e50914;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        /* Main content styles */
+        .main {
+            padding: 20px 4%;
+            margin-top: 70px;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        /* Movie row styles */
+        .movies {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+        }
+
+        .movies::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie {
+            flex: 0 0 auto;
+            width: 200px;
+            transition: transform 0.3s;
+            position: relative;
+        }
+
+        .movie:hover {
+            transform: scale(1.1);
+            z-index: 2;
+        }
+
+        .movie img {
+            width: 100%;
+            border-radius: 4px;
+        }
+
+        .movie-info {
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            transition: visibility 0.3s, opacity 0.3s;
+        }
+
+        .movie:hover .movie-info {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .movie-info h3 {
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        /* Latest Movies Section */
+        .latest-movies-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+        }
+        
+        .latest-movies {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .latest-movie {
+            flex: 0 0 100%;
+            position: relative;
+            height: 600px;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        
+        .latest-movie::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+        }
+        
+        .latest-movie-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 20px;
+            display: flex;
+            align-items: flex-end;
+            z-index: 1;
+        }
+        
+        .small-poster {
+            width: 150px;
+            margin-right: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        
+        .poster-content {
+            flex: 1;
+            color: white;
+        }
+        
+        .poster-content h3 {
+            font-size: 2rem;
+            margin: 0 0 10px 0;
+        }
+        
+        .poster-content p {
+            margin: 5px 0;
+        }
+
+        /* Responsive adjustments */
+        @media screen and (max-width: 768px) {
+            .main {
+                margin-top: 80px;
+            }
+
+            .movies {
+                gap: 5px;
+            }
+
+            .movie {
+                width: 150px;
+            }
+
+            .latest-movie {
+                height: 400px;
+            }
+
+            .small-poster {
+                width: 100px;
+            }
+
+            .poster-content h3 {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+
+            .search-container button {
+                padding: 8px;
+            }
+
+            .latest-movie {
+                height: 300px;
+            }
+
+            .small-poster {
+                width: 80px;
+            }
+
+            .poster-content h3 {
+                font-size: 1.2rem;
+            }
+
+            .poster-content p {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">MovieFlix</div>
+        <nav class="navbar">
+            <a href="#">Home</a>
+            <a href="#">TV Shows</a>
+            <a href="#">Movies</a>
+            <a href="#">New & Popular</a>
+        </nav>
+        <div class="search-container">
+            <form action="/search" method="get">
+                <input type="text" placeholder="Search..." name="query">
+                <button type="submit">Search</button>
+            </form>
+        </div>
+    </header>
+
+    <div class="main">
+        <h1 class="section-title">TV Series</h1>
+
+        <!-- Latest Series -->
+        <div class="latest-movies-wrapper">
+            <div class="latest-movies">
+                {% for serie in latest_series|slice:":5" %}
+                <div class="latest-movie" style="background-image: url('https://image.tmdb.org/t/p/original{{ serie.backdrop_path }}');">
+                    <div class="latest-movie-info">
+                        <img class="small-poster" src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                        <div class="poster-content">
+                            <h3>{{ serie.name }}</h3>
+                            <p>{{ serie.first_air_date|date:"Y" }}</p>
+                            <p>{{ serie.overview|truncatewords:30 }}</p>
+                            <a href="{% url 'series_details' serie.id %}">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Popular Series -->
+        <h2 class="section-title">Popular Series</h2>
+        <div class="movies">
+            {% for serie in series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Genre-specific series sections -->
+        {% for genre, series_list in genre_series.items %}
+        <h2 class="section-title">{{ genre }} Series</h2>
+        <div class="movies">
+            {% for serie in series_list %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
-
-<!-- Latest Series -->
-<h2>Latest Series</h2>
-<div class="series-container">
-    {% for serie in latest_series %}
-    <div class="series-item">
-        <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
-        <h3>{{ serie.name }}</h3>
-        <p>{{ serie.first_air_date|date:"Y" }}</p>
-        <a href="{% url 'series_details' serie.id %}">View Details</a>
-    </div>
-    {% endfor %}
-</div>
-
-<!-- Genre-specific series sections -->
-{% for genre, series_list in genre_series.items %}
-<h2>{{ genre }} Series</h2>
-<div class="series-container">
-    {% for serie in series_list %}
-    <div class="series-item">
-        <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
-        <h3>{{ serie.name }}</h3>
-        <p>{{ serie.first_air_date|date:"Y" }}</p>
-        <a href="{% url 'series_details' serie.id %}">View Details</a>
-    </div>
-    {% endfor %}
-</div>
-{% endfor %}
-
-{% endblock %}
+</body>
+</html>

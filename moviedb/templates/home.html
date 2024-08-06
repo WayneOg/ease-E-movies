@@ -843,7 +843,7 @@ header {
         <!-- Series Section -->
         <h2 class="section-title">Series</h2>
         <div class="movies">
-            {% for series in series %}
+            {% for serie in series %}
                 <div class="movie">
                     <a href="{% url 'series_details' pk=series.id %}">
                         <img src="https://image.tmdb.org/t/p/w500{{ series.poster_path }}" alt="{{ series.title }} Poster">

@@ -282,7 +282,25 @@
         </div>
     </header>
 
+    <!-- Off-canvas Sidebar -->
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="#">Home</a>
+        <a href="{% url 'action_movies' %}">Action</a>
+        <a href="{% url 'animation_movies' %}">Animation</a>
+        <a href="{% url 'comedy_movies' %}">Comedy</a>
+        <a href="{% url 'drama_movies' %}">Drama</a>
+        <a href="{% url 'horror_movies' %}">Horror</a>
+        <a href="{% url 'investigative_movies' %}">Investigative</a>
+        <a href="{% url 'romance_movies' %}">Romance</a>
+        <a href="{% url 'scifi_movies' %}">Sci-fi</a>
+        <a href="{% url 'series_movies' %}">Series</a>
+        <a href="{% url 'series' %}">Series</a>
+    </div>
+
     <div class="main">
+        {% load cache %}
+        {% cache 600 movie_list %}
         <h1 class="section-title">TV Series</h1>
 
         <!-- Latest Series -->
@@ -530,6 +548,9 @@
             {% endfor %}
         </div>
         {% endfor %}
+
+        {% endcache %}
+
     </div>
     <script>
         function openNav() {

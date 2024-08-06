@@ -21,6 +21,8 @@ import urllib.parse
 # Store API key as an environment variable
 TRAKT_CLIENT_ID = settings.TRAKT_CLIENT_ID
 
+TVMAZE_BASE_URL = "http://api.tvmaze.com"
+
 os.environ['TMDb_API_KEY'] = '6bd5cd084c256cd81499c0dfc1e050d2'
 API_KEY = os.environ.get('TMDb_API_KEY')
 
@@ -775,7 +777,7 @@ def fetch_streaming_link(movie_title):
 
     return None
 
-
+'''
 def get_series_by_category(category_id, page_number):
     url = f'https://api.themoviedb.org/3/discover/tv'
     params = {
@@ -1147,3 +1149,130 @@ def home_series(request):
     }
     
     return render(request, 'series.html', context)
+'''
+
+def make_api_request(url, params=None):
+    cache_key = f"api_request_{url}_{str(params)}"
+    cached_response = cache.get(cache_key)
+    if cached_response:
+        return cached_response
+
+    response = requests.get(url, params=params)
+    response.raise_for_status()
+    data = response.json()
+
+    cache.set(cache_key, data, 3600)  # Cache for 1 hour
+    return data
+
+def get_series_by_category(category_id, page=1):
+    url = f"{TMDB_BASE_URL}/discover/tv"
+    params = {
+        'api_key': API_KEY,
+        'with_genres': category_id,
+        'page': page
+    }
+    data = make_api_request(url, params)
+    return data.get('results', [])
+
+def paginate_series(request, series_list):
+    paginator = Paginator(series_list, 20)
+    page = request.GET.get('page')
+    try:
+        series = paginator.page(page)
+    except PageNotAnInteger:
+        series = paginator.page(1)
+    except EmptyPage:
+        series = paginator.page(paginator.num_pages)
+    return series
+
+def series_category_view(request, category_id, category_name):
+    try:
+        page = request.GET.get('page', 1)
+        series = get_series_by_category(category_id, page)
+        series = paginate_series(request, series)
+        context = {'series': series, 'category': category_name}
+        return render(request, 'series_list.html', context)
+    except requests.RequestException as e:
+        return HttpResponseServerError(f'Error fetching data from TMDb: {str(e)}')
+
+def home_series(request):
+    categories = [
+        {'id': 10759, 'name': 'Action'},
+        {'id': 16, 'name': 'Animation'},
+        {'id': 35, 'name': 'Comedy'},
+        {'id': 80, 'name': 'Crime'},
+        {'id': 99, 'name': 'Documentary'},
+        {'id': 18, 'name': 'Drama'},
+        {'id': 10751, 'name': 'Family'},
+        {'id': 10762, 'name': 'Kids'},
+        {'id': 9648, 'name': 'Mystery'},
+        {'id': 10764, 'name': 'Reality'},
+        {'id': 10765, 'name': 'Sci-Fi & Fantasy'},
+        {'id': 10766, 'name': 'Soap'},
+        {'id': 10768, 'name': 'War & Politics'},
+    ]
+
+    context = {}
+    for category in categories:
+        series = get_series_by_category(category['id'])[:10]  # Get top 10 series for each category
+        context[f"{category['name'].lower()}_series"] = series
+
+    return render(request, 'series.html', context)
+
+def series_details(request, series_id):
+    try:
+        # Fetch series details from TVMaze API
+        series_url = f"{TVMAZE_BASE_URL}/shows/{series_id}"
+        series_data = make_api_request(series_url)
+
+        # Fetch seasons
+        seasons_url = f"{TVMAZE_BASE_URL}/shows/{series_id}/seasons"
+        seasons_data = make_api_request(seasons_url)
+
+        # Fetch episodes for the first season
+        first_season_id = seasons_data[0]['id'] if seasons_data else None
+        episodes_data = []
+        if first_season_id:
+            episodes_url = f"{TVMAZE_BASE_URL}/seasons/{first_season_id}/episodes"
+            episodes_data = make_api_request(episodes_url)
+
+        # Create or update Series object
+        series, created = Series.objects.update_or_create(
+            tmdb_id=series_id,
+            defaults={
+                'title': series_data.get('name'),
+                'summary': series_data.get('summary', ''),
+                'poster': series_data.get('image', {}).get('medium', ''),
+            }
+        )
+
+        context = {
+            'series': series,
+            'seasons': seasons_data,
+            'episodes': episodes_data,
+        }
+        return render(request, 'series_details.html', context)
+    except requests.RequestException as e:
+        return HttpResponseServerError(f'Error fetching data from TVMaze: {str(e)}')
+
+def fetch_episodes(request, series_id, season_number):
+    try:
+        series = get_object_or_404(Series, tmdb_id=series_id)
+        episodes_url = f"{TVMAZE_BASE_URL}/shows/{series_id}/episodes"
+        all_episodes = make_api_request(episodes_url)
+        
+        season_episodes = [ep for ep in all_episodes if ep['season'] == int(season_number)]
+        
+        episodes_data = [
+            {
+                'id': episode['id'],
+                'number': episode['number'],
+                'name': episode['name'],
+                'summary': episode.get('summary', ''),
+            }
+            for episode in season_episodes
+        ]
+        
+        return JsonResponse({'episodes': episodes_data})
+    except requests.RequestException as e:
+        return JsonResponse({'error': str(e)}, status=500)

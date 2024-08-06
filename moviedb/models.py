@@ -43,6 +43,13 @@ class Series(models.Model):
     tmdb_id = models.IntegerField(unique=True, null=True)
     summary = models.TextField(max_length=255, null=True)
     imdb_id = models.CharField(max_length=10, blank=True, null=True)
+    overview = models.TextField(blank=True, null=True)
+    release_date = models.DateField(blank=True, null=True)
+    poster_path = models.CharField(max_length=255, blank=True, null=True)
+    vote_average = models.FloatField(default=0)
+    genres = models.ManyToManyField(Genre, blank=True)
+    runtime = models.IntegerField(default=0)  # Set default runtime to 0
+    tagline = models.CharField(max_length=255, blank=True, null=True)
     # Add more fields as needed
     
     def __str__(self):

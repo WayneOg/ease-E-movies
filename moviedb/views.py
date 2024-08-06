@@ -672,13 +672,8 @@ def investigative_movies(request):
     return render(request, 'movies.html', {'movies': movies, 'category': 'Investigative'})
 
 def series_list(request):
-    
-        url = 'https://api.tvmaze.com/shows'  # Endpoint for TVmaze API shows
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for bad status codes
-        series = response.json()
-        context = {'series': series}
-        return render(request, 'series_list.html', context)
+    series = Series.objects.all()
+    return render(request, 'serie_list.html', {'series': series})
 
     
 def series_details(request, pk, season=1):

@@ -336,5 +336,52 @@
         </div>
         {% endfor %}
     </div>
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.querySelector(".main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.querySelector(".main").style.marginLeft = "0";
+        }
+
+        // Automatic rotation for latest movies
+        let currentIndex = 0;
+        const latestMovies = document.querySelectorAll('.latest-movie');
+        const totalMovies = latestMovies.length;
+
+        function rotateMovies() {
+            currentIndex = (currentIndex + 1) % totalMovies;
+            document.querySelector('.latest-movies').style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        setInterval(rotateMovies, 5000); // Rotate every 5 seconds
+    </script>
+    <script>
+function openNav() {
+    document.getElementById("mySidebar").style.width = "250px";
+}
+
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+}
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    const searchInput = document.querySelector('.search-container input');
+    const searchButton = document.querySelector('.search-container button');
+
+    searchInput.addEventListener('focus', () => {
+        searchButton.style.backgroundColor = '#e50914';
+    });
+
+    searchInput.addEventListener('blur', () => {
+        if (searchInput.value === '') {
+            searchButton.style.backgroundColor = 'transparent';
+        }
+    });
+});
+</script>
 </body>
 </html>

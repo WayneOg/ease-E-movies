@@ -1142,3 +1142,60 @@ def home_series(request):
     }
     
     return render(request, 'series.html', context)
+
+def generate_serie_token(movie_id):
+    return hashlib.sha256(f"{movie_id}".encode()).hexdigest()
+
+def serie_details(request, pk):
+    try:
+        # Fetch movie details from the TMDB API
+        tmdb_api_key = API_KEY  # Replace with your actual API key
+        url = f'https://api.themoviedb.org/3/tv/{pk}?api_key={tmdb_api_key}&language=en-US'
+        response = requests.get(url)
+        response.raise_for_status()  # Raise an exception for bad status codes
+        serie_data = response.json()
+
+        # Extract movie details from API response
+        serie_title = serie_data.get('title')
+        serie_overview = serie_data.get('overview', '')
+        serie_poster_path = serie_data.get('poster_path', '')
+        serie_release_date = serie_data.get('release_date', '')
+        serie_vote_average = serie_data.get('vote_average', 0)
+        serie_genres = [genre['name'] for genre in serie_data.get('genres', [])]
+        serie_runtime = serie_data.get('runtime', 0)
+        serie_tagline = serie_data.get('tagline', '')
+        serie_imdb_id = serie_data.get('imdb_id')
+
+        # Create the full URL for the poster image
+        full_poster_url = f'https://image.tmdb.org/t/p/w500{serie_poster_path}'
+
+        # Create or update the Movie instance
+        serie, created = Series.objects.update_or_create(
+            id=pk,
+            defaults={
+                'title': serie_title,
+                'overview': serie_overview,
+                'poster_path': full_poster_url,
+                'release_date': serie_release_date,
+                'vote_average': serie_vote_average,
+                'runtime': serie_runtime,
+                'tagline': serie_tagline,
+                'imdb_id': serie_imdb_id,
+                # Add other fields as needed
+            }
+        )
+
+        # Generate a token for the movie
+        serie_token = generate_serie_token(pk)
+
+        context = {
+            'serie': serie,
+            'genres': serie_genres,
+            'movie_token':serie_token,
+        }
+        return render(request, 'series_details.html', context)
+
+    except requests.RequestException as e:
+        return render(request, 'error.html', {'error_message': f'Error fetching data from TMDB: {str(e)}'})
+    
+    

@@ -467,6 +467,7 @@ header {
                 {% for serie in latest_series|slice:":5" %}
                 <div class="latest-movie" style="background-image: url('https://image.tmdb.org/t/p/original{{ serie.backdrop_path }}');">
                     <div class="latest-movie-info">
+                        <a href="{% url 'series_details' pk=serie.id %}">
                         <img class="small-poster" src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                         <div class="poster-content">
                             <h3>{{ serie.name }}</h3>
@@ -474,6 +475,7 @@ header {
                             <p>{{ serie.overview|truncatewords:30 }}</p>
                             <a href="{% url 'series_details' serie.id %}">View Details</a>
                         </div>
+                        </a>
                     </div>
                 </div>
                 {% endfor %}

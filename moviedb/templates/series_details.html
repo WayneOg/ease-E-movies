@@ -4,202 +4,277 @@
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132334225065239"
     crossorigin="anonymous"></script>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ series.title }} - Series Details</title>
+    <title>{{ movie.title }} - Movie Details</title>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132334225065239"
      crossorigin="anonymous"></script>
      <script type='text/javascript' src='//pl23927486.highratecpm.com/de/89/b7/de89b76309771563f1f618587e867e6b.js'></script>
     <style>
-        /* Your existing styles */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #141414;
-            color: #fff;
-        }
+        /* Reset and basic styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #141414;
+    color: #fff;
+    font-size: 16px;
+}
 
-        /* Header styles */
-        header {
-            background-color: rgba(0, 0, 0, 0.8);
-            padding: 10px 0;
-            position: fixed;
-            width: 100%;
-            z-index: 1000;
-        }
+/* Header styles */
+header {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
 
-        /* Navbar styles */
-        .navbar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+/* Navbar styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
 
-        .navbar a {
-            color: #e5e5e5;
-            text-decoration: none;
-            margin-right: 20px;
-            padding: 10px;
-            transition: color 0.3s ease;
-        }
+.navbar a {
+    color: #e5e5e5;
+    text-decoration: none;
+    margin-right: 20px;
+    padding: 10px;
+    transition: color 0.3s ease;
+}
 
-        .navbar a:hover {
-            color: #fff;
-        }
+.navbar a:hover {
+    color: #fff;
+}
 
-        /* Container styles */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 80px 20px 20px;
-        }
+.search-container input[type="text"] {
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid #333;
+    color: #fff;
+    border-radius: 4px;
+    outline: none;
+    width: 200px;
+}
 
-        /* Series details container */
-        .series-details-container {
-            display: flex;
-            margin-bottom: 40px;
-        }
+.search-container button {
+    padding: 10px 20px;
+    background-color: #e50914;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s ease;
+}
 
-        /* Series poster */
-        .series-poster {
-            flex: 0 0 30%;
-            padding-right: 30px;
-        }
+.search-container button:hover {
+    background-color: #f40612;
+}
 
-        .series-poster img {
-            width: 100%;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-        }
+/* Container styles */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 80px 20px 20px;
+}
 
-        /* Series details content */
-        .series-details-content {
-            flex: 1;
-        }
+/* Movie details container */
+.movie-details-container {
+    display: flex;
+    margin-bottom: 40px;
+}
 
-        .series-details-content h2 {
-            font-size: 2.5rem;
-            margin-bottom: 20px;
-        }
+/* Movie poster */
+.movie-poster {
+    flex: 0 0 30%;
+    padding-right: 30px;
+}
 
-        .series-details-content p {
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-            line-height: 1.5;
-        }
+.movie-poster img {
+    width: 100%;
+    border-radius: 4px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
 
-        /* Watch button */
-        .watch-button {
-            display: inline-block;
-            background-color: #e50914;
-            color: #fff;
-            padding: 12px 24px;
-            text-decoration: none;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 1.1rem;
-            margin-top: 20px;
-            transition: background-color 0.3s ease;
-        }
+/* Movie details content */
+.movie-details-content {
+    flex: 1;
+}
 
-        .watch-button:hover {
-            background-color: #f40612;
-        }
+.movie-details-content h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
 
-        /* Season and episode selection */
-        #seasons {
-            padding: 10px;
-            background-color: rgba(0, 0, 0, 0.5);
-            border: 1px solid #333;
-            color: #fff;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
+.movie-details-content p {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
 
-        .episode-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
+/* Watch and Download buttons */
+.watch-button, .download-button {
+    display: inline-block;
+    background-color: #e50914;
+    color: #fff;
+    padding: 12px 24px;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
 
-        .episode-button {
-            padding: 10px 20px;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+.watch-button:hover, .download-button:hover {
+    background-color: #f40612;
+}
 
-        .episode-button:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
+.download-button {
+    background-color: red;
+    margin-left: 10px;
+}
 
-        /* Player */
-        #player {
-            width: 100%;
-            height: 500px;
-            margin-bottom: 40px;
-        }
+.download-button:hover {
+    background-color: maroon;
+}
 
-        /* Recommended series section */
-        .recommended-series {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
+/* Recommended movies section */
+.recommended-movies {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
 
-        .recommended-series-item {
-            position: relative;
-            transition: transform 0.3s ease;
-        }
+.recommended-movie {
+    position: relative;
+    transition: transform 0.3s ease;
+}
 
-        .recommended-series-item:hover {
-            transform: scale(1.05);
-        }
+.recommended-movie:hover {
+    transform: scale(1.05);
+}
 
-        .recommended-series-item img {
-            width: 100%;
-            border-radius: 4px;
-        }
+.recommended-movie img {
+    width: 100%;
+    border-radius: 4px;
+}
 
-        .recommended-series-title {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
-            padding: 10px;
-            border-radius: 0 0 4px 4px;
-        }
+.recommended-movie-title {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+    padding: 10px;
+    border-radius: 0 0 4px 4px;
+}
 
-        .recommended-series-title h3 {
-            margin: 0;
-            font-size: 1rem;
-            color: #fff;
-        }
+.recommended-movie-title h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: #fff;
+}
 
-        /* Responsive styles */
-        @media screen and (max-width: 768px) {
-            .series-details-container {
-                flex-direction: column;
-            }
+/* Responsive styles */
+@media screen and (max-width: 1024px) {
+    .container {
+        padding: 60px 15px 15px;
+    }
+}
 
-            .series-poster {
-                margin-bottom: 20px;
-                padding-right: 0;
-            }
+/* Header styles */
+@media screen and (max-width: 768px) {
+    header {
+        padding: 5px 0;
+    }
 
-            #player {
-                height: 300px;
-            }
-        }
+    .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .navbar a {
+        margin-right: 0;
+        margin-bottom: 5px;
+    }
+
+    .search-container {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .search-container input[type="text"] {
+        width: calc(100% - 60px);
+        font-size: 16px; /* Increased font size for better readability */
+    }
+
+    .search-container button {
+        width: 60px;
+        padding: 10px 0;
+    }
+}
+
+/* Movie poster */
+@media screen and (max-width: 768px) {
+    .movie-poster {
+        flex: 0 0 100%;
+        margin-bottom: 20px;
+        padding-right: 0;
+    }
+
+    .movie-poster img {
+        max-width: 300px; /* Limit max width for better visibility */
+        margin: 0 auto;
+        display: block;
+    }
+}
+
+/* Font sizes for mobile */
+@media screen and (max-width: 768px) {
+    body, html {
+        font-size: 16px; /* Increased base font size */
+    }
+
+    .movie-details-content h2 {
+        font-size: 2.2rem; /* Larger title size */
+    }
+
+    .movie-details-content p {
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    .watch-button, .download-button {
+        font-size: 1rem;
+        padding: 15px 24px; /* Increased touch target size */
+    }
+}
+
+/* Additional improvements for very small screens */
+@media screen and (max-width: 480px) {
+    .navbar {
+        padding: 0 10px;
+    }
+
+    .search-container input[type="text"] {
+        font-size: 14px;
+    }
+
+    .movie-details-content h2 {
+        font-size: 2rem;
+    }
+
+    .recommended-movie-title h3 {
+        font-size: 0.9rem;
+    }
+}
     </style>
+    <script type='text/javascript' src='//pl23927486.highratecpm.com/de/89/b7/de89b76309771563f1f618587e867e6b.js'></script>
 </head>
 <!-- Google tag (gtag.js) -->
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-09ZV7EG7YL"></script>
@@ -228,77 +303,73 @@
             </div>
         </div>
     </header>
-
     <div class="container">
-        <div class="series-details-container">
-            <div class="series-poster">
-                <img src="{{ series.poster }}" alt="{{ series.title }}">
+        <div class="movie-details-container">
+            <div class="movie-poster">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.title }}">
             </div>
-            <div class="series-details-content">
-                <h2>{{ series.title }}</h2>
-                <p>{{ series.summary|safe }}</p>
-
-                <h3>Seasons</h3>
-                <select id="seasons" onchange="fetchEpisodes(this.value)">
-                    {% for season in seasons %}
-                        <option value="{{ season.number }}">Season {{ season.number }}</option>
-                    {% endfor %}
-                </select>
-
-                <h3>Episodes</h3>
-                <div id="episodes" class="episode-buttons"></div>
-
-                <h3>Watch</h3>
-                <iframe id="player" src="{{ streaming_link }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+            <div class="movie-details-content">
+                <h2>{{ serie.title }}</h2>
+                <p><strong>{{ serie.tagline }}</strong></p>
+                <p>{{ serie.overview }}</p>
+                <p><strong>Release Date:</strong> {{ serie.release_date }}</p>
+                <p><strong>Rating:</strong> {{ serie.vote_average }} / 10</p>
+                <p><strong>Genres:</strong>
+                {% for genre in serie.genres.all %}
+                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+                </p>
+                <p><strong>Runtime:</strong> {{ serie.runtime }} minutes</p>
+                <a href="#" class="download-button" id="downloadButton">Watch Now</a>
             </div>
         </div>
+        
+        <!-- Embed Movie -->
+        {% if serie.tmdb_id or serie.imdb_id %}
+            <div style="margin-bottom: 40px;">
+                {% if movie.tmdb_id %}
+                    <iframe src="https://multiembed.mov/?video_id={{ serie.tmdb_id }}&tmdb=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                {% elif movie.imdb_id %}
+                    <iframe src="https://multiembed.mov/?video_id=tt{{ serie.imdb_id }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                {% endif %}
+            </div>
+        {% endif %}
 
-        <h2>More Like This</h2>
-        <div class="recommended-series">
-            {% for recommended_series in recommended_series %}
-                <div class="recommended-series-item">
-                    <a href="{% url 'series_details' pk=recommended_series.id %}">
-                        <img src="{{ recommended_series.poster }}" alt="{{ recommended_series.title }} Poster">
-                        <div class="recommended-series-title">
-                            <h3>{{ recommended_series.title }}</h3>
+        <h2 style="margin-bottom: 20px;">More Like This</h2>
+        <div class="recommended-movies">
+            {% for movie in recommended_movies %}
+                <div class="recommended-movie">
+                    <a href="{% url 'movie_details' pk=recommended_movie.id %}">
+                        <img src="{{ recommended_movie.poster }}" alt="{{ recommended_movie.title }} Poster">
+                        <div class="recommended-movie-title">
+                            <h3>{{ recommended_movie.title }}</h3>
                         </div>
                     </a>
                 </div>
             {% endfor %}
         </div>
     </div>
-
     <script>
-        function fetchEpisodes(seasonNumber) {
-            // Ensure we have the correct series ID
-            var seriesId = "{{ series.tmdb_id }}";  // Make sure this matches your Series model field
+        document.getElementById('downloadButton').addEventListener('click', function(e) {
+            e.preventDefault();
             
-            fetch(`/fetch_episodes/${seriesId}/${seasonNumber}/`)
-                .then(response => response.json())
-                .then(data => {
-                    const episodesContainer = document.getElementById('episodes');
-                    episodesContainer.innerHTML = '';
-                    data.episodes.forEach(episode => {
-                        const button = document.createElement('button');
-                        button.className = 'episode-button';
-                        button.textContent = `Episode ${episode.number}: ${episode.name}`;
-                        button.onclick = () => updateIframe(episode.streaming_link);
-                        episodesContainer.appendChild(button);
-                    });
-                })
-                .catch(error => console.error('Error:', error));  // Add error handling
-        }
-    
-        function updateIframe(streamingLink) {
-            const playerIframe = document.getElementById('player');
-            playerIframe.src = streamingLink;
-        }
-    
-        // Fetch episodes for the first season when the page loads
-        document.addEventListener('DOMContentLoaded', () => {
-            var initialSeason = document.getElementById('seasons').value;
-            fetchEpisodes(initialSeason);
+            {% if movie.tmdb_id %}
+                var videoId = '{{ movie.tmdb_id }}';
+                var type = 'tmdb';
+            {% elif movie.imdb_id %}
+                var videoId = 'tt{{ movie.imdb_id }}';
+                var type = 'imdb';
+            {% else %}
+                alert('Download link not available for this movie.');
+                return;
+            {% endif %}
+        
+            // Open MultiEmbed in a new window
+            var multiembedWindow = window.open('https://multiembed.mov/?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : ''), '_blank');
+        
+            // Inform the user about the next steps
+            alert('A new window has opened with the movie. To download, right-click on the video player and select "Save video as" or use a video downloader extension in your browser.');
         });
-    </script>
+        </script>
 </body>
 </html>

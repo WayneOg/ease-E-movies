@@ -1191,7 +1191,7 @@ def serie_details(request, pk):
         context = {
             'serie': serie,
             'genres': serie_genres,
-            'movie_token':serie_token,
+            'serie_token':serie_token,
         }
         return render(request, 'series_details.html', context)
 

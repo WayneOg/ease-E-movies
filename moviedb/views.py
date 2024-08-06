@@ -945,7 +945,7 @@ def action_series(request):
         'category': 'Action',
     }
     
-    return render(request, 'movies.html', context)
+    return render(request, 'series21.html', context)
 
 def animation_series(request):
     category_id = 16  # Animation movies
@@ -957,7 +957,7 @@ def animation_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Animation'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Animation'})
 
 def crime_series(request):
     category_id = 80  # Crime movies
@@ -969,7 +969,7 @@ def crime_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Crime'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Crime'})
 
 def comedy_series(request):
     category_id = 35  # Comedy movies
@@ -981,7 +981,7 @@ def comedy_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Comedy'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Comedy'})
 
 def drama_series(request):
     category_id = 18  # Drama movies
@@ -993,7 +993,7 @@ def drama_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Drama'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Drama'})
 
 def reality_series(request):
     category_id = 10764  # Reality movies
@@ -1005,7 +1005,7 @@ def reality_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Horror'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Horror'})
 
 def family_series(request):
     category_id = 10751  # Family movies
@@ -1017,7 +1017,7 @@ def family_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Family'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Family'})
 
 def kids_series(request):
     category_id = 10762 # kids movies
@@ -1029,7 +1029,7 @@ def kids_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Kids'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Kids'})
 
 def scifi_series(request):
     category_id = 10765  # Science Fiction movies
@@ -1041,7 +1041,7 @@ def scifi_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Science Fiction'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Science Fiction'})
 
 def mystery_series(request):
     category_id = 9648  # Mystery movies
@@ -1053,7 +1053,7 @@ def mystery_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Mystery'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Mystery'})
 
 def documentary_series(request):
     category_id = 99  # Documentary Fiction movies
@@ -1065,7 +1065,7 @@ def documentary_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Documentary'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Documentary'})
 
 def politics_series(request):
     category_id = 10768  #  series movies
@@ -1077,7 +1077,7 @@ def politics_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'War&Politics'})
+    return render(request, 'series21.html', {'series': series, 'category': 'War&Politics'})
 
 def soap_series(request):
     category_id = 10766  # Soap movies
@@ -1089,7 +1089,7 @@ def soap_series(request):
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from TMDb.')
     
-    return render(request, 'movies.html', {'series': series, 'category': 'Fantasy'})
+    return render(request, 'series21.html', {'series': series, 'category': 'Soaps'})
 
 def home_series(request):
     url = f'https://api.themoviedb.org/3/tv/popular?api_key={API_KEY}&language=en-US&page=1'
@@ -1131,18 +1131,18 @@ def home_series(request):
         'series': series,
         'action_series': action_series,
         'politics_series': politics_series,
-        'animation_movies': animation_series,
-        'scifi_movies': scifi_series,
-        'drama_movies': drama_series,
-        'comedy_movies': comedy_series,
-        'latest_movies': latest_series,
-        'family_movies': family_series,
+        'animation_series': animation_series,
+        'scifi_series': scifi_series,
+        'drama_series': drama_series,
+        'comedy_series': comedy_series,
+        'latest_series': latest_series,
+        'family_series': family_series,
         'reality_series': reality_series,
         'soap_series': soap_series,
         'kids_series': kids_series,
         'mystery_series': mystery_series,
         'crime_series': crime_series,
-        'documentary': documentary_series,
+        'documentary_series': documentary_series,
         'posters': posters,
     }
     

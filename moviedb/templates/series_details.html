@@ -327,9 +327,9 @@ header {
         <!-- Embed Movie -->
         {% if serie.tmdb_id or serie.imdb_id %}
             <div style="margin-bottom: 40px;">
-                {% if movie.tmdb_id %}
+                {% if serie.tmdb_id %}
                     <iframe src="https://multiembed.mov/?video_id={{ serie.tmdb_id }}&tmdb=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
-                {% elif movie.imdb_id %}
+                {% elif serie.imdb_id %}
                     <iframe src="https://multiembed.mov/?video_id=tt{{ serie.imdb_id }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
                 {% endif %}
             </div>
@@ -353,11 +353,11 @@ header {
         document.getElementById('downloadButton').addEventListener('click', function(e) {
             e.preventDefault();
             
-            {% if movie.tmdb_id %}
-                var videoId = '{{ movie.tmdb_id }}';
+            {% if serie.tmdb_id %}
+                var videoId = '{{ serie.tmdb_id }}';
                 var type = 'tmdb';
-            {% elif movie.imdb_id %}
-                var videoId = 'tt{{ movie.imdb_id }}';
+            {% elif serie.imdb_id %}
+                var videoId = 'tt{{ serie.imdb_id }}';
                 var type = 'imdb';
             {% else %}
                 alert('Download link not available for this movie.');

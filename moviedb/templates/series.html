@@ -431,9 +431,11 @@ header {
             <a href="#">New & Popular</a>
         </nav>
         <div class="search-container">
-            <form action="/search" method="get">
-                <input type="text" placeholder="Search..." name="query">
-                <button type="submit">Search</button>
+            <form action="{% url 'search_results' %}" method="GET">
+                    <input type="text" placeholder="Search..." name="query">
+                    <button>
+                        <span class="search-icon">🔍</span>
+                    </button>
             </form>
         </div>
     </header>

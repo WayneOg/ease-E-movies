@@ -334,6 +334,186 @@
             {% endfor %}
         </div>
 
+        <!-- Reaility Series -->
+        <h2 class="section-title">Reality Series</h2>
+        <div class="movies">
+            {% for serie in reality_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Animation Series -->
+        <h2 class="section-title">Animation Series</h2>
+        <div class="movies">
+            {% for serie in animation_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Kids Series -->
+        <h2 class="section-title">Kids Series</h2>
+        <div class="movies">
+            {% for serie in kids_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Family Series -->
+        <h2 class="section-title">Family Series</h2>
+        <div class="movies">
+            {% for serie in family_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Comedy Series -->
+        <h2 class="section-title">Comedy Series</h2>
+        <div class="movies">
+            {% for serie in comedy_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Drama Series -->
+        <h2 class="section-title">Drama Series</h2>
+        <div class="movies">
+            {% for serie in drama_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Soap Series -->
+        <h2 class="section-title">Soap Series</h2>
+        <div class="movies">
+            {% for serie in soap_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Mystery Series -->
+        <h2 class="section-title">Mystery Series</h2>
+        <div class="movies">
+            {% for serie in mystery_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Scifi Series -->
+        <h2 class="section-title">Sci-Fi Series</h2>
+        <div class="movies">
+            {% for serie in scifi_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Crime Series -->
+        <h2 class="section-title">Crime Series</h2>
+        <div class="movies">
+            {% for serie in crime_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Documentary Series -->
+        <h2 class="section-title">Documentary Series</h2>
+        <div class="movies">
+            {% for serie in documentary_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- History Series -->
+        <h2 class="section-title">History Series</h2>
+        <div class="movies">
+            {% for serie in politics_series %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
+                <div class="movie-info">
+                    <h3>{{ serie.name }}</h3>
+                    <p>{{ serie.first_air_date|date:"Y" }}</p>
+                    <a href="{% url 'series_details' serie.id %}">View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
         <!-- Genre-specific series sections -->
         {% for genre, series_list in genre_series.items %}
         <h2 class="section-title">{{ genre }} Series</h2>

@@ -335,19 +335,7 @@ header {
             </div>
         {% endif %}
 
-        <h2 style="margin-bottom: 20px;">More Like This</h2>
-        <div class="recommended-movies">
-            {% for movie in recommended_movies %}
-                <div class="recommended-movie">
-                    <a href="{% url 'movie_details' pk=recommended_movie.id %}">
-                        <img src="{{ recommended_movie.poster }}" alt="{{ recommended_movie.title }} Poster">
-                        <div class="recommended-movie-title">
-                            <h3>{{ recommended_movie.title }}</h3>
-                        </div>
-                    </a>
-                </div>
-            {% endfor %}
-        </div>
+        
     </div>
     <script>
         document.getElementById('downloadButton').addEventListener('click', function(e) {

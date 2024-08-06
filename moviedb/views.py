@@ -1207,9 +1207,9 @@ def home_series(request):
         {'id': 10762, 'name': 'Kids'},
         {'id': 9648, 'name': 'Mystery'},
         {'id': 10764, 'name': 'Reality'},
-        {'id': 10765, 'name': 'Sci-Fi & Fantasy'},
+        {'id': 10765, 'name': 'Sci-Fi'},
         {'id': 10766, 'name': 'Soap'},
-        {'id': 10768, 'name': 'War & Politics'},
+        {'id': 10768, 'name': 'Politics'},
     ]
 
     context = {}

@@ -321,7 +321,7 @@ def search_results(request):
         return render(request, 'search_results.html', {'error': f"Error fetching movie data: {str(e)}"})
 
     # Search for series
-    series_url = 'http://api.tvmaze.com/search/shows'
+    series_url = 'https://api.themoviedb.org/3/search/tv'
     series_params = {'q': query}
 
     try:
@@ -804,8 +804,8 @@ def genre_series(request, genre_id):
             }
         )
         serie.genres.add(Genre.objects.get(tmdb_id=genre_id))
-    serieS = Series.objects.filter(genres__tmdb_id=genre_id).distinct()
-    return render(request, 'genre_movies.html', {'serieS': serieS})
+    series = Series.objects.filter(genres__tmdb_id=genre_id).distinct()
+    return render(request, 'genre_movies.html', {'series': series})
 
 
 def get_series_by_category(category_id, page_number):

@@ -771,6 +771,43 @@ def fetch_streaming_link(movie_title):
     return None
 
 
+def serie_list(request):
+    series = Series.objects.all()
+    return render(request, 'series_list.html', {'series': series})
+
+def series_genre_list(request):
+    url = f'https://api.themoviedb.org/3/genre/tv/list?api_key={API_KEY}&language=en-US'
+    genres_data = make_api_request(url).get('genres', [])
+    for genre_data in genres_data:
+        tmdb_id = genre_data.get('id')
+        name = genre_data.get('name')
+        Genre.objects.get_or_create(tmdb_id=tmdb_id, name=name)
+    genres = Genre.objects.all()
+    return render(request, 'genre_list.html', {'genres': genres})
+
+def genre_series(request, genre_id):
+    url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&sort_by=popularity.desc&with_genres={genre_id}'
+    series_data = make_api_request(url).get('results', [])
+    for serie_data in series_data:
+        tmdb_id = serie_data.get('id')
+        title = serie_data.get('title')
+        overview = serie_data.get('overview', '')
+        release_date = serie_data.get('release_date', '')
+        poster_path = serie_data.get('poster_path', '')
+        serie, _ = Series.objects.get_or_create(
+            tmdb_id=tmdb_id,
+            title=title,
+            defaults={
+                'overview': overview,
+                'release_date': release_date,
+                'poster_path': poster_path,
+            }
+        )
+        serie.genres.add(Genre.objects.get(tmdb_id=genre_id))
+    serie = Series.objects.filter(genres__tmdb_id=genre_id).distinct()
+    return render(request, 'genre_movies.html', {'serie': serie})
+
+
 def get_series_by_category(category_id, page_number):
     url = f'https://api.themoviedb.org/3/discover/tv'
     params = {

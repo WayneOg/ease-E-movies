@@ -1186,11 +1186,13 @@ def generate_serie_token(movie_id):
     return hashlib.sha256(f"{movie_id}".encode()).hexdigest()
 
 def serie_details(request, pk):
-    tmdb_api_key = API_KEY
-    base_url = 'https://api.themoviedb.org/3'
     try:
-        # Fetch series details
-        series_url = f'{base_url}/tv/{pk}?api_key={tmdb_api_key}&language=en-US'
+        tmdb_api_key = API_KEY
+        tmdb_base_url = 'https://api.themoviedb.org/3'
+        tvmaze_base_url = 'https://api.tvmaze.com'
+
+        # Fetch series details from TMDB
+        series_url = f'{tmdb_base_url}/tv/{pk}?api_key={tmdb_api_key}&language=en-US'
         series_response = requests.get(series_url)
         series_response.raise_for_status()
         serie_data = series_response.json()
@@ -1205,82 +1207,57 @@ def serie_details(request, pk):
         serie_episode_run_time = serie_data.get('episode_run_time', [])
         serie_tagline = serie_data.get('tagline', '')
         serie_status = serie_data.get('status', '')
-        serie_number_of_seasons = serie_data.get('number_of_seasons', 0)
-        serie_number_of_episodes = serie_data.get('number_of_episodes', 0)
-
         full_poster_url = f'https://image.tmdb.org/t/p/w500{serie_poster_path}'
 
-        # Use transaction to ensure atomicity
-        with transaction.atomic():
-            # Create or update the Series instance
-            serie, created = Series.objects.update_or_create(
-                id=pk,
-                defaults={
-                    'name': serie_name,
-                    'overview': serie_overview,
-                    'poster_path': full_poster_url,
-                    'first_air_date': serie_first_air_date,
-                    'vote_average': serie_vote_average,
-                    'tagline': serie_tagline,
-                    'status': serie_status,
-                    'number_of_seasons': serie_number_of_seasons,
-                    'number_of_episodes': serie_number_of_episodes,
-                }
-            )
+        # Fetch series details from TVMaze
+        tvmaze_url = f'{tvmaze_base_url}/lookup/shows?thetvdb={pk}'
+        tvmaze_response = requests.get(tvmaze_url)
+        tvmaze_response.raise_for_status()
+        tvmaze_data = tvmaze_response.json()
+        serie_tvmaze_id = tvmaze_data['id']
 
-            # Fetch and update seasons and episodes data
-            seasons_data = []
-            for season_number in range(1, serie_number_of_seasons + 1):
-                season_url = f'{base_url}/tv/{pk}/season/{season_number}?api_key={tmdb_api_key}&language=en-US'
-                season_response = requests.get(season_url)
-                season_response.raise_for_status()
-                season_data = season_response.json()
+        # Fetch seasons data from TVMaze
+        seasons_url = f'{tvmaze_base_url}/shows/{serie_tvmaze_id}/seasons'
+        seasons_response = requests.get(seasons_url)
+        seasons_response.raise_for_status()
+        seasons_data = seasons_response.json()
 
-                season, created = Season.objects.update_or_create(
-                    series=serie,
-                    season_number=season_number,
-                    defaults={
-                        'name': season_data.get('name', ''),
-                        'overview': season_data.get('overview', ''),
-                        'air_date': season_data.get('air_date', ''),
-                        'episode_count': season_data.get('episode_count', 0),
-                    }
-                )
+        # Fetch episodes for each season
+        seasons_with_episodes = []
+        for season in seasons_data:
+            season_id = season['id']
+            episodes_url = f'{tvmaze_base_url}/seasons/{season_id}/episodes'
+            episodes_response = requests.get(episodes_url)
+            episodes_response.raise_for_status()
+            episodes_data = episodes_response.json()
 
-                episodes_data = []
-                for episode_data in season_data.get('episodes', []):
-                    episode, created = Episode.objects.update_or_create(
-                        season=season,
-                        episode_number=episode_data.get('episode_number'),
-                        defaults={
-                            'name': episode_data.get('name', ''),
-                            'overview': episode_data.get('overview', ''),
-                            'air_date': episode_data.get('air_date', ''),
-                            'vote_average': episode_data.get('vote_average', 0),
-                        }
-                    )
-                    episodes_data.append(episode)
-
-                seasons_data.append({
-                    'season': season,
-                    'episodes': episodes_data
-                })
+            seasons_with_episodes.append({
+                'season': season,
+                'episodes': episodes_data
+            })
 
         serie_token = generate_serie_token(pk)
         latest_series = fetch_latest_series()
 
         context = {
-            'serie': serie,
-            'genres': serie_genres,
-            'episode_run_time': serie_episode_run_time,
-            'seasons': seasons_data,
+            'serie': {
+                'name': serie_name,
+                'overview': serie_overview,
+                'poster_path': full_poster_url,
+                'first_air_date': serie_first_air_date,
+                'vote_average': serie_vote_average,
+                'tagline': serie_tagline,
+                'status': serie_status,
+                'genres': serie_genres,
+                'episode_run_time': serie_episode_run_time,
+            },
+            'seasons': seasons_with_episodes,
             'serie_token': serie_token,
             'latest_series': latest_series,
         }
         return render(request, 'series_details.html', context)
 
     except requests.RequestException as e:
-        return render(request, 'error.html', {'error_message': f'Error fetching data from TMDB: {str(e)}'})
-    except Exception as e:
-        return render(request, 'error.html', {'error_message': f'An unexpected error occurred: {str(e)}'})
-
+        return render(request, 'series_details.html', {'error_message': 'Your series wasn\'t found. Try again later.'})
+    
+    

@@ -219,6 +219,43 @@ header {
     }
 }
 
+ /* Add these new styles for seasons and episodes */
+        .seasons-container {
+            margin-top: 40px;
+        }
+        
+        .season {
+            margin-bottom: 30px;
+        }
+        
+        .season-title {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: #e50914;
+        }
+        
+        .episodes-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+        }
+        
+        .episode {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            border-radius: 4px;
+        }
+        
+        .episode-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .episode-info {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
 /* Movie poster */
 @media screen and (max-width: 768px) {
     .movie-poster {
@@ -306,49 +343,68 @@ header {
     <div class="container">
         <div class="movie-details-container">
             <div class="movie-poster">
-                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.title }}">
+                <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
             </div>
             <div class="movie-details-content">
-                <h2>{{ serie.title }}</h2>
+                <h2>{{ serie.name }}</h2>
                 <p><strong>{{ serie.tagline }}</strong></p>
                 <p>{{ serie.overview }}</p>
-                <p><strong>Release Date:</strong> {{ serie.release_date }}</p>
+                <p><strong>First Air Date:</strong> {{ serie.first_air_date }}</p>
                 <p><strong>Rating:</strong> {{ serie.vote_average }} / 10</p>
                 <p><strong>Genres:</strong>
-                {% for genre in serie.genres.all %}
-                    {{ genre.name }}{% if not forloop.last %}, {% endif %}
+                {% for genre in genres %}
+                    {{ genre }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
                 </p>
-                <p><strong>Runtime:</strong> {{ serie.runtime }} minutes</p>
-                <a href="#" class="download-button" id="downloadButton">Watch Now</a>
+                <p><strong>Number of Seasons:</strong> {{ serie.number_of_seasons }}</p>
+                <p><strong>Number of Episodes:</strong> {{ serie.number_of_episodes }}</p>
+                <p><strong>Status:</strong> {{ serie.status }}</p>
+                {% if serie.episode_run_time %}
+                    <p><strong>Episode Run Time:</strong> {{ serie.episode_run_time.0 }} minutes</p>
+                {% endif %}
+                <a href="#" class="watch-button" id="watchButton">Watch Now</a>
             </div>
         </div>
         
-        <!-- Embed Movie -->
-        {% if serie.tmdb_id or serie.imdb_id %}
+        <!-- Seasons and Episodes -->
+        <div class="seasons-container">
+            {% for season_data in seasons %}
+                <div class="season">
+                    <h3 class="season-title">{{ season_data.season.name }}</h3>
+                    <div class="episodes-list">
+                        {% for episode in season_data.episodes %}
+                            <div class="episode">
+                                <h4 class="episode-title">{{ episode.name }}</h4>
+                                <p class="episode-info">Episode {{ episode.episode_number }}</p>
+                                <p class="episode-info">Air Date: {{ episode.air_date }}</p>
+                                <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Embed Series -->
+        {% if serie.id %}
             <div style="margin-bottom: 40px;">
-                {% if serie.tmdb_id %}
-                    <iframe src="https://multiembed.mov/?video_id={{ serie.tmdb_id }}&tmdb=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
-                {% elif serie.imdb_id %}
-                    <iframe src="https://multiembed.mov/?video_id=tt{{ serie.imdb_id }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
-                {% endif %}
+                <iframe src="https://multiembed.mov/?video_id={{ serie.id }}&tmdb=1&tv=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
             </div>
         {% endif %}
-
-        
     </div>
+    
     <script>
-        document.getElementById('downloadButton').addEventListener('click', function(e) {
+        document.getElementById('watchButton').addEventListener('click', function(e) {
             e.preventDefault();
             
-            {% if serie.tmdb_id %}
-                var videoId = '{{ serie.tmdb_id }}';
+            {% if serie.id %}
+                var videoId = '{{ serie.id }}';
                 var type = 'tmdb';
             {% elif serie.imdb_id %}
                 var videoId = 'tt{{ serie.imdb_id }}';
                 var type = 'imdb';
             {% else %}
-                alert('Download link not available for this movie.');
+                alert('Watch link not available for this series.');
                 return;
             {% endif %}
         
@@ -358,6 +414,6 @@ header {
             // Inform the user about the next steps
             alert('A new window has opened with the movie. To download, right-click on the video player and select "Save video as" or use a video downloader extension in your browser.');
         });
-        </script>
+    </script>
 </body>
 </html>

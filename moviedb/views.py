@@ -1148,54 +1148,96 @@ def generate_serie_token(movie_id):
 
 def serie_details(request, pk):
     try:
-        # Fetch movie details from the TMDB API
-        tmdb_api_key = API_KEY  # Replace with your actual API key
-        url = f'https://api.themoviedb.org/3/tv/{pk}?api_key={tmdb_api_key}&language=en-US'
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for bad status codes
-        serie_data = response.json()
+        tmdb_api_key = API_KEY
+        base_url = 'https://api.themoviedb.org/3'
 
-        # Extract movie details from API response
-        serie_title = serie_data.get('title')
+        # Fetch series details
+        series_url = f'{base_url}/tv/{pk}?api_key={tmdb_api_key}&language=en-US'
+        series_response = requests.get(series_url)
+        series_response.raise_for_status()
+        serie_data = series_response.json()
+
+        # Extract series details
+        serie_name = serie_data.get('name')
         serie_overview = serie_data.get('overview', '')
         serie_poster_path = serie_data.get('poster_path', '')
-        serie_release_date = serie_data.get('release_date', '')
+        serie_first_air_date = serie_data.get('first_air_date', '')
         serie_vote_average = serie_data.get('vote_average', 0)
         serie_genres = [genre['name'] for genre in serie_data.get('genres', [])]
-        serie_runtime = serie_data.get('runtime', 0)
+        serie_episode_run_time = serie_data.get('episode_run_time', [])
         serie_tagline = serie_data.get('tagline', '')
-        serie_imdb_id = serie_data.get('imdb_id')
+        serie_status = serie_data.get('status', '')
+        serie_number_of_seasons = serie_data.get('number_of_seasons', 0)
+        serie_number_of_episodes = serie_data.get('number_of_episodes', 0)
 
-        # Create the full URL for the poster image
         full_poster_url = f'https://image.tmdb.org/t/p/w500{serie_poster_path}'
 
-        # Create or update the Movie instance
+        # Create or update the Series instance
         serie, created = Series.objects.update_or_create(
             id=pk,
             defaults={
-                'title': serie_title,
+                'name': serie_name,
                 'overview': serie_overview,
                 'poster_path': full_poster_url,
-                'release_date': serie_release_date,
+                'first_air_date': serie_first_air_date,
                 'vote_average': serie_vote_average,
-                'runtime': serie_runtime,
                 'tagline': serie_tagline,
-                'imdb_id': serie_imdb_id,
-                # Add other fields as needed
+                'status': serie_status,
+                'number_of_seasons': serie_number_of_seasons,
+                'number_of_episodes': serie_number_of_episodes,
             }
         )
 
-        # Generate a token for the movie
+        # Fetch seasons data
+        seasons_data = []
+        for season_number in range(1, serie_number_of_seasons + 1):
+            season_url = f'{base_url}/tv/{pk}/season/{season_number}?api_key={tmdb_api_key}&language=en-US'
+            season_response = requests.get(season_url)
+            season_response.raise_for_status()
+            season_data = season_response.json()
+
+            season, created = Season.objects.update_or_create(
+                series=serie,
+                season_number=season_number,
+                defaults={
+                    'name': season_data.get('name', ''),
+                    'overview': season_data.get('overview', ''),
+                    'air_date': season_data.get('air_date', ''),
+                    'episode_count': season_data.get('episode_count', 0),
+                }
+            )
+
+            episodes_data = []
+            for episode in season_data.get('episodes', []):
+                episode, created = Episode.objects.update_or_create(
+                    season=season,
+                    episode_number=episode.get('episode_number'),
+                    defaults={
+                        'name': episode.get('name', ''),
+                        'overview': episode.get('overview', ''),
+                        'air_date': episode.get('air_date', ''),
+                        'vote_average': episode.get('vote_average', 0),
+                    }
+                )
+                episodes_data.append(episode)
+
+            seasons_data.append({
+                'season': season,
+                'episodes': episodes_data
+            })
+
         serie_token = generate_serie_token(pk)
 
         context = {
             'serie': serie,
             'genres': serie_genres,
-            'serie_token':serie_token,
+            'episode_run_time': serie_episode_run_time,
+            'seasons': seasons_data,
+            'serie_token': serie_token,
         }
         return render(request, 'series_details.html', context)
 
     except requests.RequestException as e:
         return render(request, 'error.html', {'error_message': f'Error fetching data from TMDB: {str(e)}'})
-    
-    
+
+

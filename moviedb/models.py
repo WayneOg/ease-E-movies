@@ -52,7 +52,7 @@ class Series(models.Model):
     tagline = models.CharField(max_length=255, blank=True, null=True)
     number_of_seasons = models.IntegerField(default=0)
     number_of_episodes = models.IntegerField(default=0)
-    status = models.CharField(max_length=100)
+    status = models.CharField(max_length=100, blank=True, null=True)
     # Add more fields as needed
     
     def __str__(self):
@@ -61,7 +61,7 @@ class Series(models.Model):
 class Season(models.Model):
     series = models.ForeignKey(Series, on_delete=models.CASCADE, related_name='seasons')
     season_number = models.IntegerField()
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True, null=True)
     overview = models.TextField(blank=True)
     air_date = models.DateField(null=True, blank=True)
     episode_count = models.IntegerField(default=0)
@@ -69,7 +69,7 @@ class Season(models.Model):
 class Episode(models.Model):
     season = models.ForeignKey(Season, on_delete=models.CASCADE, related_name='episodes')
     episode_number = models.IntegerField()
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, blank=True, null=True)
     overview = models.TextField(blank=True)
     air_date = models.DateField(null=True, blank=True)
     vote_average = models.FloatField(default=0)

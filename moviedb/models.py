@@ -37,6 +37,7 @@ class Movie(models.Model):
     
     
 class Series(models.Model):
+    id = models.IntegerField(primary_key=True, unique=True)
     title = models.CharField(max_length=200)
     poster = models.URLField(blank=True, null=True)
     release_date = models.DateField(null=True, blank=True)

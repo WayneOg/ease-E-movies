@@ -676,7 +676,7 @@ def series_list(request):
     return render(request, 'serie_list.html', {'series': series})
 
     
-def series_details(request, pk, season=1):
+'''def series_details(request, pk, season=1):
     # Fetch series details from the TVmaze API
     series_url = f'http://api.tvmaze.com/shows/{pk}'
     series_response = requests.get(series_url)
@@ -720,7 +720,7 @@ def series_details(request, pk, season=1):
         'episodes': episodes_data,
         'streaming_link': streaming_link
     }
-    return render(request, 'series_details.html', context)
+    return render(request, 'series_details.html', context)'''
 
 def fetch_episodes(request, series_id, season_number):
     # Note: we're using series_id instead of pk

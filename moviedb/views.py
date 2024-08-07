@@ -1185,110 +1185,79 @@ def home_series(request):
 def generate_serie_token(movie_id):
     return hashlib.sha256(f"{movie_id}".encode()).hexdigest()
 
-def series_details(request, pk, season=1):
+def serie_details(request, pk):
     try:
-        # Fetch series details from TMDB
         tmdb_api_key = API_KEY
         tmdb_base_url = 'https://api.themoviedb.org/3'
+        tvmaze_base_url = 'https://api.tvmaze.com'
+
+        # Fetch series details from TMDB
         series_url = f'{tmdb_base_url}/tv/{pk}?api_key={tmdb_api_key}&language=en-US'
         series_response = requests.get(series_url)
         series_response.raise_for_status()
-        series_data = series_response.json()
+        serie_data = series_response.json()
 
-        # Extract TVDB ID from TMDB data
-        external_ids_url = f'{tmdb_base_url}/tv/{pk}/external_ids?api_key={tmdb_api_key}&language=en-US'
-        external_ids_response = requests.get(external_ids_url)
-        external_ids_response.raise_for_status()
-        external_ids_data = external_ids_response.json()
-        tvdb_id = external_ids_data.get('tvdb_id')
-
-        if not tvdb_id:
-            raise ValueError('TVDB ID not found for the series in TMDB')
+        # Extract series details
+        serie_name = serie_data.get('name')
+        serie_overview = serie_data.get('overview', '')
+        serie_poster_path = serie_data.get('poster_path', '')
+        serie_first_air_date = serie_data.get('first_air_date', '')
+        serie_vote_average = serie_data.get('vote_average', 0)
+        serie_genres = [genre['name'] for genre in serie_data.get('genres', [])]
+        serie_episode_run_time = serie_data.get('episode_run_time', [])
+        serie_tagline = serie_data.get('tagline', '')
+        serie_status = serie_data.get('status', '')
+        full_poster_url = f'https://image.tmdb.org/t/p/w500{serie_poster_path}'
 
         # Fetch series details from TVMaze
-        tvmaze_base_url = 'https://api.tvmaze.com'
-        tvmaze_series_url = f'{tvmaze_base_url}/lookup/shows?thetvdb={tvdb_id}'
-        tvmaze_series_response = requests.get(tvmaze_series_url)
-        tvmaze_series_response.raise_for_status()
-        tvmaze_series_data = tvmaze_series_response.json()
-        tvmaze_id = tvmaze_series_data['id']
+        tvmaze_url = f'{tvmaze_base_url}/lookup/shows?thetvdb={pk}'
+        tvmaze_response = requests.get(tvmaze_url)
+        tvmaze_response.raise_for_status()
+        tvmaze_data = tvmaze_response.json()
+        serie_tvmaze_id = tvmaze_data['id']
 
-        # Fetch seasons details from TVMaze
-        seasons_url = f'{tvmaze_base_url}/shows/{tvmaze_id}/seasons'
+        # Fetch seasons data from TVMaze
+        seasons_url = f'{tvmaze_base_url}/shows/{serie_tvmaze_id}/seasons'
         seasons_response = requests.get(seasons_url)
         seasons_response.raise_for_status()
         seasons_data = seasons_response.json()
 
-        # Fetch episodes details for the selected season
-        episodes_url = f'{tvmaze_base_url}/seasons/{seasons_data[int(season)-1]["id"]}/episodes'
-        episodes_response = requests.get(episodes_url)
-        episodes_response.raise_for_status()
-        episodes_data = episodes_response.json()
+        # Fetch episodes for each season
+        seasons_with_episodes = []
+        for season in seasons_data:
+            season_id = season['id']
+            episodes_url = f'{tvmaze_base_url}/seasons/{season_id}/episodes'
+            episodes_response = requests.get(episodes_url)
+            episodes_response.raise_for_status()
+            episodes_data = episodes_response.json()
 
-        series_name = series_data.get('name')
-        series_overview = series_data.get('overview', '')
-        series_poster_path = series_data.get('poster_path', '')
-        full_poster_url = f'https://image.tmdb.org/t/p/w500{series_poster_path}'
+            seasons_with_episodes.append({
+                'season': season,
+                'episodes': episodes_data
+            })
 
-        # Save or retrieve series details
-        series, created = Series.objects.get_or_create(
-            tmdb_id=pk,
-            defaults={
-                'title': series_name,
-                'summary': series_overview,
-                'poster': full_poster_url,
-            }
-        )
-
-        # Generate the streaming link
-        encoded_series_name = urllib.parse.quote(series_name.replace(' ', '-').lower())
-        streaming_link = f"https://multiembed.mov/?video_id={encoded_series_name}&s={season}&e=1"
+        serie_token = generate_serie_token(pk)
+        latest_series = fetch_latest_series()
 
         context = {
-            'series': series,
-            'seasons': seasons_data,
-            'season': season,
-            'episodes': episodes_data,
-            'streaming_link': streaming_link,
+            'serie': {
+                'name': serie_name,
+                'overview': serie_overview,
+                'poster_path': full_poster_url,
+                'first_air_date': serie_first_air_date,
+                'vote_average': serie_vote_average,
+                'tagline': serie_tagline,
+                'status': serie_status,
+                'genres': serie_genres,
+                'episode_run_time': serie_episode_run_time,
+            },
+            'seasons': seasons_with_episodes,
+            'serie_token': serie_token,
+            'latest_series': latest_series,
         }
         return render(request, 'series_details.html', context)
 
     except requests.RequestException as e:
-        return render(request, 'series_details.html', {'error_message': f'Error fetching data: {str(e)}'})
-    except ValueError as e:
-        return render(request, 'series_details.html', {'error_message': f'Error: {str(e)}'})
-
-def fetch_episodes(request, series_id, season_number):
-    try:
-        # Fetch series details to get the title
-        series = get_object_or_404(Series, tmdb_id=series_id)
-        
-        # Fetch episodes from TVMaze API
-        tvmaze_base_url = 'https://api.tvmaze.com'
-        episodes_url = f'{tvmaze_base_url}/shows/{series_id}/episodes'
-        response = requests.get(episodes_url)
-        response.raise_for_status()
-        all_episodes = response.json()
-        
-        # Filter episodes for the specific season
-        season_episodes = [ep for ep in all_episodes if ep['season'] == int(season_number)]
-        
-        encoded_series_name = urllib.parse.quote(series.title.replace(' ', '-').lower())
-        
-        episodes_data = [
-            {
-                'id': episode['id'],
-                'number': episode['number'],
-                'name': episode['name'],
-                'streaming_link': f"https://multiembed.mov/?video_id={encoded_series_name}&s={season_number}&e={episode['number']}"
-            }
-            for episode in season_episodes
-        ]
-        
-        return JsonResponse({'episodes': episodes_data})
-
-    except requests.RequestException as e:
-        return JsonResponse({'error_message': f'Error fetching data: {str(e)}'}, status=500)
-    except ValueError as e:
-        return JsonResponse({'error_message': f'Error: {str(e)}'}, status=400)
+        return render(request, 'series_details.html', {'error_message': 'Your series wasn\'t found. Try again later.'})
+    
     

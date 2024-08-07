@@ -340,56 +340,56 @@ header {
             </div>
         </div>
     </header>
-    <div class="container">
-        {% if error_message %}
-            <p>{{ error_message }}</p>
-        {% else %}
-            <div class="movie-details-container">
-                <div class="movie-poster">
-                    <img src="{{ series.poster }}" alt="{{ series.title }}">
-                </div>
-                <div class="movie-details-content">
-                    <h2>{{ series.title }}</h2>
-                    <p><strong>{{ series.tagline }}</strong></p>
-                    <p>{{ series.summary|safe }}</p>
-                    <p><strong>First Air Date:</strong> {{ series.first_air_date }}</p>
-                    <p><strong>Rating:</strong> {{ series.vote_average }} / 10</p>
-                    <p><strong>Genres:</strong>
-                    {% for genre in series.genres.all %}
-                        {{ genre }}{% if not forloop.last %}, {% endif %}
-                    {% endfor %}
-                    </p>
-                    <p><strong>Number of Seasons:</strong> {{ series.number_of_seasons }}</p>
-                    <p><strong>Number of Episodes:</strong> {{ series.number_of_episodes }}</p>
-                    <p><strong>Status:</strong> {{ series.status }}</p>
-                    {% if series.episode_run_time %}
-                        <p><strong>Episode Run Time:</strong> {{ series.episode_run_time.0 }} minutes</p>
-                    {% endif %}
-                    <a href="{{ streaming_link }}" class="watch-button" id="watchButton">Watch Now</a>
-                </div>
+   <div class="container">
+    {% if error_message %}
+        <p>{{ error_message }}</p>
+    {% else %}
+        <div class="movie-details-container">
+            <div class="movie-poster">
+                <img src="{{ series.poster }}" alt="{{ series.title }}">
             </div>
-    
-            <!-- Seasons and Episodes -->
-            <div class="seasons-container">
-                {% for season in seasons %}
-                    <div class="season">
-                        <h3 class="season-title">{{ season.name }}</h3>
-                        <div class="episodes-list">
-                            {% for episode in episodes %}
-                                <div class="episode">
-                                    <h4 class="episode-title">{{ episode.name }}</h4>
-                                    <p class="episode-info">Episode {{ episode.number }}</p>
-                                    <p class="episode-info">Air Date: {{ episode.air_date }}</p>
-                                    <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
-                                    <a href="{{ episode.streaming_link }}" class="watch-button">Watch Now</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+            <div class="movie-details-content">
+                <h2>{{ series.title }}</h2>
+                <p><strong>{{ series.tagline }}</strong></p>
+                <p>{{ series.summary|safe }}</p>
+                <p><strong>First Air Date:</strong> {{ series.first_air_date }}</p>
+                <p><strong>Rating:</strong> {{ series.vote_average }} / 10</p>
+                <p><strong>Genres:</strong>
+                {% for genre in series.genres.all %}
+                    {{ genre }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
+                </p>
+                <p><strong>Number of Seasons:</strong> {{ series.number_of_seasons }}</p>
+                <p><strong>Number of Episodes:</strong> {{ series.number_of_episodes }}</p>
+                <p><strong>Status:</strong> {{ series.status }}</p>
+                {% if series.episode_run_time %}
+                    <p><strong>Episode Run Time:</strong> {{ series.episode_run_time.0 }} minutes</p>
+                {% endif %}
+                <a href="{{ streaming_link }}" class="watch-button" id="watchButton">Watch Now</a>
             </div>
-        {% endif %}
-    </div>
+        </div>
+
+        <!-- Seasons and Episodes -->
+        <div class="seasons-container">
+            {% for season in seasons %}
+                <div class="season">
+                    <h3 class="season-title">{{ season.name }}</h3>
+                    <div class="episodes-list">
+                        {% for episode in episodes %}
+                            <div class="episode">
+                                <h4 class="episode-title">{{ episode.name }}</h4>
+                                <p class="episode-info">Episode {{ episode.number }}</p>
+                                <p class="episode-info">Air Date: {{ episode.air_date }}</p>
+                                <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
+                                <a href="{{ episode.streaming_link }}" class="watch-button">Watch Now</a>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+</div>
             
             <!-- Embed Series -->
             {% if serie.id %}

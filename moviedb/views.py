@@ -1228,8 +1228,6 @@ def serie_details(request, pk):
 
         serie_token = generate_serie_token(pk)
 
-        # Fetch latest series
-        latest_series = fetch_latest_series()
 
         context = {
             'serie': serie,
@@ -1237,7 +1235,7 @@ def serie_details(request, pk):
             'episode_run_time': serie_episode_run_time,
             'seasons': seasons_data,
             'serie_token': serie_token,
-            'latest_series': latest_series,
+            
         }
         return render(request, 'series_details.html', context)
 

@@ -722,7 +722,7 @@ def series_list(request):
     }
     return render(request, 'series_details.html', context)'''
 
-def fetch_episodes(request, series_id, season_number):
+'''def fetch_episodes(request, series_id, season_number):
     # Note: we're using series_id instead of pk
     series = get_object_or_404(Series, tmdb_id=series_id)
     
@@ -747,7 +747,7 @@ def fetch_episodes(request, series_id, season_number):
         for episode in season_episodes
     ]
     
-    return JsonResponse({'episodes': episodes_data})
+    return JsonResponse({'episodes': episodes_data})'''
 
 def fetch_streaming_link(movie_title):
     search_url = f'https://en.nexus-stream.com/movies'

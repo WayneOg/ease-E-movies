@@ -20,8 +20,6 @@ urlpatterns = [
     path('romance/', views.romance_movies, name='romance_movies'),
     path('sci-fi/', views.scifi_movies, name='scifi_movies'),
     path('serieslist/', views.series_list, name='series_movies'),
-    path('series/<int:pk>/', views.series_details, name='series_details'),
-    path('series/<int:pk>/season/<int:season>/', views.series_details, name='series_details_season'),
-    path('series/<int:pk>/season/<int:season>/fetch/', views.fetch_episodes, name='fetch_episodes'),
-    path('fetch_episodes/<int:series_id>/<int:season_number>/', views.fetch_episodes, name='fetch_episodes'),
+    path('series/<int:pk>/', views.serie_details, name='series_details'),
+    path('series/<int:pk>/season/<int:season>/', views.serie_details, name='series_details_season'),
 ]

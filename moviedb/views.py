@@ -1185,6 +1185,9 @@ def home_series(request):
 def generate_serie_token(movie_id):
     return hashlib.sha256(f"{movie_id}".encode()).hexdigest()
 
+import logging
+logger = logging.getLogger(__name__)
+
 def serie_details(request, pk):
     try:
         tmdb_api_key = API_KEY
@@ -1209,8 +1212,18 @@ def serie_details(request, pk):
         serie_status = serie_data.get('status', '')
         full_poster_url = f'https://image.tmdb.org/t/p/w500{serie_poster_path}'
 
+        # Fetch TVDB ID from TMDB
+        external_ids_url = f'{tmdb_base_url}/tv/{pk}/external_ids?api_key={tmdb_api_key}'
+        external_ids_response = requests.get(external_ids_url)
+        external_ids_response.raise_for_status()
+        external_ids_data = external_ids_response.json()
+        tvdb_id = external_ids_data.get('tvdb_id')
+
+        if not tvdb_id:
+            raise ValueError('TVDB ID not found for the series in TMDB')
+
         # Fetch series details from TVMaze
-        tvmaze_url = f'{tvmaze_base_url}/lookup/shows?thetvdb={pk}'
+        tvmaze_url = f'{tvmaze_base_url}/lookup/shows?thetvdb={tvdb_id}'
         tvmaze_response = requests.get(tvmaze_url)
         tvmaze_response.raise_for_status()
         tvmaze_data = tvmaze_response.json()
@@ -1258,6 +1271,10 @@ def serie_details(request, pk):
         return render(request, 'series_details.html', context)
 
     except requests.RequestException as e:
+        logger.error(f"Error fetching series details: {str(e)}")
         return render(request, 'series_details.html', {'error_message': 'Your series wasn\'t found. Try again later.'})
+    except ValueError as e:
+        logger.error(f"Error processing series data: {str(e)}")
+        return render(request, 'series_details.html', {'error_message': 'There was an issue processing the series data.'})
     
     

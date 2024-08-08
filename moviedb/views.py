@@ -1175,6 +1175,16 @@ def serie_details(request, pk):
                 'season': season,
                 'episodes': episodes_data
             })
+            
+         # Fetch streaming links for each episode
+        episode_streaming_links = {}
+        for season_data in seasons_with_episodes:
+            for episode in season_data['episodes']:
+                episode_number = episode['number']
+                season_number = season_data['season']['number']
+                streaming_links_url = f"https://multiembed.mov/?video_id={pk}&s={season_number}&e={episode_number}&tmdb=1"
+                episode_streaming_links[(season_number, episode_number)] = streaming_links_url
+
 
         serie_token = generate_serie_token(pk)
         latest_series = fetch_latest_series()
@@ -1194,6 +1204,7 @@ def serie_details(request, pk):
             'seasons': seasons_with_episodes,
             'serie_token': serie_token,
             'latest_series': latest_series,
+            'episode_streaming_links': episode_streaming_links,
         }
         return render(request, 'series_details.html', context)
 

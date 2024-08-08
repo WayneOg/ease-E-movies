@@ -381,7 +381,10 @@ header {
                                     <p class="episode-info">Episode {{ episode.number }}</p>
                                     <p class="episode-info">Air Date: {{ episode.airdate }}</p>
                                     <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
-                                    <a href="#" class="episode-watch-button" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">Watch Episode</a>
+                                    <div class="streaming-links">
+                                        <iframe src="{{ episode_streaming_links[(season_data.season.number, episode.number)] }}" width="100%" height="300" frameborder="0" allowfullscreen></iframe>
+                                    </div>
+                                    <a href="{{ episode_streaming_links[(season_data.season.number, episode.number)] }}" class="episode-watch-button" target="_blank">Watch Episode</a>
                                 </div>
                             {% endfor %}
                         </div>

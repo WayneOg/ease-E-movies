@@ -1138,6 +1138,9 @@ def serie_details(request, pk):
         serie_tagline = serie_data.get('tagline', '')
         serie_status = serie_data.get('status', '')
         full_poster_url = f'https://image.tmdb.org/t/p/w500{serie_poster_path}'
+        
+        # The `pk` is the TMDB ID in this case
+        tmdb_id = pk
 
         # Fetch TVDB ID from TMDB
         external_ids_url = f'{tmdb_base_url}/tv/{pk}/external_ids?api_key={tmdb_api_key}'
@@ -1183,6 +1186,7 @@ def serie_details(request, pk):
 
         context = {
             'serie': {
+                'tmdb_id': tmdb_id,
                 'name': serie_name,
                 'overview': serie_overview,
                 'poster_path': full_poster_url,

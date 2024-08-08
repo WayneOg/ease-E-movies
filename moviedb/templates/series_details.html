@@ -340,84 +340,78 @@ header {
             </div>
         </div>
     </header>
-   <div class="container">
-    {% if error_message %}
-    <div class="error">{{ error_message }}</div>
-    {% else %}
     <div class="container">
-        <div class="movie-details-container">
-            <div class="movie-poster">
-                <img src="{{ serie.poster_path }}" alt="{{ serie.name }}">
-            </div>
-            <div class="movie-details-content">
-                <h2>{{ serie.name }}</h2>
-                <p><strong>{{ serie.tagline }}</strong></p>
-                <p>{{ serie.overview }}</p>
-                <p><strong>First Air Date:</strong> {{ serie.first_air_date }}</p>
-                <p><strong>Rating:</strong> {{ serie.vote_average }} / 10</p>
-                <p><strong>Genres:</strong>
-                {% for genre in serie.genres %}
-                    {{ genre }}{% if not forloop.last %}, {% endif %}
-                {% endfor %}
-                </p>
-                <p><strong>Number of Seasons:</strong> {{ seasons|length }}</p>
-                <p><strong>Status:</strong> {{ serie.status }}</p>
-                {% if serie.episode_run_time %}
-                    <p><strong>Episode Run Time:</strong> {{ serie.episode_run_time.0 }} minutes</p>
-                {% endif %}
-                <a href="#" class="watch-button" id="watchButton">Watch Now</a>
-            </div>
-        </div>
-
-        <!-- Seasons and Episodes -->
-        <div class="seasons-container">
-            {% for season_data in seasons %}
-                <div class="season">
-                    <h3 class="season-title">{{ season_data.season.name }}</h3>
-                    <div class="episodes-list">
-                        {% for episode in season_data.episodes %}
-                            <div class="episode">
-                                <h4 class="episode-title">{{ episode.name }}</h4>
-                                <p class="episode-info">Episode {{ episode.number }}</p>
-                                <p class="episode-info">Air Date: {{ episode.airdate }}</p>
-                                <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
-                            </div>
-                        {% endfor %}
-                    </div>
+        {% if error_message %}
+        <div class="error">{{ error_message }}</div>
+        {% else %}
+        <div class="container">
+            <div class="movie-details-container">
+                <div class="movie-poster">
+                    <img src="{{ serie.poster_path }}" alt="{{ serie.name }}">
                 </div>
-            {% endfor %}
-        </div>
-
-        <!-- Embed Series -->
-        {% if serie.id %}
-            <div style="margin-bottom: 40px;">
-                <iframe src="https://multiembed.mov/?video_id={{ serie.id }}&tmdb=1&tv=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                <div class="movie-details-content">
+                    <h2>{{ serie.name }}</h2>
+                    <p><strong>{{ serie.tagline }}</strong></p>
+                    <p>{{ serie.overview }}</p>
+                    <p><strong>First Air Date:</strong> {{ serie.first_air_date }}</p>
+                    <p><strong>Rating:</strong> {{ serie.vote_average }} / 10</p>
+                    <p><strong>Genres:</strong>
+                    {% for genre in serie.genres %}
+                        {{ genre }}{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    </p>
+                    <p><strong>Number of Seasons:</strong> {{ seasons|length }}</p>
+                    <p><strong>Status:</strong> {{ serie.status }}</p>
+                    {% if serie.episode_run_time %}
+                        <p><strong>Episode Run Time:</strong> {{ serie.episode_run_time.0 }} minutes</p>
+                    {% endif %}
+                    <a href="#" class="watch-button" id="watchButton">Watch Now</a>
+                </div>
             </div>
+    
+            <!-- Seasons and Episodes -->
+            <div class="seasons-container">
+                {% for season_data in seasons %}
+                    <div class="season">
+                        <h3 class="season-title">{{ season_data.season.name }}</h3>
+                        <div class="episodes-list">
+                            {% for episode in season_data.episodes %}
+                                <div class="episode" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">
+                                    <h4 class="episode-title">{{ episode.name }}</h4>
+                                    <p class="episode-info">Episode {{ episode.number }}</p>
+                                    <p class="episode-info">Air Date: {{ episode.airdate }}</p>
+                                    <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
+                                    <a href="#" class="episode-watch-button" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">Watch Episode</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+    
+            <!-- Embed Series -->
+            {% if serie.id %}
+                <div style="margin-bottom: 40px;">
+                    <iframe src="https://multiembed.mov/?video_id={{ serie.id }}&tmdb=1&tv=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                </div>
+            {% endif %}
+        </div>
         {% endif %}
-    </div>
-    {% endif %}
     </div>
     
     <script>
-        document.getElementById('watchButton').addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            {% if serie.id %}
-                var videoId = '{{ serie.id }}';
-                var type = 'tmdb';
-            {% elif serie.imdb_id %}
-                var videoId = 'tt{{ serie.imdb_id }}';
-                var type = 'imdb';
-            {% else %}
-                alert('Watch link not available for this series.');
-                return;
-            {% endif %}
-        
-            // Open MultiEmbed in a new window
-            var multiembedWindow = window.open('https://multiembed.mov/?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : ''), '_blank');
-        
-            // Inform the user about the next steps
-            alert('A new window has opened with the movie. To download, right-click on the video player and select "Save video as" or use a video downloader extension in your browser.');
+        document.querySelectorAll('.episode-watch-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const seasonNumber = this.getAttribute('data-season');
+                const episodeNumber = this.getAttribute('data-episode');
+                const videoId = '{{ serie.id }}'; // Assuming you're using TMDB ID
+                
+                // Open the corresponding episode in MultiEmbed
+                const multiembedUrl = `https://multiembed.mov/?video_id=${videoId}&s=${seasonNumber}&e=${episodeNumber}&tmdb=1`;
+                window.open(multiembedUrl, '_blank');
+            });
         });
     </script>
     

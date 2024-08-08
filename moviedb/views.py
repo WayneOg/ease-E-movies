@@ -17,6 +17,7 @@ import hashlib
 from django.http import JsonResponse
 import urllib.parse
 from django.db import transaction
+from .service import SearchService
 
 
 
@@ -289,73 +290,30 @@ def search_results(request):
     if not query:
         return render(request, 'search_results.html', {'movies': [], 'series': [], 'error': 'Please enter a search term.'})
 
-    movies = []
-    series = []
-
-    tmdb_api_key = API_KEY
-
-    # Search for movies
-    movie_url = 'https://api.themoviedb.org/3/search/movie'
-    movie_params = {
-        'api_key': tmdb_api_key,
-        'language': 'en-US',
-        'query': query
-    }
-
+    search_service = SearchService(api_key=API_KEY)
     try:
-        movie_response = requests.get(movie_url, params=movie_params)
-        movie_response.raise_for_status()
-        movie_results = movie_response.json().get('results', [])
-
-        for result in movie_results:
-            if result.get('poster_path'):
-                movie, created = Movie.objects.update_or_create(
-                    id=result['id'],
-                    defaults={
-                        'title': result['title'],
-                        'overview': result.get('overview', ''),
-                        'release_date': result.get('release_date', None),
-                        'poster_path': result.get('poster_path', ''),
-                    }
-                )
-                movies.append(movie)
-
+        movies, series = search_service.search_movies_and_series(query)
     except requests.RequestException as e:
-        return render(request, 'search_results.html', {'error': f"Error fetching movie data: {str(e)}"})
-
-    # Search for series
-    series_url = 'https://api.themoviedb.org/3/search/tv'
-    series_params = {
-        'api_key': tmdb_api_key,
-        'language': 'en-US',
-        'query': query
-    }
-
-    try:
-        series_response = requests.get(series_url, params=series_params)
-        series_response.raise_for_status()
-        series_results = series_response.json().get('results', [])
-
-        for result in series_results:
-            if result.get('poster_path'):
-                serie, created = Series.objects.update_or_create(
-                    id=result['id'],  # assuming TMDB ID is used as the primary key
-                    defaults={
-                        'title': result['name'],
-                        'summary': result.get('overview', ''),
-                        'release_date': result.get('first_air_date', None),
-                        'poster': result.get('poster_path', ''),
-                    }
-                )
-                series.append(serie)
-
-    except requests.RequestException as e:
-        return render(request, 'search_results.html', {'error': f"Error fetching series data: {str(e)}"})
+        logger.error(f"Error fetching data: {str(e)}")
+        return render(request, 'search_results.html', {'error': 'An error occurred while fetching the search results. Please try again later.'})
 
     if not movies and not series:
         return render(request, 'search_results.html', {'error': 'No results found for your search.'})
 
-    return render(request, 'search_results.html', {'movies': movies, 'series': series})
+    # Implement pagination
+    page = request.GET.get('page', 1)
+    movie_paginator = Paginator(movies, 10)
+    series_paginator = Paginator(series, 10)
+
+    try:
+        movie_page = movie_paginator.page(page)
+        series_page = series_paginator.page(page)
+    except (PageNotAnInteger, EmptyPage):
+        movie_page = movie_paginator.page(1)
+        series_page = series_paginator.page(1)
+
+    return render(request, 'search_results.html', {'movies': movie_page, 'series': series_page, 'query': query})
+
 
 
 # Utility function to generate a unique token

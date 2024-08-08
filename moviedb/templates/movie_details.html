@@ -328,9 +328,9 @@ header {
         {% if movie.tmdb_id or movie.imdb_id %}
             <div style="margin-bottom: 40px;">
                 {% if movie.tmdb_id %}
-                    <iframe src="https://multiembed.mov/?video_id={{ movie.tmdb_id }}&tmdb=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                    <iframe src="https://multiembed.mov/directstream.php?video_id={{ movie.tmdb_id }}&tmdb=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
                 {% elif movie.imdb_id %}
-                    <iframe src="https://multiembed.mov/?video_id=tt{{ movie.imdb_id }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+                    <iframe src="https://multiembed.mov/directstream.php?video_id=tt{{ movie.imdb_id }}" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
                 {% endif %}
             </div>
         {% endif %}
@@ -365,7 +365,7 @@ header {
             {% endif %}
         
             // Open MultiEmbed in a new window
-            var multiembedWindow = window.open('https://multiembed.mov/?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : ''), '_blank');
+            var multiembedWindow = window.open('https://multiembed.mov/directstream.php?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : ''), '_blank');
         
             // Inform the user about the next steps
             alert('A new window has opened with the movie. To download, right-click on the video player and select "Save video as" or use a video downloader extension in your browser.');

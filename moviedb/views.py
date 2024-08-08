@@ -1190,7 +1190,7 @@ logger = logging.getLogger(__name__)
 
 def serie_details(request, pk):
     try:
-        tmdb_api_key = API_KEY
+        tmdb_api_key = API_KEY  # Ensure API_KEY is defined in settings.py
         tmdb_base_url = 'https://api.themoviedb.org/3'
         tvmaze_base_url = 'https://api.tvmaze.com'
 
@@ -1276,5 +1276,7 @@ def serie_details(request, pk):
     except ValueError as e:
         logger.error(f"Error processing series data: {str(e)}")
         return render(request, 'series_details.html', {'error_message': 'There was an issue processing the series data.'})
-    
+    except Exception as e:
+        logger.error(f"Unexpected error: {str(e)}")
+        return render(request, 'series_details.html', {'error_message': 'An unexpected error occurred. Try again later.'})
     

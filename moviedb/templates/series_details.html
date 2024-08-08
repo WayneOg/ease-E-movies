@@ -342,62 +342,60 @@ header {
     </header>
    <div class="container">
     {% if error_message %}
-        <p>{{ error_message }}</p>
+    <div class="error">{{ error_message }}</div>
     {% else %}
+    <div class="container">
         <div class="movie-details-container">
             <div class="movie-poster">
-                <img src="{{ series.poster }}" alt="{{ series.title }}">
+                <img src="{{ serie.poster_path }}" alt="{{ serie.name }}">
             </div>
             <div class="movie-details-content">
-                <h2>{{ series.title }}</h2>
-                <p><strong>{{ series.tagline }}</strong></p>
-                <p>{{ series.summary|safe }}</p>
-                <p><strong>First Air Date:</strong> {{ series.first_air_date }}</p>
-                <p><strong>Rating:</strong> {{ series.vote_average }} / 10</p>
+                <h2>{{ serie.name }}</h2>
+                <p><strong>{{ serie.tagline }}</strong></p>
+                <p>{{ serie.overview }}</p>
+                <p><strong>First Air Date:</strong> {{ serie.first_air_date }}</p>
+                <p><strong>Rating:</strong> {{ serie.vote_average }} / 10</p>
                 <p><strong>Genres:</strong>
-                {% for genre in series.genres.all %}
+                {% for genre in serie.genres %}
                     {{ genre }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
                 </p>
-                <p><strong>Number of Seasons:</strong> {{ series.number_of_seasons }}</p>
-                <p><strong>Number of Episodes:</strong> {{ series.number_of_episodes }}</p>
-                <p><strong>Status:</strong> {{ series.status }}</p>
-                {% if series.episode_run_time %}
-                    <p><strong>Episode Run Time:</strong> {{ series.episode_run_time.0 }} minutes</p>
+                <p><strong>Number of Seasons:</strong> {{ seasons|length }}</p>
+                <p><strong>Status:</strong> {{ serie.status }}</p>
+                {% if serie.episode_run_time %}
+                    <p><strong>Episode Run Time:</strong> {{ serie.episode_run_time.0 }} minutes</p>
                 {% endif %}
-                <a href="{{ streaming_link }}" class="watch-button" id="watchButton">Watch Now</a>
+                <a href="#" class="watch-button" id="watchButton">Watch Now</a>
             </div>
         </div>
 
         <!-- Seasons and Episodes -->
         <div class="seasons-container">
-            {% for season in seasons %}
+            {% for season_data in seasons %}
                 <div class="season">
-                    <h3 class="season-title">{{ season.name }}</h3>
+                    <h3 class="season-title">{{ season_data.season.name }}</h3>
                     <div class="episodes-list">
-                        {% for episode in episodes %}
+                        {% for episode in season_data.episodes %}
                             <div class="episode">
                                 <h4 class="episode-title">{{ episode.name }}</h4>
                                 <p class="episode-info">Episode {{ episode.number }}</p>
-                                <p class="episode-info">Air Date: {{ episode.air_date }}</p>
+                                <p class="episode-info">Air Date: {{ episode.airdate }}</p>
                                 <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
-                                <a href="{{ episode.streaming_link }}" class="watch-button">Watch Now</a>
                             </div>
                         {% endfor %}
                     </div>
                 </div>
             {% endfor %}
         </div>
-    {% endif %}
-</div>
-            
-            <!-- Embed Series -->
-            {% if serie.id %}
-                <div style="margin-bottom: 40px;">
-                    <iframe src="https://multiembed.mov/?video_id={{ serie.id }}&tmdb=1&tv=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
-                </div>
-            {% endif %}
+
+        <!-- Embed Series -->
+        {% if serie.id %}
+            <div style="margin-bottom: 40px;">
+                <iframe src="https://multiembed.mov/?video_id={{ serie.id }}&tmdb=1&tv=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
+            </div>
         {% endif %}
+    </div>
+    {% endif %}
     </div>
     
     <script>

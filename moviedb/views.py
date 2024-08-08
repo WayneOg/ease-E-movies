@@ -292,8 +292,9 @@ def search_results(request):
     movies = []
     series = []
 
-    # Search for movies
     tmdb_api_key = API_KEY
+
+    # Search for movies
     movie_url = 'https://api.themoviedb.org/3/search/movie'
     movie_params = {
         'api_key': tmdb_api_key,
@@ -324,23 +325,26 @@ def search_results(request):
 
     # Search for series
     series_url = 'https://api.themoviedb.org/3/search/tv'
-    series_params = {'q': query}
+    series_params = {
+        'api_key': tmdb_api_key,
+        'language': 'en-US',
+        'query': query
+    }
 
     try:
         series_response = requests.get(series_url, params=series_params)
         series_response.raise_for_status()
-        series_results = series_response.json()
+        series_results = series_response.json().get('results', [])
 
         for result in series_results:
-            show = result['show']
-            if show.get('image') and show['image'].get('medium'):
+            if result.get('poster_path'):
                 serie, created = Series.objects.update_or_create(
-                    tmdb_id=show['id'],
+                    id=result['id'],  # assuming TMDB ID is used as the primary key
                     defaults={
-                        'title': show['name'],
-                        'summary': show.get('summary', ''),
-                        'release_date': show.get('premiered', None),
-                        'poster': show.get('image', {}).get('medium', ''),
+                        'title': result['name'],
+                        'summary': result.get('overview', ''),
+                        'release_date': result.get('first_air_date', None),
+                        'poster': result.get('poster_path', ''),
                     }
                 )
                 series.append(serie)
@@ -352,6 +356,7 @@ def search_results(request):
         return render(request, 'search_results.html', {'error': 'No results found for your search.'})
 
     return render(request, 'search_results.html', {'movies': movies, 'series': series})
+
 
 # Utility function to generate a unique token
 def generate_movie_token(movie_id):

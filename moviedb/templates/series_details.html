@@ -400,7 +400,7 @@ header {
     </div>
     
     <script>
-        document.querySelectorAll('.episode-watch-button').forEach(button => {
+        document.querySelectorAll('.watch-button').forEach(button => {
             button.addEventListener('click', function(e) {
                 e.preventDefault();
                 
@@ -409,7 +409,7 @@ header {
                 const videoId = '{{ serie.id }}'; // Assuming you're using TMDB ID
                 
                 // Open the corresponding episode in MultiEmbed
-                const multiembedUrl = `https://multiembed.mov/?video_id=${videoId}&s=${seasonNumber}&e=${episodeNumber}&tmdb=1`;
+                const multiembedUrl = `https://multiembed.mov/directstream.php?video_id=${videoId}&tmdb=1&s=${seasonNumber}&e=${episodeNumber}`;
                 window.open(multiembedUrl, '_blank');
             });
         });

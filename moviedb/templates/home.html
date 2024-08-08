@@ -838,26 +838,7 @@ header {
             {% endfor %}
         </div>
         {% endfor %}
-        
-
-        <!-- Series Section -->
-        <h2 class="section-title">Series</h2>
-        <div class="movies">
-            {% for serie in series %}
-                <div class="movie">
-                    <a href="{% url 'series_details' pk=series.id %}">
-                        <img src="https://image.tmdb.org/t/p/w500{{ series.poster_path }}" alt="{{ series.title }} Poster">
-                        <div class="movie-info">
-                            <h3>{{ series.title }}</h3>
-                            <p>{{ series.release_date }}</p>
-                        </div>
-                    </a>
-                    <div class="recommended-movie-title">
-                        <h2>{{ series.title }}</h2>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
+    
 
         {% endcache %}
     </div>

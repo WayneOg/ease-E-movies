@@ -369,49 +369,66 @@ header {
                 </div>
             </div>
     
-            <!-- Seasons and Episodes -->
-            <div class="seasons-container">
-                {% for season_data in seasons %}
-                    <div class="season">
-                        <h3 class="season-title">{{ season_data.season.name }}</h3>
-                        <div class="episodes-list">
-                            {% for episode in season_data.episodes %}
-                                <div class="episode" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">
-                                    <h4 class="episode-title">{{ episode.name }}</h4>
-                                    <p class="episode-info">Episode {{ episode.number }}</p>
-                                    <p class="episode-info">Air Date: {{ episode.airdate }}</p>
-                                    <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
-                                    <a href="#" class="watch-button" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">Watch Episode</a>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    </div>
+            <!-- Dropdowns for selecting season and episode -->
+        <div>
+            <label for="seasonSelect">Select Season:</label>
+            <select id="seasonSelect">
+                {% for season in seasons %}
+                <option value="{{ season.season.number }}">{{ season.season.name }}</option>
                 {% endfor %}
-            </div>
-    
-            <!-- Embed Series -->
-            {% if serie.id %}
-                <div style="margin-bottom: 40px;">
-                    <iframe src="https://multiembed.mov/?video_id={{ serie.id }}&tmdb=1&tv=1" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
-                </div>
-            {% endif %}
+            </select>
+            
+            <label for="episodeSelect">Select Episode:</label>
+            <select id="episodeSelect">
+                {% if seasons %}
+                    {% for episode in seasons.0.episodes %}
+                    <option value="{{ episode.number }}">{{ episode.name }}</option>
+                    {% endfor %}
+                {% endif %}
+            </select>
+        </div>
+
+        <!-- Embed the SE Player using an iframe -->
+        <div id="player-container" style="margin-top: 20px;">
+            <iframe id="playerIframe" src="" width="100%" height="500" frameborder="0" allowfullscreen></iframe>
         </div>
         {% endif %}
     </div>
-    
+
     <script>
-        document.querySelectorAll('.watch-button').forEach(button => {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                
-                const seasonNumber = this.getAttribute('data-season');
-                const episodeNumber = this.getAttribute('data-episode');
-                const videoId = '{{ serie.id }}'; // Assuming you're using TMDB ID
-                
-                // Open the corresponding episode in MultiEmbed
-                const multiembedUrl = `https://multiembed.mov/directstream.php?video_id=${videoId}&tmdb=1&s=${seasonNumber}&e=${episodeNumber}`;
-                window.open(multiembedUrl, '_blank');
-            });
+        document.getElementById('watchButton').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            var videoId = '{{ serie.id }}';
+            var type = 'tmdb';  // Use 'tmdb' if applicable, otherwise adjust as needed
+
+            var seasonNumber = document.getElementById('seasonSelect').value;
+            var episodeNumber = document.getElementById('episodeSelect').value;
+
+            var playerUrl = `https://ease-e-movies.vercel.app/static/se_player.php?video_id=${videoId}&${type}=1&s=${seasonNumber}&e=${episodeNumber}`;
+
+            // Set the iframe source to the player URL
+            document.getElementById('playerIframe').src = playerUrl;
+        });
+
+        // Optional: Update episode dropdown based on selected season
+        document.getElementById('seasonSelect').addEventListener('change', function() {
+            var seasonNumber = this.value;
+            var episodeSelect = document.getElementById('episodeSelect');
+            episodeSelect.innerHTML = ''; // Clear previous options
+
+            {% if seasons %}
+                {% for season in seasons %}
+                    {% if season.season.number == 1 %}
+                        {% for episode in season.episodes %}
+                        var option = document.createElement('option');
+                        option.value = '{{ episode.number }}';
+                        option.textContent = '{{ episode.name }}';
+                        episodeSelect.appendChild(option);
+                        {% endfor %}
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
         });
     </script>
     

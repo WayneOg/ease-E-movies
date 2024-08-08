@@ -360,32 +360,38 @@ header {
                     {{ genre }}{% if not forloop.last %}, {% endif %}
                 {% endfor %}
                 </p>
-                <p><strong>Number of Seasons:</strong> {{ seasons|length }}</p>
                 <p><strong>Status:</strong> {{ serie.status }}</p>
                 {% if serie.episode_run_time %}
                     <p><strong>Episode Run Time:</strong> {{ serie.episode_run_time.0 }} minutes</p>
                 {% endif %}
-                <a href="#" class="watch-button" id="watchButton">Watch Now</a>
             </div>
         </div>
 
-        <!-- Seasons and Episodes -->
-        <div class="seasons-container">
-            {% for season_data in seasons %}
-                <div class="season">
-                    <h3 class="season-title">{{ season_data.season.name }}</h3>
-                    <div class="episodes-list">
-                        {% for episode in season_data.episodes %}
-                            <div class="episode">
-                                <h4 class="episode-title">{{ episode.name }}</h4>
-                                <p class="episode-info">Episode {{ episode.number }}</p>
-                                <p class="episode-info">Air Date: {{ episode.airdate }}</p>
-                                <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
-                            </div>
-                        {% endfor %}
+        <!-- Seasons Selector -->
+        <div class="seasons-selector">
+            <label for="season-select">Select Season:</label>
+            <select id="season-select" onchange="loadEpisodes('{{ serie_tvmaze_id }}', this.value)">
+                {% for season in seasons %}
+                    <option value="{{ season.number }}" {% if selected_season.number == season.number %}selected{% endif %}>
+                        {{ season.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Episodes List -->
+        <div id="episodes-container">
+            <h3>{{ selected_season.name }} Episodes</h3>
+            <div class="episodes-list">
+                {% for episode in episodes %}
+                    <div class="episode">
+                        <h4 class="episode-title">{{ episode.name }}</h4>
+                        <p class="episode-info">Episode {{ episode.number }}</p>
+                        <p class="episode-info">Air Date: {{ episode.airdate }}</p>
+                        <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
         </div>
 
         <!-- Embed Series -->
@@ -397,6 +403,39 @@ header {
     </div>
     {% endif %}
     </div>
+
+    <script>
+        function loadEpisodes(serieId, seasonNumber) {
+            const episodesContainer = document.getElementById('episodes-container');
+            episodesContainer.innerHTML = 'Loading...';
+    
+            fetch(`/series/${serieId}/fetch_episodes/?season_number=${seasonNumber}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.error_message) {
+                        episodesContainer.innerHTML = `<div class="error">${data.error_message}</div>`;
+                    } else {
+                        let episodesHtml = `<h3>Season ${seasonNumber} Episodes</h3><div class="episodes-list">`;
+                        data.episodes.forEach(episode => {
+                            episodesHtml += `
+                                <div class="episode">
+                                    <h4 class="episode-title">${episode.name}</h4>
+                                    <p class="episode-info">Episode ${episode.number}</p>
+                                    <p class="episode-info">Air Date: ${episode.airdate}</p>
+                                    <p class="episode-info">Rating: ${episode.vote_average} / 10</p>
+                                </div>`;
+                        });
+                        episodesHtml += '</div>';
+                        episodesContainer.innerHTML = episodesHtml;
+                    }
+                })
+                .catch(error => {
+                    episodesContainer.innerHTML = `<div class="error">Failed to load episodes. Please try again later.</div>`;
+                    console.error('Error fetching episodes:', error);
+                });
+        }
+    </script>
+    
     
     <script>
         document.getElementById('watchButton').addEventListener('click', function(e) {

@@ -1188,9 +1188,9 @@ def generate_serie_token(movie_id):
 import logging
 logger = logging.getLogger(__name__)
 
-def serie_details(request, pk):
+def serie_details(request, pk, season_number=None):
     try:
-        tmdb_api_key = API_KEY  # Ensure API_KEY is defined in settings.py
+        tmdb_api_key = settings.TMDB_API_KEY
         tmdb_base_url = 'https://api.themoviedb.org/3'
         tvmaze_base_url = 'https://api.tvmaze.com'
 
@@ -1235,19 +1235,13 @@ def serie_details(request, pk):
         seasons_response.raise_for_status()
         seasons_data = seasons_response.json()
 
-        # Fetch episodes for each season
-        seasons_with_episodes = []
-        for season in seasons_data:
-            season_id = season['id']
-            episodes_url = f'{tvmaze_base_url}/seasons/{season_id}/episodes'
-            episodes_response = requests.get(episodes_url)
-            episodes_response.raise_for_status()
-            episodes_data = episodes_response.json()
-
-            seasons_with_episodes.append({
-                'season': season,
-                'episodes': episodes_data
-            })
+        # If a season is selected, fetch episodes for that season
+        selected_season = seasons_data[0] if season_number is None else next(season for season in seasons_data if season['number'] == season_number)
+        season_id = selected_season['id']
+        episodes_url = f'{tvmaze_base_url}/seasons/{season_id}/episodes'
+        episodes_response = requests.get(episodes_url)
+        episodes_response.raise_for_status()
+        episodes_data = episodes_response.json()
 
         serie_token = generate_serie_token(pk)
         latest_series = fetch_latest_series()
@@ -1264,7 +1258,9 @@ def serie_details(request, pk):
                 'genres': serie_genres,
                 'episode_run_time': serie_episode_run_time,
             },
-            'seasons': seasons_with_episodes,
+            'seasons': seasons_data,
+            'selected_season': selected_season,
+            'episodes': episodes_data,
             'serie_token': serie_token,
             'latest_series': latest_series,
         }
@@ -1279,4 +1275,19 @@ def serie_details(request, pk):
     except Exception as e:
         logger.error(f"Unexpected error: {str(e)}")
         return render(request, 'series_details.html', {'error_message': 'An unexpected error occurred. Try again later.'})
+
+def fetch_episodes(request, serie_tvmaze_id, season_number, seasons_data):
+    try:
+        tvmaze_base_url = 'https://api.tvmaze.com'
+        # Fetch episodes for the selected season
+        season_id = next(season['id'] for season in seasons_data if season['number'] == int(season_number))
+        episodes_url = f'{tvmaze_base_url}/seasons/{season_id}/episodes'
+        episodes_response = requests.get(episodes_url)
+        episodes_response.raise_for_status()
+        episodes_data = episodes_response.json()
+        return JsonResponse({'episodes': episodes_data})
+    except Exception as e:
+        logger.error(f"Error fetching episodes: {str(e)}")
+        return JsonResponse({'error_message': 'Failed to load episodes.'}, status=500)
+    
     

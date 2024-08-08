@@ -22,5 +22,6 @@ urlpatterns = [
     path('sci-fi/', views.scifi_movies, name='scifi_movies'),
     path('serieslist/', views.series_list, name='series_movies'),
     path('series/<int:pk>/', views.serie_details, name='series_details'),
+    path('series/<int:pk>/fetch_episodes/', views.fetch_episodes, name='fetch_episodes'),
     path('series/<int:pk>/season/<int:season>/', views.serie_details, name='series_details_season'),
 ]

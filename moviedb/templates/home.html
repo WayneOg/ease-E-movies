@@ -840,6 +840,29 @@ document.addEventListener('DOMContentLoaded', (event) => {
         }
     });
 });
+
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchValue = this.value.toLowerCase();
+    const movies = document.querySelectorAll('.movie');
+    let found = false;
+
+    movies.forEach(function(movie) {
+        const title = movie.getAttribute('data-title').toLowerCase();
+        if (title.includes(searchValue)) {
+            movie.style.display = 'block';
+            found = true;
+        } else {
+            movie.style.display = 'none';
+        }
+    });
+
+    const noResultsMessage = document.querySelector('.no-results');
+    if (found) {
+        noResultsMessage.classList.remove('active');
+    } else {
+        noResultsMessage.classList.add('active');
+    }
+});
 </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132334225065239"
      crossorigin="anonymous"></script>

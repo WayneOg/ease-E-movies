@@ -312,7 +312,7 @@ def search_results(request):
 
             for result in results:
                 item = {
-                    'id': result['id'],
+                    'pk': result['id'],  # Using 'pk' to match Django template usage
                     'title': result.get('title') or result.get('name'),
                     'overview': result.get('overview', ''),
                     'release_date': result.get('release_date') or result.get('first_air_date'),
@@ -326,14 +326,16 @@ def search_results(request):
         except requests.RequestException as e:
             errors.append(f"Error fetching {search['type']} data: {str(e)}")
 
-    if not movies and not series:
-        return render(request, 'search_results.html', {'error': 'No results found for your search.'})
+    context = {
+        'movies': movies,
+        'series': series,
+        'errors': errors,
+    }
 
-    return render(request, 'search_results.html', {
-        'movies': movies, 
-        'series': series, 
-        'errors': errors if errors else None
-    })
+    if not movies and not series:
+        context['error'] = 'No results found for your search.'
+
+    return render(request, 'search_results.html', context)
     
 # Utility function to generate a unique token
 def generate_movie_token(movie_id):

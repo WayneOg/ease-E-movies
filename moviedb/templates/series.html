@@ -437,7 +437,7 @@
         <!-- Latest Series -->
         <div class="latest-movies-wrapper">
             <div class="latest-movies">
-                {% for serie in latest_series|slice:":5" %}
+                {% for serie in latest_series|slice:":10" %}
                 <div class="latest-movie" style="background-image: url('https://image.tmdb.org/t/p/original{{ serie.backdrop_path }}');">
                     <div class="latest-movie-info">
                         <a href="{% url 'series_details' pk=serie.id %}">
@@ -460,12 +460,13 @@
         <div class="movies">
             {% for serie in series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -477,10 +478,11 @@
             <div class="movie">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
+                    <a href="{% url 'series_details' serie.id %}">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -490,12 +492,13 @@
         <div class="movies">
             {% for serie in reality_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -505,12 +508,13 @@
         <div class="movies">
             {% for serie in animation_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -520,12 +524,13 @@
         <div class="movies">
             {% for serie in kids_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -535,12 +540,13 @@
         <div class="movies">
             {% for serie in family_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -550,12 +556,13 @@
         <div class="movies">
             {% for serie in comedy_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -565,12 +572,13 @@
         <div class="movies">
             {% for serie in drama_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -580,12 +588,13 @@
         <div class="movies">
             {% for serie in soap_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -595,12 +604,13 @@
         <div class="movies">
             {% for serie in mystery_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -610,12 +620,13 @@
         <div class="movies">
             {% for serie in scifi_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -625,12 +636,13 @@
         <div class="movies">
             {% for serie in crime_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -640,12 +652,13 @@
         <div class="movies">
             {% for serie in documentary_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>
@@ -655,12 +668,13 @@
         <div class="movies">
             {% for serie in politics_series %}
             <div class="movie">
+                <a href="{% url 'series_details' serie.id %}">
                 <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.name }}">
                 <div class="movie-info">
                     <h3>{{ serie.name }}</h3>
                     <p>{{ serie.first_air_date|date:"Y" }}</p>
-                    <a href="{% url 'series_details' serie.id %}">View Details</a>
                 </div>
+                </a>
             </div>
             {% endfor %}
         </div>

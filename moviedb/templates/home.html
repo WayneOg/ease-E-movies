@@ -298,38 +298,26 @@ footer {
     
 
     /* Search adjustments */
-    .search-container input[type=text] {
-        width: 30px;
-        padding-right: 30px;
-        cursor: pointer;
-        transition: width 0.4s;
+    .search-container {
+        width: 100%;
     }
 
     .search-container form {
-        width: 30px;
-        transition: width 0.4s;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 100%;
     }
 
-    .search-container form:focus-within {
-        width: calc(100vw - 120px);
-    }
-
-    .search-container input[type=text]:focus {
-        width: calc(100vw - 80px);
-        cursor: text;
+    .search-container input[type=text] {
+        width: 100%;
+        padding-right: 30px;
+        max-width: none; /* Remove max-width to allow full-width on small screens */
     }
 
     .search-container button {
-        background: transparent;
-        border: none;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-    }
-
-    .search-container button::after {
-        content: "Search";
-        color: #fff;
+        margin-left: 0;
+        margin-top: 8px;
+        width: 100%;
     }
 
     /* Movie row adjustments */
@@ -839,6 +827,20 @@ document.addEventListener('DOMContentLoaded', (event) => {
     searchInput.addEventListener('blur', () => {
         if (searchInput.value === '') {
             searchButton.style.backgroundColor = 'transparent';
+        }
+    });
+});
+
+document.getElementById('searchInput').addEventListener('keyup', function() {
+    const searchValue = this.value.toLowerCase();
+    const movies = document.querySelectorAll('.movie');
+
+    movies.forEach(function(movie) {
+        const title = movie.getAttribute('data-title').toLowerCase();
+        if (title.includes(searchValue)) {
+            movie.style.display = 'block';
+        } else {
+            movie.style.display = 'none';
         }
     });
 });

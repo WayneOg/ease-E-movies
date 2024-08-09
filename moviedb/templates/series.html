@@ -425,10 +425,10 @@ header {
     <header>
         <div class="logo">Ease-E-Movies</div>
         <nav class="navbar">
-            <a href="#">Home</a>
-            <a href="#">TV Shows</a>
-            <a href="#">Movies</a>
-            <a href="#">New & Popular</a>
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'series' %}">TV Shows</a>
+            <a href="{% url 'home' %}">Movies</a>
+            <a href="home">New & Popular</a>
         </nav>
         <div class="search-container">
             <form action="{% url 'search_results' %}" method="GET">

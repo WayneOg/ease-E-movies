@@ -10,6 +10,7 @@
      <script type='text/javascript' src='//pl23927486.highratecpm.com/de/89/b7/de89b76309771563f1f618587e867e6b.js'></script>
     <style>
         /* Reset and basic styles */
+/* Reset and basic styles */
 body, html {
     margin: 0;
     padding: 0;
@@ -17,6 +18,7 @@ body, html {
     background-color: #141414;
     color: #fff;
     font-size: 16px;
+    overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 /* Header styles */
@@ -36,6 +38,7 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    box-sizing: border-box; /* Include padding in width calculations */
 }
 
 .navbar a {
@@ -50,6 +53,11 @@ header {
     color: #fff;
 }
 
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
 .search-container input[type="text"] {
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -58,6 +66,7 @@ header {
     border-radius: 4px;
     outline: none;
     width: 200px;
+    transition: width 0.3s ease;
 }
 
 .search-container button {
@@ -80,11 +89,13 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     padding: 80px 20px 20px;
+    box-sizing: border-box; /* Include padding in width calculations */
 }
 
 /* Movie details container */
 .movie-details-container {
     display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
     margin-bottom: 40px;
 }
 
@@ -92,6 +103,7 @@ header {
 .movie-poster {
     flex: 0 0 30%;
     padding-right: 30px;
+    box-sizing: border-box; /* Include padding in width calculations */
 }
 
 .movie-poster img {
@@ -185,6 +197,14 @@ header {
     .container {
         padding: 60px 15px 15px;
     }
+
+    .search-container input[type="text"] {
+        width: 180px; /* Adjust width */
+    }
+
+    .search-container button {
+        width: 60px;
+    }
 }
 
 /* Header styles */
@@ -210,17 +230,14 @@ header {
 
     .search-container input[type="text"] {
         width: calc(100% - 60px);
-        font-size: 16px; /* Increased font size for better readability */
+        font-size: 16px;
     }
 
     .search-container button {
         width: 60px;
         padding: 10px 0;
     }
-}
 
-/* Movie poster */
-@media screen and (max-width: 768px) {
     .movie-poster {
         flex: 0 0 100%;
         margin-bottom: 20px;
@@ -228,20 +245,13 @@ header {
     }
 
     .movie-poster img {
-        max-width: 300px; /* Limit max width for better visibility */
+        max-width: 100%; /* Ensure image fits within container */
         margin: 0 auto;
         display: block;
     }
-}
-
-/* Font sizes for mobile */
-@media screen and (max-width: 768px) {
-    body, html {
-        font-size: 16px; /* Increased base font size */
-    }
 
     .movie-details-content h2 {
-        font-size: 2.2rem; /* Larger title size */
+        font-size: 2.2rem; /* Adjust title size */
     }
 
     .movie-details-content p {
@@ -251,7 +261,7 @@ header {
 
     .watch-button, .download-button {
         font-size: 1rem;
-        padding: 15px 24px; /* Increased touch target size */
+        padding: 10px 20px; /* Adjust button padding */
     }
 }
 
@@ -266,13 +276,14 @@ header {
     }
 
     .movie-details-content h2 {
-        font-size: 2rem;
+        font-size: 2rem; /* Adjust title size */
     }
 
     .recommended-movie-title h3 {
         font-size: 0.9rem;
     }
 }
+
     </style>
     <script type='text/javascript' src='//pl23927486.highratecpm.com/de/89/b7/de89b76309771563f1f618587e867e6b.js'></script>
 </head>

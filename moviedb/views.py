@@ -304,7 +304,7 @@ class SearchService:
             for result in movie_results:
                 if result.get('poster_path'):
                     movie, created = Movie.objects.update_or_create(
-                        id=result['id'],
+                        tmdb_id=result['id'],
                         defaults={
                             'title': result['title'],
                             'overview': result.get('overview', ''),

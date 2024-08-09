@@ -10,6 +10,7 @@
      <script type='text/javascript' src='//pl23927486.highratecpm.com/de/89/b7/de89b76309771563f1f618587e867e6b.js'></script>
     <style>
         /* Reset and basic styles */
+/* Reset and basic styles */
 body, html {
     margin: 0;
     padding: 0;
@@ -17,6 +18,7 @@ body, html {
     background-color: #141414;
     color: #fff;
     font-size: 16px;
+    overflow-x: hidden; /* Prevent horizontal overflow */
 }
 
 /* Header styles */
@@ -36,6 +38,7 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
+    box-sizing: border-box; /* Include padding in width calculations */
 }
 
 .navbar a {
@@ -50,6 +53,11 @@ header {
     color: #fff;
 }
 
+.search-container {
+    display: flex;
+    align-items: center;
+}
+
 .search-container input[type="text"] {
     padding: 10px;
     background-color: rgba(0, 0, 0, 0.5);
@@ -58,6 +66,7 @@ header {
     border-radius: 4px;
     outline: none;
     width: 200px;
+    transition: width 0.3s ease;
 }
 
 .search-container button {
@@ -85,6 +94,7 @@ header {
 /* Movie details container */
 .movie-details-container {
     display: flex;
+    flex-wrap: wrap; /* Wrap content on smaller screens */
     margin-bottom: 40px;
 }
 
@@ -92,6 +102,7 @@ header {
 .movie-poster {
     flex: 0 0 30%;
     padding-right: 30px;
+    box-sizing: border-box;
 }
 
 .movie-poster img {
@@ -185,6 +196,18 @@ header {
     .container {
         padding: 60px 15px 15px;
     }
+
+    .navbar {
+        padding: 0 10px; /* Adjust padding */
+    }
+
+    .search-container input[type="text"] {
+        width: 180px; /* Adjust width */
+    }
+
+    .search-container button {
+        width: 60px;
+    }
 }
 
 /* Header styles */
@@ -210,7 +233,7 @@ header {
 
     .search-container input[type="text"] {
         width: calc(100% - 60px);
-        font-size: 16px; /* Increased font size for better readability */
+        font-size: 16px;
     }
 
     .search-container button {
@@ -219,42 +242,42 @@ header {
     }
 }
 
- /* Add these new styles for seasons and episodes */
-        .seasons-container {
-            margin-top: 40px;
-        }
-        
-        .season {
-            margin-bottom: 30px;
-        }
-        
-        .season-title {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: #e50914;
-        }
-        
-        .episodes-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-        }
-        
-        .episode {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 15px;
-            border-radius: 4px;
-        }
-        
-        .episode-title {
-            font-size: 1.1rem;
-            margin-bottom: 10px;
-        }
-        
-        .episode-info {
-            font-size: 0.9rem;
-            color: #ccc;
-        }
+/* Add these new styles for seasons and episodes */
+.seasons-container {
+    margin-top: 40px;
+}
+
+.season {
+    margin-bottom: 30px;
+}
+
+.season-title {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #e50914;
+}
+
+.episodes-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.episode {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 4px;
+}
+
+.episode-title {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+}
+
+.episode-info {
+    font-size: 0.9rem;
+    color: #ccc;
+}
 
 /* Movie poster */
 @media screen and (max-width: 768px) {
@@ -265,7 +288,7 @@ header {
     }
 
     .movie-poster img {
-        max-width: 300px; /* Limit max width for better visibility */
+        max-width: 100%; /* Ensure image fits within container */
         margin: 0 auto;
         display: block;
     }
@@ -274,11 +297,11 @@ header {
 /* Font sizes for mobile */
 @media screen and (max-width: 768px) {
     body, html {
-        font-size: 16px; /* Increased base font size */
+        font-size: 14px; /* Adjust base font size */
     }
 
     .movie-details-content h2 {
-        font-size: 2.2rem; /* Larger title size */
+        font-size: 2.2rem;
     }
 
     .movie-details-content p {
@@ -288,7 +311,7 @@ header {
 
     .watch-button, .download-button {
         font-size: 1rem;
-        padding: 15px 24px; /* Increased touch target size */
+        padding: 10px 20px; /* Adjust padding */
     }
 }
 
@@ -303,7 +326,7 @@ header {
     }
 
     .movie-details-content h2 {
-        font-size: 2rem;
+        font-size: 1.8rem;
     }
 
     .recommended-movie-title h3 {

@@ -285,9 +285,15 @@ def genre_movies(request, genre_id):
     movies = Movie.objects.filter(genres__tmdb_id=genre_id).distinct()
     return render(request, 'genre_movies.html', {'movies': movies})
 
+
 class SearchService:
     def __init__(self, api_key):
         self.api_key = api_key
+
+    def search_movies_and_series(self, query):
+        movies = self.search_movies(query)
+        series = self.search_series(query)
+        return movies, series
 
     def search_movies(self, query):
         movie_url = 'https://api.themoviedb.org/3/search/movie'
@@ -304,7 +310,7 @@ class SearchService:
             for result in movie_results:
                 if result.get('poster_path'):
                     movie, created = Movie.objects.update_or_create(
-                        tmdb_id=result['id'],
+                        tmdb_id=result['id'],  # Using `tmdb_id` instead of `id`
                         defaults={
                             'title': result['title'],
                             'overview': result.get('overview', ''),
@@ -317,71 +323,69 @@ class SearchService:
             return movies
         except requests.RequestException as e:
             logger.error(f"Error fetching movie data: {str(e)}")
-            raise
+            return []
 
     def search_series(self, query):
-        series_url = 'http://api.tvmaze.com/search/shows'
-        series_params = {'q': query}
+        series_url = 'https://api.themoviedb.org/3/search/tv'
+        series_params = {
+            'api_key': self.api_key,
+            'language': 'en-US',
+            'query': query
+        }
         try:
             series_response = requests.get(series_url, params=series_params)
             series_response.raise_for_status()
-            series_results = series_response.json()
+            series_results = series_response.json().get('results', [])
             series = []
             for result in series_results:
-                show = result['show']
-                if show.get('image') and show['image'].get('medium'):
+                if result.get('poster_path'):
                     serie, created = Series.objects.update_or_create(
-                        tmdb_id=show['id'],
+                        tmdb_id=result['id'],
                         defaults={
-                            'title': show['name'],
-                            'summary': show.get('summary', ''),
-                            'release_date': show.get('premiered', None),
-                            'poster': show.get('image', {}).get('medium', ''),
+                            'title': result['name'],
+                            'summary': result.get('overview', ''),
+                            'release_date': result.get('first_air_date', None),
+                            'poster': result.get('poster_path', ''),
+                            'vote_average': result.get('vote_average', 0)
                         }
                     )
                     series.append(serie)
             return series
         except requests.RequestException as e:
             logger.error(f"Error fetching series data: {str(e)}")
-            raise
+            return []
 
 def search_results(request):
     query = request.GET.get('query', '').strip()
     if not query:
-        return render(request, 'search_results.html', {'movies': [], 'series': [], 'error': 'Please enter a search term.'})
+        return render(request, 'search_results.html', {
+            'movies': [],
+            'series': [],
+            'error': 'Please enter a search term.'
+        })
 
-    search_service = SearchService(api_key=API_KEY)  # Ensure API_KEY is set in Django settings
+    search_service = SearchService(api_key=API_KEY)
     try:
-        movies = search_service.search_movies(query)
-        series = search_service.search_series(query)
+        movies, series = search_service.search_movies_and_series(query)
     except requests.RequestException as e:
         logger.error(f"Error fetching data: {str(e)}")
-        return render(request, 'search_results.html', {'error': 'An error occurred while fetching the search results. Please try again later.'})
+        return render(request, 'search_results.html', {
+            'error': 'An error occurred while fetching the search results. Please try again later.'
+        })
 
     if not movies and not series:
-        return render(request, 'search_results.html', {'error': 'No results found for your search.', 'query': query})
+        return render(request, 'search_results.html', {
+            'error': 'No results found for your search.',
+            'query': query
+        })
 
-    # Implement pagination for movies
-    movie_paginator = Paginator(movies, 10)
-    movie_page_number = request.GET.get('movie_page', 1)
-    try:
-        movie_page = movie_paginator.page(movie_page_number)
-    except PageNotAnInteger:
-        movie_page = movie_paginator.page(1)
-    except EmptyPage:
-        movie_page = movie_paginator.page(movie_paginator.num_pages)
-
-    # Implement pagination for series
-    series_paginator = Paginator(series, 10)
-    series_page_number = request.GET.get('series_page', 1)
-    try:
-        series_page = series_paginator.page(series_page_number)
-    except PageNotAnInteger:
-        series_page = series_paginator.page(1)
-    except EmptyPage:
-        series_page = series_paginator.page(series_paginator.num_pages)
-
-    return render(request, 'search_results.html', {'movies': movie_page, 'series': series_page, 'query': query})
+    return render(request, 'search_results.html', {
+        'movies': movies,
+        'series': series,
+        'query': query
+    })
+    
+    
 # Utility function to generate a unique token
 def generate_movie_token(movie_id):
     return hashlib.sha256(f"{movie_id}".encode()).hexdigest()

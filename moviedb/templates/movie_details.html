@@ -321,7 +321,7 @@ header {
                 </p>
                 <p><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
                 <a href="#" class="download-button" id="downloadButton">Watch Now</a>
-                
+                <a href="#" class="download-button" id="download">Download Now</a>
             </div>
         </div>
         
@@ -350,6 +350,34 @@ header {
             {% endfor %}
         </div>
     </div>
+    <script>
+        document.getElementById('download').addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            {% if movie.tmdb_id %}
+                var videoId = '{{ movie.tmdb_id }}';
+                var type = 'tmdb';
+            {% elif movie.imdb_id %}
+                var videoId = 'tt{{ movie.imdb_id }}';
+                var type = 'imdb';
+            {% else %}
+                alert('Download link not available for this movie.');
+                return;
+            {% endif %}
+
+            var downloadUrl = 'https://multiembed.mov/directstream.php?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : '');
+
+            var link = document.createElement('a');
+            link.href = downloadUrl;
+            link.target = '_blank';
+            link.download = 'movie.mp4'; // Set this as the default file name
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            alert('If the download did not start automatically, please right-click on the video player in the new tab and select "Save video as" or use a video downloader extension in your browser.');
+        });
+    </script>
     <script>
         document.getElementById('downloadButton').addEventListener('click', function(e) {
             e.preventDefault();

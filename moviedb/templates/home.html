@@ -295,11 +295,7 @@ footer {
         box-sizing: border-box;
     }
 
-    .search-container button {
-        margin-left: 0;
-        margin-top: 8px;
-        width: 100%;
-    }
+    
 
     /* Search adjustments */
     .search-container input[type=text] {
@@ -323,7 +319,13 @@ footer {
         cursor: text;
     }
 
-    
+    .search-container button {
+        background: transparent;
+        border: none;
+        padding: 0;
+        width: 30px;
+        height: 30px;
+    }
 
     .search-container button::after {
         content: "Search";
@@ -839,29 +841,6 @@ document.addEventListener('DOMContentLoaded', (event) => {
             searchButton.style.backgroundColor = 'transparent';
         }
     });
-});
-
-document.getElementById('searchInput').addEventListener('keyup', function() {
-    const searchValue = this.value.toLowerCase();
-    const movies = document.querySelectorAll('.movie');
-    let found = false;
-
-    movies.forEach(function(movie) {
-        const title = movie.getAttribute('data-title').toLowerCase();
-        if (title.includes(searchValue)) {
-            movie.style.display = 'block';
-            found = true;
-        } else {
-            movie.style.display = 'none';
-        }
-    });
-
-    const noResultsMessage = document.querySelector('.no-results');
-    if (found) {
-        noResultsMessage.classList.remove('active');
-    } else {
-        noResultsMessage.classList.add('active');
-    }
 });
 </script>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132334225065239"

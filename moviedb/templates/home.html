@@ -7,22 +7,21 @@
     <title>Wayne's Movie Site</title>
     
     <style>
-        /* Reset and basic styles */
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Helvetica Neue', Arial, sans-serif;
-            background-color: #141414;
-            color: #fff;
-            overflow-x: hidden;
-        }
+   /* Reset and basic styles */
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #141414;
+    color: #fff;
+    overflow-x: hidden;
+}
 
-        a {
-            text-decoration: none;
-            color: inherit;
-        }
+a {
+    text-decoration: none;
+    color: inherit;
+}
 
-        /* Header styles */
 /* Header styles */
 header {
     background-color: rgba(0, 0, 0, 0.8);
@@ -71,6 +70,7 @@ header {
     color: #fff;
     border-radius: 4px;
     width: 200px;
+    transition: width 0.3s;
 }
 
 .search-container button {
@@ -83,8 +83,193 @@ header {
     cursor: pointer;
 }
 
-/* Mobile styles */
+/* Sidebar styles */
+.sidebar {
+    height: 100%;
+    width: 0;
+    position: fixed;
+    z-index: 1001;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 60px;
+}
+
+.sidebar a {
+    padding: 8px 8px 8px 32px;
+    text-decoration: none;
+    font-size: 18px;
+    color: #818181;
+    display: block;
+    transition: color 0.3s;
+}
+
+.sidebar a:hover {
+    color: #f1f1f1;
+}
+
+.sidebar .closebtn {
+    position: absolute;
+    top: 0;
+    right: 25px;
+    font-size: 36px;
+    margin-left: 50px;
+}
+
+.openbtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: transparent;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+}
+
+.openbtn:hover {
+    background-color: #444;
+}
+
+/* Main content styles */
+.main {
+    padding: 20px 4%;
+    margin-top: 70px;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* Movie row styles */
+.movies {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 20px 0;
+}
+
+.movies::-webkit-scrollbar {
+    display: none;
+}
+
+.movie {
+    flex: 0 0 auto;
+    width: 200px;
+    transition: transform 0.3s;
+    position: relative;
+}
+
+.movie:hover {
+    transform: scale(1.1);
+    z-index: 2;
+}
+
+.movie img {
+    width: 100%;
+    border-radius: 4px;
+}
+
+.movie-info {
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 10px;
+    transition: visibility 0.3s, opacity 0.3s;
+}
+
+.movie:hover .movie-info {
+    visibility: visible;
+    opacity: 1;
+}
+
+.movie-info h3 {
+    margin: 0;
+    font-size: 1rem;
+}
+
+.recommended-movie-title {
+    display: none;
+}
+
+/* Latest Movies Section */
+.latest-movies-wrapper {
+    position: relative;
+    margin-bottom: 40px;
+}
+
+.latest-movies {
+    display: flex;
+    transition: transform 0.5s ease;
+}
+
+.latest-movie {
+    flex: 0 0 100%;
+    position: relative;
+    height: 600px; /* Adjust this value as needed */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.latest-movie::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+}
+
+.latest-movie-info {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    display: flex;
+    align-items: flex-end;
+    z-index: 1;
+}
+
+.small-poster {
+    width: 150px;
+    margin-right: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+.poster-content {
+    flex: 1;
+    color: white;
+}
+
+.poster-content h3 {
+    font-size: 2rem;
+    margin: 0 0 10px 0;
+}
+
+.poster-content p {
+    margin: 5px 0;
+}
+
+/* Footer styles */
+footer {
+    background-color: #141414;
+    padding: 40px 4%;
+    margin-top: 60px;
+}
+
+/* Responsive adjustments */
 @media screen and (max-width: 768px) {
+    /* Header adjustments */
     header {
         padding: 10px 2%;
     }
@@ -93,10 +278,7 @@ header {
         display: none;
     }
 
-    .search-container {
-        position: relative;
-    }
-
+    /* Search adjustments */
     .search-container input[type=text] {
         width: 30px;
         padding-right: 30px;
@@ -105,47 +287,12 @@ header {
     }
 
     .search-container form {
-        position: relative;
         width: 30px;
-        overflow: hidden;
         transition: width 0.4s;
     }
 
     .search-container form:focus-within {
         width: calc(100vw - 120px);
-    }
-
-    .search-container input[type=text] {
-        width: 100%;
-        padding-right: 30px;
-        cursor: pointer;
-    }
-
-    .search-container button {
-        position: absolute;
-        right: 0;
-        background: transparent;
-        border: none;
-        padding: 0;
-        width: 30px;
-        height: 30px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .search-container form:focus-within button {
-        background-color: #e50914;
-        right: -40px;
-    }
-
-    .search-container form:focus-within button .search-icon {
-        display: none;
-    }
-
-    .search-container form:focus-within button::after {
-        content: "Search";
-        color: #fff;
     }
 
     .search-container input[type=text]:focus {
@@ -154,234 +301,16 @@ header {
     }
 
     .search-container button {
-        position: absolute;
-        right: 0;
         background: transparent;
         border: none;
         padding: 0;
         width: 30px;
         height: 30px;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
     }
 
-    .search-container .search-icon {
-        color: #fff;
-        font-size: 18px;
-    }
-
-    .search-container input[type=text]:focus + button {
-        background-color: #e50914;
-        right: -40px;
-    }
-
-    .search-container input[type=text]:focus + button .search-icon {
-        display: none;
-    }
-
-    .search-container input[type=text]:focus + button::after {
+    .search-container button::after {
         content: "Search";
         color: #fff;
-    }
-
-    .openbtn {
-        display: block;
-    }
-}
-
-        /* Sidebar styles */
-        .sidebar {
-            height: 100%;
-            width: 0;
-            position: fixed;
-            z-index: 1001;
-            top: 0;
-            left: 0;
-            background-color: #111;
-            overflow-x: hidden;
-            transition: 0.5s;
-            padding-top: 60px;
-        }
-
-        .sidebar a {
-            padding: 8px 8px 8px 32px;
-            text-decoration: none;
-            font-size: 18px;
-            color: #818181;
-            display: block;
-            transition: 0.3s;
-        }
-
-        .sidebar a:hover {
-            color: #f1f1f1;
-        }
-
-        .sidebar .closebtn {
-            position: absolute;
-            top: 0;
-            right: 25px;
-            font-size: 36px;
-            margin-left: 50px;
-        }
-
-        .openbtn {
-            font-size: 20px;
-            cursor: pointer;
-            background-color: transparent;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-        }
-
-        .openbtn:hover {
-            background-color: #444;
-        }
-
-        /* Main content styles */
-        .main {
-            padding: 20px 4%;
-            margin-top: 70px;
-        }
-
-        .section-title {
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            font-weight: bold;
-        }
-
-        /* Movie row styles */
-        .movies {
-            display: flex;
-            gap: 10px;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-            padding: 20px 0;
-        }
-
-        .movies::-webkit-scrollbar {
-            display: none;
-        }
-
-        .movie {
-            flex: 0 0 auto;
-            width: 200px;
-            transition: transform 0.3s;
-            position: relative;
-        }
-
-        .movie:hover {
-            transform: scale(1.1);
-            z-index: 2;
-        }
-
-        .movie img {
-            width: 100%;
-            border-radius: 4px;
-        }
-
-        .movie-info {
-            visibility: hidden;
-            opacity: 0;
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px;
-            transition: visibility 0.3s, opacity 0.3s;
-        }
-
-        .movie:hover .movie-info {
-            visibility: visible;
-            opacity: 1;
-        }
-
-        .movie-info h3 {
-            margin: 0;
-            font-size: 1rem;
-        }
-
-        .recommended-movie-title {
-            display: none;
-        }
-
-        /* Latest Movies Section */
-        .latest-movies-wrapper {
-            position: relative;
-            margin-bottom: 40px;
-        }
-        
-        .latest-movies {
-            display: flex;
-            transition: transform 0.5s ease;
-        }
-        
-        .latest-movie {
-            flex: 0 0 100%;
-            position: relative;
-            height: 600px; /* Adjust this value as needed */
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        
-        .latest-movie::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
-        }
-        
-        .latest-movie-info {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            padding: 20px;
-            display: flex;
-            align-items: flex-end;
-            z-index: 1;
-        }
-        
-        .small-poster {
-            width: 150px;
-            margin-right: 20px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-        
-        .poster-content {
-            flex: 1;
-            color: white;
-        }
-        
-        .poster-content h3 {
-            font-size: 2rem;
-            margin: 0 0 10px 0;
-        }
-        
-        .poster-content p {
-            margin: 5px 0;
-        }
-       
-
-        /* Footer styles */
-        footer {
-            background-color: #141414;
-            padding: 40px 4%;
-            margin-top: 60px;
-        }
-
-/* Responsive adjustments */
-@media screen and (max-width: 768px) {
-    
-    /* Main content adjustments */
-    .main {
-        margin-top: 80px;
     }
 
     /* Movie row adjustments */
@@ -405,24 +334,29 @@ header {
     .poster-content h3 {
         font-size: 1.5rem;
     }
+
+    /* Main content adjustments */
+    .main {
+        margin-top: 80px;
+    }
 }
 
 @media screen and (max-width: 480px) {
-    /* Further adjustments for smaller screens */
+    /* Header adjustments */
     .logo {
         font-size: 1.5rem;
-    }
-
-    .navbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
     }
 
     .search-container button {
         padding: 8px;
     }
 
+    /* Movie row adjustments */
+    .movie {
+        width: 120px;
+    }
+
+    /* Latest Movies Section adjustments */
     .latest-movie {
         height: 300px;
     }
@@ -438,13 +372,12 @@ header {
     .poster-content p {
         font-size: 0.9rem;
     }
-}
 
-/* Sidebar responsiveness */
-@media screen and (max-height: 450px) {
+    /* Sidebar responsiveness */
     .sidebar {padding-top: 15px;}
     .sidebar a {font-size: 18px;}
 }
+
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9132334225065239"
      crossorigin="anonymous"></script>
@@ -876,14 +809,6 @@ header {
         setInterval(rotateMovies, 5000); // Rotate every 5 seconds
     </script>
     <script>
-function openNav() {
-    document.getElementById("mySidebar").style.width = "250px";
-}
-
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-}
-
 document.addEventListener('DOMContentLoaded', (event) => {
     const searchInput = document.querySelector('.search-container input');
     const searchButton = document.querySelector('.search-container button');

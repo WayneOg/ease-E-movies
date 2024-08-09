@@ -288,28 +288,16 @@ def genre_movies(request, genre_id):
 def search_results(request):
     query = request.GET.get('query', '').strip()
     if not query:
-        return render(request, 'search_results.html', {'movies': [], 'series': [], 'error': 'Please enter a search term.'})
+        return render(request, 'search_results.html', {'error': 'Please enter a search term.'})
 
     tmdb_api_key = API_KEY
     movies = []
     series = []
+    errors = []
 
-    # Search for movies and TV series
     search_types = [
-        {'type': 'movie', 'url': 'https://api.themoviedb.org/3/search/movie', 'model': Movie, 'fields': {
-            'id_field': 'id',
-            'title': 'title',
-            'overview': 'overview',
-            'release_date': 'release_date',
-            'poster_path': 'poster_path'
-        }},
-        {'type': 'tv', 'url': 'https://api.themoviedb.org/3/search/tv', 'model': Series, 'fields': {
-            'id_field': 'id',
-            'title': 'name',
-            'overview': 'overview',
-            'release_date': 'first_air_date',
-            'poster_path': 'poster_path'
-        }}
+        {'type': 'movie', 'url': 'https://api.themoviedb.org/3/search/movie'},
+        {'type': 'tv', 'url': 'https://api.themoviedb.org/3/search/tv'}
     ]
 
     for search in search_types:
@@ -323,28 +311,29 @@ def search_results(request):
             results = response.json().get('results', [])
 
             for result in results:
-                if result.get('poster_path'):
-                    item, created = search['model'].objects.update_or_create(
-                        id=result[search['fields']['id_field']],
-                        defaults={
-                            'title': result[search['fields']['title']],
-                            'overview': result.get(search['fields']['overview'], ''),
-                            'release_date': result.get(search['fields']['release_date'], None),
-                            'poster_path': result.get(search['fields']['poster_path'], ''),
-                        }
-                    )
-                    if search['type'] == 'movie':
-                        movies.append(item)
-                    else:
-                        series.append(item)
+                item = {
+                    'id': result['id'],
+                    'title': result.get('title') or result.get('name'),
+                    'overview': result.get('overview', ''),
+                    'release_date': result.get('release_date') or result.get('first_air_date'),
+                    'poster_path': result.get('poster_path', ''),
+                }
+                if search['type'] == 'movie':
+                    movies.append(item)
+                else:
+                    series.append(item)
 
         except requests.RequestException as e:
-            return render(request, 'search_results.html', {'error': f"Error fetching {search['type']} data: {str(e)}"})
+            errors.append(f"Error fetching {search['type']} data: {str(e)}")
 
     if not movies and not series:
         return render(request, 'search_results.html', {'error': 'No results found for your search.'})
 
-    return render(request, 'search_results.html', {'movies': movies, 'series': series})
+    return render(request, 'search_results.html', {
+        'movies': movies, 
+        'series': series, 
+        'errors': errors if errors else None
+    })
     
 # Utility function to generate a unique token
 def generate_movie_token(movie_id):

@@ -286,105 +286,74 @@ def genre_movies(request, genre_id):
     return render(request, 'genre_movies.html', {'movies': movies})
 
 
-class SearchService:
-    def __init__(self, api_key):
-        self.api_key = api_key
-
-    def search_movies_and_series(self, query):
-        movies = self.search_movies(query)
-        series = self.search_series(query)
-        return movies, series
-
-    def search_movies(self, query):
-        movie_url = 'https://api.themoviedb.org/3/search/movie'
-        movie_params = {
-            'api_key': self.api_key,
-            'language': 'en-US',
-            'query': query
-        }
-        try:
-            movie_response = requests.get(movie_url, params=movie_params)
-            movie_response.raise_for_status()
-            movie_results = movie_response.json().get('results', [])
-            movies = []
-            for result in movie_results:
-                if result.get('poster_path'):
-                    movie, created = Movie.objects.update_or_create(
-                        tmdb_id=result['id'],  # Using `tmdb_id` instead of `id`
-                        defaults={
-                            'title': result['title'],
-                            'overview': result.get('overview', ''),
-                            'release_date': result.get('release_date', None),
-                            'poster_path': result.get('poster_path', ''),
-                            'vote_average': result.get('vote_average', 0)
-                        }
-                    )
-                    movies.append(movie)
-            return movies
-        except requests.RequestException as e:
-            logger.error(f"Error fetching movie data: {str(e)}")
-            return []
-
-    def search_series(self, query):
-        series_url = 'https://api.themoviedb.org/3/search/tv'
-        series_params = {
-            'api_key': self.api_key,
-            'language': 'en-US',
-            'query': query
-        }
-        try:
-            series_response = requests.get(series_url, params=series_params)
-            series_response.raise_for_status()
-            series_results = series_response.json().get('results', [])
-            series = []
-            for result in series_results:
-                if result.get('poster_path'):
-                    serie, created = Series.objects.update_or_create(
-                        tmdb_id=result['id'],
-                        defaults={
-                            'title': result['name'],
-                            'summary': result.get('overview', ''),
-                            'release_date': result.get('first_air_date', None),
-                            'poster': result.get('poster_path', ''),
-                            'vote_average': result.get('vote_average', 0)
-                        }
-                    )
-                    series.append(serie)
-            return series
-        except requests.RequestException as e:
-            logger.error(f"Error fetching series data: {str(e)}")
-            return []
-
 def search_results(request):
     query = request.GET.get('query', '').strip()
     if not query:
-        return render(request, 'search_results.html', {
-            'movies': [],
-            'series': [],
-            'error': 'Please enter a search term.'
-        })
+        return render(request, 'search_results.html', {'movies': [], 'series': [], 'error': 'Please enter a search term.'})
 
-    search_service = SearchService(api_key=API_KEY)
+    movies = []
+    series = []
+
+    # Search for movies
+    tmdb_api_key = API_KEY
+    movie_url = 'https://api.themoviedb.org/3/search/movie'
+    movie_params = {
+        'api_key': tmdb_api_key,
+        'language': 'en-US',
+        'query': query
+    }
+
     try:
-        movies, series = search_service.search_movies_and_series(query)
+        movie_response = requests.get(movie_url, params=movie_params)
+        movie_response.raise_for_status()
+        movie_results = movie_response.json().get('results', [])
+
+        for result in movie_results:
+            if result.get('poster_path'):
+                movie, created = Movie.objects.update_or_create(
+                    id=result['id'],
+                    defaults={
+                        'title': result['title'],
+                        'overview': result.get('overview', ''),
+                        'release_date': result.get('release_date', None),
+                        'poster_path': result.get('poster_path', ''),
+                    }
+                )
+                movies.append(movie)
+
     except requests.RequestException as e:
-        logger.error(f"Error fetching data: {str(e)}")
-        return render(request, 'search_results.html', {
-            'error': 'An error occurred while fetching the search results. Please try again later.'
-        })
+        return render(request, 'search_results.html', {'error': f"Error fetching movie data: {str(e)}"})
+
+    # Search for series
+    series_url = 'http://api.tvmaze.com/search/shows'
+    series_params = {'q': query}
+
+    try:
+        series_response = requests.get(series_url, params=series_params)
+        series_response.raise_for_status()
+        series_results = series_response.json()
+
+        for result in series_results:
+            show = result['show']
+            if show.get('image') and show['image'].get('medium'):
+                serie, created = Series.objects.update_or_create(
+                    tmdb_id=show['id'],
+                    defaults={
+                        'title': show['name'],
+                        'summary': show.get('summary', ''),
+                        'release_date': show.get('premiered', None),
+                        'poster': show.get('image', {}).get('medium', ''),
+                    }
+                )
+                series.append(serie)
+
+    except requests.RequestException as e:
+        return render(request, 'search_results.html', {'error': f"Error fetching series data: {str(e)}"})
 
     if not movies and not series:
-        return render(request, 'search_results.html', {
-            'error': 'No results found for your search.',
-            'query': query
-        })
+        return render(request, 'search_results.html', {'error': 'No results found for your search.'})
 
-    return render(request, 'search_results.html', {
-        'movies': movies,
-        'series': series,
-        'query': query
-    })
-    
+    return render(request, 'search_results.html', {'movies': movies, 'series': series})
     
 # Utility function to generate a unique token
 def generate_movie_token(movie_id):

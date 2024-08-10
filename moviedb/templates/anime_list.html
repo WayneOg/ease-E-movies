@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime List</title>
+    <style>
+        body {
+            background-color: #141414;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        
+        header {
+            background-color: #e50914;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .anime-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+        
+        .anime-item {
+            background-color: #1c1c1c;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .anime-item img {
+            max-width: 100%;
+            border-radius: 4px;
+        }
+        
+        .anime-item h2 {
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        
+        .anime-item p {
+            font-size: 0.9rem;
+        }
+        
+    </style>
+</head>
+<body>
+    <header>
+        <h1>{{ category }} Anime</h1>
+    </header>
+
+    <div class="anime-list">
+        {% for anime in anime_list %}
+            <div class="anime-item">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}" />
+                <h2>{{ anime.title }}</h2>
+                <p>{{ anime.synopsis|truncatewords:20 }}</p>
+                <p><strong>Score:</strong> {{ anime.score }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Add pagination controls here if needed -->
+</body>
+</html>

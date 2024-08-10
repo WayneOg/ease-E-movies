@@ -1197,3 +1197,40 @@ def serie_details(request, pk):
         logger.error(f"Unexpected error: {str(e)}")
         return render(request, 'series_details.html', {'error_message': 'An unexpected error occurred. Try again later.'})
     
+# Replace this with your own function to handle pagination if needed.
+def paginate_anime(request, anime_list):
+    # Add your pagination logic here (Django's Paginator can be used)
+    return anime_list
+
+def fetch_anime_by_genre(genre_id, page=1):
+    url = f'https://api.jikan.moe/v4/anime?genres={genre_id}&page={page}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('data', [])
+    else:
+        response.raise_for_status()
+
+def anime_by_genre(request, genre_id=1):
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        anime_list = fetch_anime_by_genre(genre_id, page_number)
+        anime_list = paginate_anime(request, anime_list)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from Jikan API.')
+    
+    return render(request, 'anime_list.html', {'anime_list': anime_list, 'genre_id': genre_id})
+
+def popular_anime(request):
+    page_number = request.GET.get('page', 1)
+    
+    try:
+        anime_list = fetch_anime_by_genre(genre_id=None, page=page_number)  # Fetch popular anime without genre filtering
+        anime_list = paginate_anime(request, anime_list)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from Jikan API.')
+    
+    return render(request, 'anime_list.html', {'anime_list': anime_list, 'category': 'Popular Anime'})
+
+def action_anime(request):
+    return anime_by_genre(request, genre_id=1)  # Assuming genre_id=1 is for Action

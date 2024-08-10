@@ -23,4 +23,7 @@ urlpatterns = [
     path('serieslist/', views.series_list, name='series_movies'),
     path('series/<int:pk>/', views.serie_details, name='series_details'),
     path('series/<int:pk>/season/<int:season>/', views.serie_details, name='series_details_season'),
+    path('anime/popular/', views.popular_anime, name='popular_anime'),
+    path('anime/genre/<int:genre_id>/', views.anime_by_genre, name='anime_by_genre'),
+    path('anime/action/', views.action_anime, name='action_anime'),
 ]

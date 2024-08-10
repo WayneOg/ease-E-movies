@@ -1239,31 +1239,31 @@ def popular_anime(request):
     
     return render(request, 'anime_list.html', {'anime_list': anime_list, 'category': 'Popular Anime'})
 
-def fetch_action_anime(request):
+def action_anime(request):
     return anime_by_genre(request, genre_id=1)  # Assuming genre_id=1 is for Action
 
 
-def fetch_action_anime(request):
+def action_anime(request):
     return anime_by_genre(request, genre_id=1)  # Action
 
-def fetch_scifi_anime(request):
+def scifi_anime(request):
     return anime_by_genre(request, genre_id=24)  # Sci-Fi
 
-def fetch_romance_anime(request):
+def romance_anime(request):
     return anime_by_genre(request, genre_id=22)  # Romance
 
-def fetch_drama_anime(request):
+def drama_anime(request):
     return anime_by_genre(request, genre_id=8)  # Drama
 
-def fetch_comedy_anime(request):
+def comedy_anime(request):
     return anime_by_genre(request, genre_id=4)  # Comedy
 
-def fetch_history_anime(request):
+def history_anime(request):
     return anime_by_genre(request, genre_id=13)  # History
 
-def fetch_horror_anime(request):
+def horror_anime(request):
     return anime_by_genre(request, genre_id=14)  # Horror
 
-def fetch_investigative_anime(request):
+def investigative_anime(request):
     return anime_by_genre(request, genre_id=7)  # Mystery (Investigative Series)
 

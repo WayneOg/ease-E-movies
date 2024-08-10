@@ -718,7 +718,7 @@ def genre_series(request, genre_id):
         )
         serie.genres.add(Genre.objects.get(tmdb_id=genre_id))
     series = Series.objects.filter(genres__tmdb_id=genre_id).distinct()
-    return render(request, 'genre_movies.html', {'series': series})
+    return render(request, 'genre_series.html', {'series': series})
 
 
 def get_series_by_category(category_id, page_number):

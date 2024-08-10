@@ -1267,3 +1267,28 @@ def horror_anime(request):
 def investigative_anime(request):
     return anime_by_genre(request, genre_id=7)  # Mystery (Investigative Series)
 
+def home_anime(request):
+    try:
+        action_animes = fetch_anime_by_genre(genre_id=1)
+        scifi_animes = fetch_anime_by_genre(genre_id=24)
+        romance_animes = fetch_anime_by_genre(genre_id=22)
+        drama_animes = fetch_anime_by_genre(genre_id=8)
+        comedy_animes = fetch_anime_by_genre(genre_id=4)
+        history_animes = fetch_anime_by_genre(genre_id=13)
+        horror_animes = fetch_anime_by_genre(genre_id=14)
+        investigative_animes = fetch_anime_by_genre(genre_id=7)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from Jikan API.')
+
+    context = {
+        'action_animes': action_animes,
+        'scifi_animes': scifi_animes,
+        'romance_animes': romance_animes,
+        'drama_animes': drama_animes,
+        'comedy_animes': comedy_animes,
+        'history_animes': history_animes,
+        'horror_animes': horror_animes,
+        'investigative_animes': investigative_animes,
+    }
+
+    return render(request, 'anime_list.html', context)

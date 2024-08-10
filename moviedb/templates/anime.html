@@ -418,32 +418,14 @@
         {% cache 600 animes_list %}
         <h1 class="section-title">TV animes</h1>
 
-        <!-- Latest animes -->
-        <div class="latest-movies-wrapper">
-            <div class="latest-movies">
-                {% for anime in latest_animes|slice:":10" %}
-                <div class="latest-movie" style="background-image: url('https://image.tmdb.org/t/p/original{{ anime.backdrop_path }}');">
-                    <div class="latest-movie-info">
-                        <a href="{% url 'animes_details' pk=anime.id %}">
-                        <img class="small-poster" src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                        <div class="poster-content">
-                            <h3>{{ anime.name }}</h3>
-                            <p>{{ anime.first_air_date|date:"Y" }}</p>
-                            <p>{{ anime.overview|truncatewords:20 }}</p>
-                        </div>
-    
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </div>
+        
 
         <!-- Popular animes -->
         <h2 class="section-title">Popular animes</h2>
         <div class="movies">
             {% for anime in animes %}
             <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">
                     <h3>{{ anime.name }}</h3>
                     <p>{{ anime.first_air_date|date:"Y" }}</p>
@@ -457,7 +439,7 @@
         <div class="movies">
             {% for anime in action_animes %}
             <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">
 
                     <h3>{{ anime.name }}</h3>
@@ -476,7 +458,7 @@
         <div class="movies">
             {% for anime in comedy_animes %}
             <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">
                     <h3>{{ anime.name }}</h3>
                     <p>{{ anime.first_air_date|date:"Y" }}</p>
@@ -490,7 +472,7 @@
         <div class="movies">
             {% for anime in drama_animes %}
             <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">
                     <h3>{{ anime.name }}</h3>
                     <p>{{ anime.first_air_date|date:"Y" }}</p>
@@ -522,7 +504,7 @@
         <div class="movies">
             {% for anime in scifi_animes %}
             <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">
                     <h3>{{ anime.name }}</h3>
                     <p>{{ anime.first_air_date|date:"Y" }}</p>
@@ -536,7 +518,7 @@
         <div class="movies">
             {% for anime in history_animes %}
             <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">
                     <h3>{{ anime.name }}</h3>
                     <p>{{ anime.first_air_date|date:"Y" }}</p>
@@ -552,11 +534,10 @@
         <div class="movies">
             {% for anime in animes_list %}
             <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">
                     <h3>{{ anime.name }}</h3>
                     <p>{{ anime.first_air_date|date:"Y" }}</p>
-View Details</a>
                 </div>
             </div>
             {% endfor %}

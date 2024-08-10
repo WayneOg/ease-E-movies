@@ -1267,7 +1267,7 @@ def fetch_horror_anime(request):
 def fetch_investigative_anime(request):
     return anime_by_genre(request, genre_id=7)  # Mystery (Investigative Series)
 
-def fetch_adventure_anime():
+'''def fetch_adventure_anime():
     return fetch_anime_by_genre(2)
 
 def fetch_fantasy_anime():
@@ -1292,7 +1292,7 @@ def fetch_sports_anime():
     return fetch_anime_by_genre(30)
 
 def fetch_martial_arts_anime():
-    return fetch_anime_by_genre(17)
+    return fetch_anime_by_genre(17)'''
 
 def home_anime(request, genre_id):
     try:
@@ -1312,7 +1312,7 @@ def home_anime(request, genre_id):
     investigative_animes = fetch_investigative_anime()
     history_animes = fetch_history_anime()
     romance_animes = fetch_romance_anime()
-    adventure_animes = fetch_adventure_anime()
+    '''adventure_animes = fetch_adventure_anime()
     fantasy_animes = fetch_fantasy_anime()
     mecha_animes = fetch_mecha_anime()
     psychological_animes = fetch_psychological_anime()
@@ -1320,7 +1320,7 @@ def home_anime(request, genre_id):
     slice_of_life_animes = fetch_slice_of_life_anime()
     thriller_animes = fetch_thriller_anime()
     sports_animes = fetch_sports_anime()
-    martial_arts_animes = fetch_martial_arts_anime()
+    martial_arts_animes = fetch_martial_arts_anime()'''
 
     # Collect posters for all genres
     posters = [anime['images']['jpg']['image_url'] for anime in animes]
@@ -1332,7 +1332,7 @@ def home_anime(request, genre_id):
     posters.extend([anime['images']['jpg']['image_url'] for anime in investigative_animes])
     posters.extend([anime['images']['jpg']['image_url'] for anime in history_animes])
     posters.extend([anime['images']['jpg']['image_url'] for anime in romance_animes])
-    posters.extend([anime['images']['jpg']['image_url'] for anime in adventure_animes])
+    '''posters.extend([anime['images']['jpg']['image_url'] for anime in adventure_animes])
     posters.extend([anime['images']['jpg']['image_url'] for anime in fantasy_animes])
     posters.extend([anime['images']['jpg']['image_url'] for anime in mecha_animes])
     posters.extend([anime['images']['jpg']['image_url'] for anime in psychological_animes])
@@ -1341,7 +1341,7 @@ def home_anime(request, genre_id):
     posters.extend([anime['images']['jpg']['image_url'] for anime in thriller_animes])
     posters.extend([anime['images']['jpg']['image_url'] for anime in sports_animes])
     posters.extend([anime['images']['jpg']['image_url'] for anime in martial_arts_animes])
-
+'''
     context = {
         'animes': animes,
         'action_anime': action_animes,
@@ -1352,7 +1352,7 @@ def home_anime(request, genre_id):
         'investigative_anime': investigative_animes,
         'horror_anime': horror_animes,
         'romance_anime': romance_animes,
-        'adventure_anime': adventure_animes,
+        ''''adventure_anime': adventure_animes,
         'fantasy_anime': fantasy_animes,
         'mecha_anime': mecha_animes,
         'psychological_anime': psychological_animes,
@@ -1360,7 +1360,7 @@ def home_anime(request, genre_id):
         'slice_of_life_anime': slice_of_life_animes,
         'thriller_anime': thriller_animes,
         'sports_anime': sports_animes,
-        'martial_arts_anime': martial_arts_animes,
+        'martial_arts_anime': martial_arts_animes,'''
         'posters': posters,
     }
 

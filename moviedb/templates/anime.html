@@ -467,62 +467,10 @@
             {% endfor %}
         </div>
 
-        <!-- Reaility animes -->
-        <h2 class="section-title">Reality animes</h2>
-        <div class="movies">
-            {% for anime in adventure_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+      
+        
 
-        <!-- Animation animes -->
-        <h2 class="section-title">Animation animes</h2>
-        <div class="movies">
-            {% for anime in fantasy_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Kids animes -->
-        <h2 class="section-title">Kids animes</h2>
-        <div class="movies">
-            {% for anime in thriller_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- Family animes -->
-        <h2 class="section-title">Family animes</h2>
-        <div class="movies">
-            {% for anime in slice_of_life_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
+        
         <!-- Comedy animes -->
         <h2 class="section-title">Comedy animes</h2>
         <div class="movies">
@@ -551,33 +499,9 @@
             {% endfor %}
         </div>
 
-        <!-- History animes -->
-        <h2 class="section-title">History animes</h2>
-        <div class="movies">
-            {% for anime in fantasy_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+        
 
-        <!-- Soap animes -->
-        <h2 class="section-title">Soap animes</h2>
-        <div class="movies">
-            {% for anime in slice_of_life_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+      
 
         <!-- Mystery animes -->
         <h2 class="section-title">Mystery animes</h2>
@@ -621,63 +545,7 @@
             {% endfor %}
         </div>
 
-        <!-- Documentary animes -->
-        <h2 class="section-title">Documentary animes</h2>
-        <div class="movies">
-            {% for anime in psychological_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- History animes -->
-        <h2 class="section-title">History animes</h2>
-        <div class="movies">
-            {% for anime in martial_arts_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <!-- History animes -->
-        <h2 class="section-title">History animes</h2>
-        <div class="movies">
-            {% for anime in sports_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-     
-        <!-- History animes -->
-        <h2 class="section-title">History animes</h2>
-        <div class="movies">
-            {% for anime in mecha_anime %}
-            <div class="movie">
-                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
-
+        
         <!-- Genre-specific animes sections -->
         {% for genre, animes_list in genre_animes.items %}
         <h2 class="section-title">{{ genre }} animes</h2>

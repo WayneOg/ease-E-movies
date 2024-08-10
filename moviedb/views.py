@@ -696,7 +696,7 @@ def series_genre_list(request):
         name = genre_data.get('name')
         Genre.objects.get_or_create(tmdb_id=tmdb_id, name=name)
     genres = Genre.objects.all()
-    return render(request, 'genre_list.html', {'genres': genres})
+    return render(request, 'series_genre_list.html', {'genres': genres})
 
 def genre_series(request, genre_id):
     url = f'https://api.themoviedb.org/3/discover/tv?api_key={API_KEY}&language=en-US&sort_by=popularity.desc&with_genres={genre_id}'

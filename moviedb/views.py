@@ -1261,21 +1261,8 @@ def comedy_anime(request):
 def history_anime(request):
     return anime_by_genre(request, genre_id=13)  # History
 
-def fetch_horror_anime(page=1):
-    base_url = 'https://api.jikan.moe/v4/anime'
-    genre_id = 14  # Replace with the actual genre ID for documentary-like content
-    return fetch_anime_by_genre(base_url, genre_id, page) # Horror
-
 def horror_anime(request):
-    page_number = request.GET.get('page', 1)
-    
-    try:
-        horror_animes = fetch_horror_anime(page_number)
-        horror_animes = paginate_anime(request, horror_animes)
-    except requests.exceptions.RequestException:
-        return HttpResponseServerError('Error fetching data from Jikan API.')
-
-    return render(request, 'anime_list.html', {'anime_list': horror_animes, 'category': 'Horror Anime'})
+    return anime_by_genre(request, genre_id=14)  # Horror
 
 def investigative_anime(request):
     return anime_by_genre(request, genre_id=7)  # Mystery (Investigative Series)

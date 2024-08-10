@@ -275,32 +275,14 @@
          .navbar {
              display: none;
          }
-     
-         .search-container {
-             width: 100%;
-         }
-     
-         .search-container form {
-             flex-direction: row;
-             justify-content: space-between;
-             width: 100%;
-         }
-     
-         .search-container input[type=text] {
-             width: 100%;
-             padding-right: 30px;
-             max-width: none; /* Remove max-width to allow full-width on small screens */
-             box-sizing: border-box;
-         }
-     
-         
-     
+          
          /* Search adjustments */
          .search-container {
              width: 100%;
          }
      
          .search-container form {
+             display: hidden;
              flex-direction: row;
              justify-content: space-between;
              width: 100%;
@@ -445,8 +427,7 @@
                         <div class="poster-content">
                             <h3>{{ serie.name }}</h3>
                             <p>{{ serie.first_air_date|date:"Y" }}</p>
-                            <p>{{ serie.overview|truncatewords:30 }}</p>
-                            <a href="{% url 'series_details' serie.id %}">View Details</a>
+                            <p>{{ serie.overview|truncatewords:20 }}</p>
                         </div>
                         </a>
                     </div>

@@ -96,17 +96,17 @@
 
     <div class="container">
         <div class="series">
-            {% for movie in series %}
+            {% for serie in series %}
             <div class="movie">
-                {% if movie.poster_path %}
-                <a href="{% url 'movie_details' pk=movie.id %}">
-                    <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }} Poster">
+                {% if serie.poster_path %}
+                <a href="{% url 'serie_details' pk=serie.id %}">
+                    <img src="https://image.tmdb.org/t/p/w500{{ serie.poster_path }}" alt="{{ serie.title }} Poster">
                 </a>
                 {% else %}
                 <p>No poster available</p>
                 {% endif %}
                 <div class="movie-title">
-                    <h2>{{ movie.title }}</h2>
+                    <h2>{{ serie.title }}</h2>
                 </div>
             </div>
             {% empty %}

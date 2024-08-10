@@ -1208,8 +1208,8 @@ def fetch_anime_by_genre(genre_id, page=1):
         url,
         params={
                 'genres': genre_id,
-                'order_by': 'start_date',  # Order by release date
-                'sort': 'desc',            # Sort in descending order to get latest first
+                'order_by': 'popularity',  # Order by release date
+                'sort': 'asc',            # Sort in descending order to get latest first
             }
         )
     if response.status_code == 200:

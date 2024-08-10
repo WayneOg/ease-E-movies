@@ -1204,7 +1204,14 @@ def paginate_anime(request, anime_list):
 
 def fetch_anime_by_genre(genre_id, page=1):
     url = f'https://api.jikan.moe/v4/anime?genres={genre_id}&page={page}'
-    response = requests.get(url)
+    response = requests.get(
+        url,
+        params={
+                'genres': genre_id,
+                'order_by': 'start_date',  # Order by release date
+                'sort': 'desc',            # Sort in descending order to get latest first
+            }
+        )
     if response.status_code == 200:
         return response.json().get('data', [])
     else:

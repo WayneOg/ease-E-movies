@@ -1291,4 +1291,4 @@ def home_anime(request):
         'investigative_animes': investigative_animes,
     }
 
-    return render(request, 'anime_list.html', context)
+    return render(request, 'anime.html', context)

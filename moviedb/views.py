@@ -1268,15 +1268,17 @@ def investigative_anime(request):
     return anime_by_genre(request, genre_id=7)  # Mystery (Investigative Series)
 
 def home_anime(request):
+    base_url = 'https://api.jikan.moe/v4/anime'
+    
     try:
-        action_animes = fetch_anime_by_genre()
-        scifi_animes = fetch_anime_by_genre()
-        romance_animes = fetch_anime_by_genre()
-        drama_animes = fetch_anime_by_genre()
-        comedy_animes = fetch_anime_by_genre()
-        history_animes = fetch_anime_by_genre()
-        horror_animes = fetch_anime_by_genre()
-        investigative_animes = fetch_anime_by_genre()
+        action_animes = fetch_anime_by_genre(url=base_url, genre_id=1)
+        scifi_animes = fetch_anime_by_genre(url=base_url, genre_id=24)
+        romance_animes = fetch_anime_by_genre(url=base_url, genre_id=22)
+        drama_animes = fetch_anime_by_genre(url=base_url, genre_id=8)
+        comedy_animes = fetch_anime_by_genre(url=base_url, genre_id=4)
+        history_animes = fetch_anime_by_genre(url=base_url, genre_id=13)
+        horror_animes = fetch_anime_by_genre(url=base_url, genre_id=14)
+        investigative_animes = fetch_anime_by_genre(url=base_url, genre_id=7)
     except requests.exceptions.RequestException:
         return HttpResponseServerError('Error fetching data from Jikan API.')
 

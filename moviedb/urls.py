@@ -4,7 +4,6 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('series/', views.home_series, name='series'),
-    path('anime/', views.home_anime, name='anime'),
     path('categories/', views.movie_list, name='categories'),
     path('genres/', views.genre_list, name='genre_list'),
     path('series_genres/', views.series_genre_list, name='series_genre_list'),

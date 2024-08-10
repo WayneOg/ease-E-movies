@@ -422,11 +422,11 @@
         <div class="movies">
             {% for anime in action_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
 
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -441,10 +441,10 @@
         <div class="movies">
             {% for anime in comedy_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -455,10 +455,10 @@
         <div class="movies">
             {% for anime in drama_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -469,10 +469,10 @@
         <div class="movies">
             {% for anime in romance_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -485,10 +485,10 @@
         <div class="movies">
             {% for anime in investigative_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -499,10 +499,10 @@
         <div class="movies">
             {% for anime in horror_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -513,24 +513,24 @@
         <div class="movies">
             {% for anime in scifi_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
         </div>
 
         <!-- Crime animes -->
-        <h2 class="section-title">Crime animes</h2>
+        <h2 class="section-title">History animes</h2>
         <div class="movies">
             {% for anime in history_animes %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}
@@ -543,10 +543,10 @@
         <div class="movies">
             {% for anime in animes_list %}
             <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}">
                 <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                    <h3>{{ anime.title }}</h3>
+                    <p>{{ anime.aired.from|date:"Y" }}</p>
                 </div>
             </div>
             {% endfor %}

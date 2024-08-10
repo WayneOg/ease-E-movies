@@ -1234,3 +1234,29 @@ def popular_anime(request):
 
 def action_anime(request):
     return anime_by_genre(request, genre_id=1)  # Assuming genre_id=1 is for Action
+
+
+def action_anime(request):
+    return anime_by_genre(request, genre_id=1)  # Action
+
+def scifi_anime(request):
+    return anime_by_genre(request, genre_id=24)  # Sci-Fi
+
+def romance_anime(request):
+    return anime_by_genre(request, genre_id=22)  # Romance
+
+def drama_anime(request):
+    return anime_by_genre(request, genre_id=8)  # Drama
+
+def comedy_anime(request):
+    return anime_by_genre(request, genre_id=4)  # Comedy
+
+def history_anime(request):
+    return anime_by_genre(request, genre_id=13)  # History
+
+def horror_anime(request):
+    return anime_by_genre(request, genre_id=14)  # Horror
+
+def investigative_anime(request):
+    return anime_by_genre(request, genre_id=7)  # Mystery (Investigative Series)
+

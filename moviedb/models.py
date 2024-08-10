@@ -74,3 +74,4 @@ class Episode(models.Model):
     overview = models.TextField(blank=True)
     air_date = models.DateField(null=True, blank=True)
     vote_average = models.FloatField(default=0)
+

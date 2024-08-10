@@ -26,4 +26,11 @@ urlpatterns = [
     path('anime/popular/', views.popular_anime, name='popular_anime'),
     path('anime/genre/<int:genre_id>/', views.anime_by_genre, name='anime_by_genre'),
     path('anime/action/', views.action_anime, name='action_anime'),
+    path('anime/scifi/', views.scifi_anime, name='scifi_anime'),
+    path('anime/romance/', views.romance_anime, name='romance_anime'),
+    path('anime/drama/', views.drama_anime, name='drama_anime'),
+    path('anime/comedy/', views.comedy_anime, name='comedy_anime'),
+    path('anime/history/', views.history_anime, name='history_anime'),
+    path('anime/horror/', views.horror_anime, name='horror_anime'),
+    path('anime/investigative/', views.investigative_anime, name='investigative_anime'),
 ]

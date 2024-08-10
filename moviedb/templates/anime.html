@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TV animes</title>
+    <style>
+        /* Reset and basic styles */
+     body, html {
+         margin: 0;
+         padding: 0;
+         font-family: 'Helvetica Neue', Arial, sans-serif;
+         background-color: #141414;
+         color: #fff;
+         overflow-x: hidden;
+     }
+     
+     a {
+         text-decoration: none;
+         color: inherit;
+     }
+     
+     /* Header styles */
+     header {
+         background-color: rgba(0, 0, 0, 0.8);
+         padding: 10px 4%;
+         position: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         z-index: 1000;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         transition: background-color 0.3s;
+     }
+     
+     .logo {
+         font-size: 2rem;
+         font-weight: bold;
+         color: #e50914;
+     }
+     
+     .navbar {
+         display: flex;
+         gap: 20px;
+     }
+     
+     .navbar a {
+         font-size: 0.9rem;
+         color: #e5e5e5;
+         transition: color 0.3s;
+     }
+     
+     .navbar a:hover {
+         color: #fff;
+     }
+     
+     .search-container form {
+         display: flex;
+         align-items: center;
+     }
+     
+     .search-container input[type=text] {
+         padding: 8px;
+         border: none;
+         background-color: rgba(255, 255, 255, 0.2);
+         color: #fff;
+         border-radius: 4px;
+         width: 200px;
+         transition: width 0.3s;
+     }
+     
+     .search-container button {
+         padding: 8px 12px;
+         background-color: #e50914;
+         color: #fff;
+         border: none;
+         border-radius: 4px;
+         margin-left: 10px;
+         cursor: pointer;
+     }
+     
+     /* Sidebar styles */
+     .sidebar {
+         height: 100%;
+         width: 0;
+         position: fixed;
+         z-index: 1001;
+         top: 0;
+         left: 0;
+         background-color: #111;
+         overflow-x: hidden;
+         transition: 0.5s;
+         padding-top: 60px;
+     }
+     
+     .sidebar a {
+         padding: 8px 8px 8px 32px;
+         text-decoration: none;
+         font-size: 18px;
+         color: #818181;
+         display: block;
+         transition: color 0.3s;
+     }
+     
+     .sidebar a:hover {
+         color: #f1f1f1;
+     }
+     
+     .sidebar .closebtn {
+         position: absolute;
+         top: 0;
+         right: 25px;
+         font-size: 36px;
+         margin-left: 50px;
+     }
+     
+     .openbtn {
+         font-size: 20px;
+         cursor: pointer;
+         background-color: transparent;
+         color: white;
+         padding: 10px 15px;
+         border: none;
+     }
+     
+     .openbtn:hover {
+         background-color: #444;
+     }
+     
+     /* Main content styles */
+     .main {
+         padding: 20px 4%;
+         margin-top: 70px;
+     }
+     
+     .section-title {
+         font-size: 1.5rem;
+         margin-bottom: 10px;
+         font-weight: bold;
+     }
+     
+     /* Movie row styles */
+     .movies {
+         display: flex;
+         gap: 10px;
+         overflow-x: auto;
+         scroll-behavior: smooth;
+         padding: 20px 0;
+     }
+     
+     .movies::-webkit-scrollbar {
+         display: none;
+     }
+     
+     .movie {
+         flex: 0 0 auto;
+         width: 200px;
+         transition: transform 0.3s;
+         position: relative;
+     }
+     
+     .movie:hover {
+         transform: scale(1.1);
+         z-index: 2;
+     }
+     
+     .movie img {
+         width: 100%;
+         border-radius: 4px;
+     }
+     
+     .movie-info {
+         visibility: hidden;
+         opacity: 0;
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         background: rgba(0, 0, 0, 0.8);
+         padding: 10px;
+         transition: visibility 0.3s, opacity 0.3s;
+     }
+     
+     .movie:hover .movie-info {
+         visibility: visible;
+         opacity: 1;
+     }
+     
+     .movie-info h3 {
+         margin: 0;
+         font-size: 1rem;
+     }
+     
+     .recommended-movie-title {
+         display: none;
+     }
+     
+     /* Latest Movies Section */
+     .latest-movies-wrapper {
+         position: relative;
+         margin-bottom: 40px;
+     }
+     
+     .latest-movies {
+         display: flex;
+         transition: transform 0.5s ease;
+     }
+     
+     .latest-movie {
+         flex: 0 0 100%;
+         position: relative;
+         height: 600px; /* Adjust this value as needed */
+         background-size: cover;
+         background-position: center;
+         background-repeat: no-repeat;
+     }
+     
+     .latest-movie::before {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+     }
+     
+     .latest-movie-info {
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         padding: 20px;
+         display: flex;
+         align-items: flex-end;
+         z-index: 1;
+     }
+     
+     .small-poster {
+         width: 150px;
+         margin-right: 20px;
+         box-shadow: 0 0 10px rgba(0,0,0,0.5);
+     }
+     
+     .poster-content {
+         flex: 1;
+         color: white;
+     }
+     
+     .poster-content h3 {
+         font-size: 2rem;
+         margin: 0 0 10px 0;
+     }
+     
+     .poster-content p {
+         margin: 5px 0;
+     }
+     
+     /* Footer styles */
+     footer {
+         background-color: #141414;
+         padding: 40px 4%;
+         margin-top: 60px;
+     }
+     
+     /* Responsive adjustments */
+     @media screen and (max-width: 768px) {
+         /* Header adjustments */
+         header {
+             padding: 10px 2%;
+         }
+     
+         .navbar {
+             display: none;
+         }
+          
+         /* Search adjustments */
+         .search-container {
+             width: 100%;
+         }
+     
+         .search-container form {
+             flex-direction: row;
+             justify-content: space-between;
+             width: 100%;
+         }
+     
+         .search-container input[type=text] {
+             display: none;
+             justify-content: space-between;
+             width: 100%;
+             padding-right: 30px;
+             max-width: none; /* Remove max-width to allow full-width on small screens */
+         }
+     
+         .search-container button {
+             margin-left: 200px;
+             margin-top: 5px;
+             width: 30%;
+         }
+     
+         /* Movie row adjustments */
+         .movies {
+             gap: 5px;
+         }
+     
+         .movie {
+             width: 150px;
+         }
+     
+         /* Latest Movies Section adjustments */
+         .latest-movie {
+             height: 400px;
+         }
+     
+         .small-poster {
+             width: 100px;
+         }
+     
+         .poster-content h3 {
+             font-size: 1.5rem;
+         }
+     
+         /* Main content adjustments */
+         .main {
+             margin-top: 80px;
+         }
+     }
+     
+     @media screen and (max-width: 480px) {
+         /* Header adjustments */
+         .logo {
+             font-size: 1.5rem;
+         }
+     
+         .search-container input[type=text] {
+             display: none;
+             padding: 8px;
+             width: calc(100% - 50px); /* Adjust the width so it fits next to the button */
+         }
+     
+         .search-container button {
+             padding: 8px;
+             margin-left: 200px;
+             margin-top: 0;
+             width: 50px;
+         }
+     
+         /* Movie row adjustments */
+         .movie {
+             width: 120px;
+         }
+     
+         /* Latest Movies Section adjustments */
+         .latest-movie {
+             height: 300px;
+         }
+     
+         .small-poster {
+             width: 80px;
+         }
+     
+         .poster-content h3 {
+             font-size: 1.2rem;
+         }
+     
+         .poster-content p {
+             font-size: 0.9rem;
+         }
+     
+         /* Sidebar responsiveness */
+         .sidebar {padding-top: 15px;}
+         .sidebar a {font-size: 18px;}
+     }
+     
+         </style>
+</head>
+<body>
+    <header>
+        <button class="openbtn" onclick="openNav()">☰</button>
+        <div class="logo">Ease-E-Movies</div>
+        <nav class="navbar">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'animes' %}">TV Shows</a>
+            <a href="{% url 'home' %}">Movies</a>
+            <a href="home">New & Popular</a>
+        </nav>
+        <div class="search-container">
+            <form action="{% url 'search_results' %}" method="GET">
+                    <input type="text" placeholder="Search..." >
+                    <button>
+                        <span class="search-icon">🔍</span>
+                    </button>
+            </form>
+        </div>
+    </header>
+
+    <!-- Off-canvas Sidebar -->
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+        <a href="{% url 'home' %}">Home</a>
+        <a href="{% url 'action_movies' %}">Action</a>
+        <a href="{% url 'animation_movies' %}">Animation</a>
+        <a href="{% url 'comedy_movies' %}">Comedy</a>
+        <a href="{% url 'drama_movies' %}">Drama</a>
+        <a href="{% url 'horror_movies' %}">Horror</a>
+        <a href="{% url 'investigative_movies' %}">Investigative</a>
+        <a href="{% url 'romance_movies' %}">Romance</a>
+        <a href="{% url 'scifi_movies' %}">Sci-fi</a>
+        <a href="{% url 'animes_movies' %}">animes</a>
+        <a href="{% url 'animes' %}">animes</a>
+    </div>
+
+    <div class="main">
+        {% load cache %}
+        {% cache 600 animes_list %}
+        <h1 class="section-title">TV animes</h1>
+
+        <!-- Latest animes -->
+        <div class="latest-movies-wrapper">
+            <div class="latest-movies">
+                {% for anime in latest_animes|slice:":10" %}
+                <div class="latest-movie" style="background-image: url('https://image.tmdb.org/t/p/original{{ anime.backdrop_path }}');">
+                    <div class="latest-movie-info">
+                        <a href="{% url 'animes_details' pk=anime.id %}">
+                        <img class="small-poster" src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                        <div class="poster-content">
+                            <h3>{{ anime.name }}</h3>
+                            <p>{{ anime.first_air_date|date:"Y" }}</p>
+                            <p>{{ anime.overview|truncatewords:20 }}</p>
+                        </div>
+    
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Popular animes -->
+        <h2 class="section-title">Popular animes</h2>
+        <div class="movies">
+            {% for anime in animes %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Action animes -->
+        <h2 class="section-title">Action animes</h2>
+        <div class="movies">
+            {% for anime in action_animes %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Reaility animes -->
+        <h2 class="section-title">Reality animes</h2>
+        <div class="movies">
+            {% for anime in adventure_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Animation animes -->
+        <h2 class="section-title">Animation animes</h2>
+        <div class="movies">
+            {% for anime in fantasy_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Kids animes -->
+        <h2 class="section-title">Kids animes</h2>
+        <div class="movies">
+            {% for anime in thriller_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Family animes -->
+        <h2 class="section-title">Family animes</h2>
+        <div class="movies">
+            {% for anime in slice_of_life_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Comedy animes -->
+        <h2 class="section-title">Comedy animes</h2>
+        <div class="movies">
+            {% for anime in comedy_animes %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Drama animes -->
+        <h2 class="section-title">Drama animes</h2>
+        <div class="movies">
+            {% for anime in drama_animes %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- History animes -->
+        <h2 class="section-title">History animes</h2>
+        <div class="movies">
+            {% for anime in fantasy_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Soap animes -->
+        <h2 class="section-title">Soap animes</h2>
+        <div class="movies">
+            {% for anime in slice_of_life_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Mystery animes -->
+        <h2 class="section-title">Mystery animes</h2>
+        <div class="movies">
+            {% for anime in investigative_animes %}
+            <div class="movie">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Scifi animes -->
+        <h2 class="section-title">Sci-Fi animes</h2>
+        <div class="movies">
+            {% for anime in scifi_animes %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Crime animes -->
+        <h2 class="section-title">Crime animes</h2>
+        <div class="movies">
+            {% for anime in history_animes %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Documentary animes -->
+        <h2 class="section-title">Documentary animes</h2>
+        <div class="movies">
+            {% for anime in psychological_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- History animes -->
+        <h2 class="section-title">History animes</h2>
+        <div class="movies">
+            {% for anime in martial_arts_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- History animes -->
+        <h2 class="section-title">History animes</h2>
+        <div class="movies">
+            {% for anime in sports_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+     
+        <!-- History animes -->
+        <h2 class="section-title">History animes</h2>
+        <div class="movies">
+            {% for anime in mecha_anime %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+
+        <!-- Genre-specific animes sections -->
+        {% for genre, animes_list in genre_animes.items %}
+        <h2 class="section-title">{{ genre }} animes</h2>
+        <div class="movies">
+            {% for anime in animes_list %}
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w500{{ anime.poster_path }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+View Details</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% endfor %}
+
+        {% endcache %}
+
+    </div>
+    <script>
+        function openNav() {
+            document.getElementById("mySidebar").style.width = "250px";
+            document.querySelector(".main").style.marginLeft = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidebar").style.width = "0";
+            document.querySelector(".main").style.marginLeft = "0";
+        }
+
+        // Automatic rotation for latest movies
+        let currentIndex = 0;
+        const latestMovies = document.querySelectorAll('.latest-movie');
+        const totalMovies = latestMovies.length;
+
+        function rotateMovies() {
+            currentIndex = (currentIndex + 1) % totalMovies;
+            document.querySelector('.latest-movies').style.transform = `translateX(-${currentIndex * 100}%)`;
+        }
+
+        setInterval(rotateMovies, 5000); // Rotate every 5 seconds
+    </script>
+</body>
+</html>

@@ -416,24 +416,7 @@
     <div class="main">
         {% load cache %}
         {% cache 600 animes_list %}
-        <h1 class="section-title">TV animes</h1>
-
         
-
-        <!-- Popular animes -->
-        <h2 class="section-title">Popular animes</h2>
-        <div class="movies">
-            {% for anime in animes %}
-            <div class="movie">
-                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
-                <div class="movie-info">
-                    <h3>{{ anime.name }}</h3>
-                    <p>{{ anime.first_air_date|date:"Y" }}</p>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-
         <!-- Action animes -->
         <h2 class="section-title">Action animes</h2>
         <div class="movies">
@@ -481,7 +464,19 @@
             {% endfor %}
         </div>
 
-        
+        <!-- Crime animes -->
+        <h2 class="section-title">Romance animes</h2>
+        <div class="movies">
+            {% for anime in romance_animes %}
+            <div class="movie">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
 
       
 
@@ -489,6 +484,20 @@
         <h2 class="section-title">Mystery animes</h2>
         <div class="movies">
             {% for anime in investigative_animes %}
+            <div class="movie">
+                <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
+                <div class="movie-info">
+                    <h3>{{ anime.name }}</h3>
+                    <p>{{ anime.first_air_date|date:"Y" }}</p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Crime animes -->
+        <h2 class="section-title">Horror animes</h2>
+        <div class="movies">
+            {% for anime in horror_animes %}
             <div class="movie">
                 <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.name }}">
                 <div class="movie-info">

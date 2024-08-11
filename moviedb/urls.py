@@ -48,4 +48,5 @@ urlpatterns = [
     path('anime/history/', views.history_anime, name='history_anime'),
     path('anime/horror/', views.horror_anime, name='horror_anime'),
     path('anime/investigative/', views.investigative_anime, name='investigative_anime'),
+    path('anime/<int:mal_id>/', views.anime_details, name='anime_details'),
 ]

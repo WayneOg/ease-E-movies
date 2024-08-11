@@ -1294,3 +1294,46 @@ def home_anime(request):
     }
 
     return render(request, 'anime.html', context)
+
+def fetch_anime_details_from_jikan(mal_id):
+    url = f'https://api.jikan.moe/v4/anime/{mal_id}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json().get('data', {})
+    else:
+        response.raise_for_status()
+
+def search_tmdb_for_anime(title):
+    url = f'https://api.themoviedb.org/3/search/tv?api_key={API_KEY}&query={title}'
+    response = requests.get(url)
+    if response.status_code == 200:
+        results = response.json().get('results', [])
+        return results[0] if results else None
+    else:
+        response.raise_for_status()
+
+def anime_details(request, mal_id):
+    try:
+        # Step 1: Fetch anime details from Jikan
+        anime_data = fetch_anime_details_from_jikan(mal_id)
+        
+        # Step 2: Search TMDb for the anime
+        tmdb_anime_data = search_tmdb_for_anime(anime_data.get('title'))
+        
+        # Step 3: If found, fetch more details from TMDb
+        if tmdb_anime_data:
+            tmdb_id = tmdb_anime_data['id']
+            tmdb_anime_url = f'https://api.themoviedb.org/3/tv/{tmdb_id}?api_key={API_KEY}&language=en-US'
+            tmdb_anime_response = requests.get(tmdb_anime_url)
+            tmdb_anime_response.raise_for_status()
+            tmdb_anime_details = tmdb_anime_response.json()
+        else:
+            tmdb_anime_details = None
+        
+        context = {
+            'anime': anime_data,
+            'tmdb_anime': tmdb_anime_details,
+        }
+        return render(request, 'anime_details.html', context)
+    except requests.exceptions.RequestException:
+        return HttpResponseServerError('Error fetching data from Jikan or TMDb API.')

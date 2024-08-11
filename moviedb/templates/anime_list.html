@@ -5,48 +5,395 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Anime List</title>
     <style>
-        body {
-            background-color: #141414;
-            color: #fff;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-        }
-        
-        header {
-            background-color: #e50914;
-            padding: 20px;
-            text-align: center;
-        }
-        
-        .anime-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 20px;
-            padding: 20px;
-        }
-        
-        .anime-item {
-            background-color: #1c1c1c;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-        }
-        
-        .anime-item img {
-            max-width: 100%;
-            border-radius: 4px;
-        }
-        
-        .anime-item h2 {
-            font-size: 1.2rem;
-            margin: 10px 0;
-        }
-        
-        .anime-item p {
-            font-size: 0.9rem;
-        }
-        
+        /* Reset and basic styles */
+     body, html {
+         margin: 0;
+         padding: 0;
+         font-family: 'Helvetica Neue', Arial, sans-serif;
+         background-color: #141414;
+         color: #fff;
+         overflow-x: hidden;
+     }
+     
+     a {
+         text-decoration: none;
+         color: inherit;
+     }
+     
+     /* Header styles */
+     header {
+         background-color: rgba(0, 0, 0, 0.8);
+         padding: 10px 4%;
+         position: fixed;
+         top: 0;
+         left: 0;
+         right: 0;
+         z-index: 1000;
+         display: flex;
+         justify-content: space-between;
+         align-items: center;
+         transition: background-color 0.3s;
+     }
+     
+     .logo {
+         font-size: 2rem;
+         font-weight: bold;
+         color: #e50914;
+     }
+     
+     .navbar {
+         display: flex;
+         gap: 20px;
+     }
+     
+     .navbar a {
+         font-size: 0.9rem;
+         color: #e5e5e5;
+         transition: color 0.3s;
+     }
+     
+     .navbar a:hover {
+         color: #fff;
+     }
+     
+     .search-container form {
+         display: flex;
+         align-items: center;
+     }
+     
+     .search-container input[type=text] {
+         padding: 8px;
+         border: none;
+         background-color: rgba(255, 255, 255, 0.2);
+         color: #fff;
+         border-radius: 4px;
+         width: 200px;
+         transition: width 0.3s;
+     }
+     
+     .search-container button {
+         padding: 8px 12px;
+         background-color: #e50914;
+         color: #fff;
+         border: none;
+         border-radius: 4px;
+         margin-left: 10px;
+         cursor: pointer;
+     }
+     
+     /* Sidebar styles */
+     .sidebar {
+         height: 100%;
+         width: 0;
+         position: fixed;
+         z-index: 1001;
+         top: 0;
+         left: 0;
+         background-color: #111;
+         overflow-x: hidden;
+         transition: 0.5s;
+         padding-top: 60px;
+     }
+     
+     .sidebar a {
+         padding: 8px 8px 8px 32px;
+         text-decoration: none;
+         font-size: 18px;
+         color: #818181;
+         display: block;
+         transition: color 0.3s;
+     }
+     
+     .sidebar a:hover {
+         color: #f1f1f1;
+     }
+     
+     .sidebar .closebtn {
+         position: absolute;
+         top: 0;
+         right: 25px;
+         font-size: 36px;
+         margin-left: 50px;
+     }
+     
+     .openbtn {
+         font-size: 20px;
+         cursor: pointer;
+         background-color: transparent;
+         color: white;
+         padding: 10px 15px;
+         border: none;
+     }
+     
+     .openbtn:hover {
+         background-color: #444;
+     }
+     
+     /* Main content styles */
+     .main {
+         padding: 20px 4%;
+         margin-top: 70px;
+     }
+     
+     .section-title {
+         font-size: 1.5rem;
+         margin-bottom: 10px;
+         font-weight: bold;
+     }
+     
+     /* Movie row styles */
+     .movies {
+         display: flex;
+         gap: 10px;
+         overflow-x: auto;
+         scroll-behavior: smooth;
+         padding: 20px 0;
+     }
+     
+     .movies::-webkit-scrollbar {
+         display: none;
+     }
+     
+     .movie {
+         flex: 0 0 auto;
+         width: 200px;
+         transition: transform 0.3s;
+         position: relative;
+     }
+     
+     .movie:hover {
+         transform: scale(1.1);
+         z-index: 2;
+     }
+     
+     .movie img {
+         width: 100%;
+         border-radius: 4px;
+     }
+     
+     .movie-info {
+         visibility: hidden;
+         opacity: 0;
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         background: rgba(0, 0, 0, 0.8);
+         padding: 10px;
+         transition: visibility 0.3s, opacity 0.3s;
+     }
+     
+     .movie:hover .movie-info {
+         visibility: visible;
+         opacity: 1;
+     }
+     
+     .movie-info h3 {
+         margin: 0;
+         font-size: 1rem;
+     }
+     
+     .recommended-movie-title {
+         display: none;
+     }
+     
+     /* Latest Movies Section */
+     .latest-movies-wrapper {
+         position: relative;
+         margin-bottom: 40px;
+     }
+     
+     .latest-movies {
+         display: flex;
+         transition: transform 0.5s ease;
+     }
+     
+     .latest-movie {
+         flex: 0 0 100%;
+         position: relative;
+         height: 600px; /* Adjust this value as needed */
+         background-size: cover;
+         background-position: center;
+         background-repeat: no-repeat;
+     }
+     
+     .latest-movie::before {
+         content: '';
+         position: absolute;
+         top: 0;
+         left: 0;
+         right: 0;
+         bottom: 0;
+         background: linear-gradient(to bottom, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.8) 100%);
+     }
+     
+     .latest-movie-info {
+         position: absolute;
+         bottom: 0;
+         left: 0;
+         right: 0;
+         padding: 20px;
+         display: flex;
+         align-items: flex-end;
+         z-index: 1;
+     }
+     
+     .small-poster {
+         width: 150px;
+         margin-right: 20px;
+         box-shadow: 0 0 10px rgba(0,0,0,0.5);
+     }
+     
+     .poster-content {
+         flex: 1;
+         color: white;
+     }
+     
+     .poster-content h3 {
+         font-size: 2rem;
+         margin: 0 0 10px 0;
+     }
+     
+     .poster-content p {
+         margin: 5px 0;
+     }
+     
+     /* Footer styles */
+     footer {
+         background-color: #141414;
+         padding: 40px 4%;
+         margin-top: 60px;
+     }
+     
+     /* Responsive adjustments */
+     @media screen and (max-width: 768px) {
+         /* Header adjustments */
+         header {
+             padding: 10px 2%;
+         }
+     
+         .navbar {
+             display: none;
+         }
+     
+         .search-container {
+             width: 100%;
+         }
+     
+         .search-container form {
+             flex-direction: row;
+             justify-content: space-between;
+             width: 100%;
+         }
+     
+         .search-container input[type=text] {
+             width: 100%;
+             padding-right: 30px;
+             max-width: none; /* Remove max-width to allow full-width on small screens */
+             box-sizing: border-box;
+         }
+     
+         
+     
+         /* Search adjustments */
+         .search-container {
+             width: 100%;
+         }
+     
+         .search-container form {
+             flex-direction: row;
+             justify-content: space-between;
+             width: 100%;
+         }
+     
+         .search-container input[type=text] {
+             display: none;
+             justify-content: space-between;
+             width: 100%;
+             padding-right: 30px;
+             max-width: none; /* Remove max-width to allow full-width on small screens */
+         }
+     
+         .search-container button {
+             margin-left: 200px;
+             margin-top: 5px;
+             width: 30%;
+         }
+     
+         /* Movie row adjustments */
+         .movies {
+             gap: 5px;
+         }
+     
+         .movie {
+             width: 150px;
+         }
+     
+         /* Latest Movies Section adjustments */
+         .latest-movie {
+             height: 400px;
+         }
+     
+         .small-poster {
+             width: 100px;
+         }
+     
+         .poster-content h3 {
+             font-size: 1.5rem;
+         }
+     
+         /* Main content adjustments */
+         .main {
+             margin-top: 80px;
+         }
+     }
+     
+     @media screen and (max-width: 480px) {
+         /* Header adjustments */
+         .logo {
+             font-size: 1.5rem;
+         }
+     
+         .search-container input[type=text] {
+             display: none;
+             padding: 8px;
+             width: calc(100% - 50px); /* Adjust the width so it fits next to the button */
+         }
+     
+         .search-container button {
+             padding: 8px;
+             margin-left: 200px;
+             margin-top: 0;
+             width: 50px;
+         }
+     
+         /* Movie row adjustments */
+         .movie {
+             width: 120px;
+         }
+     
+         /* Latest Movies Section adjustments */
+         .latest-movie {
+             height: 300px;
+         }
+     
+         .small-poster {
+             width: 80px;
+         }
+     
+         .poster-content h3 {
+             font-size: 1.2rem;
+         }
+     
+         .poster-content p {
+             font-size: 0.9rem;
+         }
+     
+         /* Sidebar responsiveness */
+         .sidebar {padding-top: 15px;}
+         .sidebar a {font-size: 18px;}
+     }
+     
     </style>
 </head>
 <body>
@@ -54,9 +401,11 @@
         <h1>{{ category }} Anime</h1>
     </header>
 
-    <div class="anime-list">
+    <!-- Action Movies Section -->
+    <h2 class="section-title">Animes</h2>
+    <div class="movies">
         {% for anime in anime_list %}
-            <div class="anime-item">
+            <div class="movie">
                 <img src="{{ anime.images.jpg.image_url }}" alt="{{ anime.title }}" />
                 <h2>{{ anime.title }}</h2>
                 <p>{{ anime.synopsis|truncatewords:20 }}</p>

@@ -436,7 +436,7 @@ header {
                 var videoId = '{{ serie.tmdb_id }}';
     
                 // Construct the download URL for vidsrc.vip using the TMDB ID, season, and episode
-                var downloadUrl = 'https://dl.vidsrc.vip/tv/' + videoId + seasonNumber + episodeNumber;
+                var downloadUrl = 'https://dl.vidsrc.vip/tv/' + videoId + '/' + seasonNumber + '/' + episodeNumber;
     
                 // Create a temporary link element to trigger the download
                 var link = document.createElement('a');

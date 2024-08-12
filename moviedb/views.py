@@ -360,6 +360,7 @@ def movie_details(request, pk):
         movie_runtime = movie_data.get('runtime', 0)
         movie_tagline = movie_data.get('tagline', '')
         movie_imdb_id = movie_data.get('imdb_id')
+        movie_tmdb_id = movie_data.get('tmdb_id')
 
         # Create the full URL for the poster image
         full_poster_url = f'https://image.tmdb.org/t/p/w500{movie_poster_path}'
@@ -376,6 +377,7 @@ def movie_details(request, pk):
                 'runtime': movie_runtime,
                 'tagline': movie_tagline,
                 'imdb_id': movie_imdb_id,
+                'tmdb_id': movie_tmdb_id,
                 # Add other fields as needed
             }
         )

@@ -432,7 +432,7 @@ header {
                 var tmdbId = '{{ serie.tmdb_id }}';
 
                 if (seasonNumber && episodeNumber && tmdbId) {
-                    var downloadUrl = `https://dl.vidsrc.vip/tv/${tmdbId}/season/${seasonNumber}/episode/${episodeNumber}`;
+                    var downloadUrl = `https://dl.vidsrc.vip/tv/${tmdbId}/${seasonNumber}/${episodeNumber}`;
                     
                     // Create a temporary link element to trigger the download
                     var link = document.createElement('a');

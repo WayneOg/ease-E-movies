@@ -394,19 +394,19 @@ header {
     
             <!-- Seasons and Episodes -->
             <div class="seasons-container">
-                {% for season_data in seasons %}
+                {% for season in seasons %}
                     <div class="season">
-                        <h3 class="season-title">{{ season_data.season.name }}</h3>
+                        <h3 class="season-title">Season {{ season.season_number }}</h3>
                         <div class="episodes-list">
-                            {% for episode in season_data.episodes %}
-                                <div class="episode" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">
-                                    <h4 class="episode-title">{{ episode.name }}</h4>
-                                    <p class="episode-info">Episode {{ episode.number }}</p>
-                                    <p class="episode-info">Air Date: {{ episode.airdate }}</p>
-                                    <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
-                                    <a href="#" class="watch-button" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">Watch Episode</a>
-                                    <a href="#" class="download-button" id="download"cdata-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">Download</a>
-                                </div>
+                            {% for episode in season.episodes %}
+                            <div class="episode" data-season="{{ season.season_number }}" data-episode="{{ episode.number }}">
+                                <h4 class="episode-title">{{ episode.name }}</h4>
+                                <p class="episode-info">Episode {{ episode.number }}</p>
+                                <p class="episode-info">Air Date: {{ episode.airdate }}</p>
+                                <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
+                                <a href="#" class="watch-button" data-season="{{ season.season_number }}" data-episode="{{ episode.number }}">Watch Episode</a>
+                                <a href="#" class="download-button" data-season="{{ season.season_number }}" data-episode="{{ episode.number }}">Download</a>
+                            </div>
                             {% endfor %}
                         </div>
                     </div>

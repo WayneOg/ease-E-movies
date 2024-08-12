@@ -1161,7 +1161,8 @@ def serie_details(request, pk):
             episodes_data = episodes_response.json()
 
             seasons_with_episodes.append({
-                'season': season,
+                'season_number': season['number'],
+                'season_name': season.get('name', f'Season {season["number"]}'),
                 'episodes': episodes_data
             })
             

@@ -364,17 +364,10 @@ header {
     <script>
         document.getElementById('download').addEventListener('click', function(e) {
             e.preventDefault();
-            
-            {% if movie.tmdb_id %}
-                var videoId = '{{ movie.tmdb_id }}';
-                var type = 'tmdb';
-            {% elif movie.imdb_id %}
-                var videoId = 'tt{{ movie.imdb_id }}';
-                var type = 'imdb';
-            {% else %}
-                alert('Download link not available for this movie.');
-                return;
-            {% endif %}
+   
+            var videoId = '{{ movie.tmdb_id }}';
+            var type = 'tmdb';
+           
 
             var downloadUrl = 'https://dl.vidsrc.vip/?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : '');
 

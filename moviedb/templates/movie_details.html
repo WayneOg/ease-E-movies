@@ -364,21 +364,23 @@ header {
     <script>
         document.getElementById('download').addEventListener('click', function(e) {
             e.preventDefault();
-   
+       
+            // Assuming movie.tmdb_id is already passed to the template context and is available here
             var videoId = '{{ movie.tmdb_id }}';
-            var type = 'tmdb';
            
-
-            var downloadUrl = 'https://dl.vidsrc.vip/?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : '');
-
+            // Construct the download URL for vidsrc.vip using the TMDB ID
+            var downloadUrl = 'https://dl.vidsrc.vip/movie/' + videoId;
+    
+            // Create a temporary link element to trigger the download
             var link = document.createElement('a');
             link.href = downloadUrl;
-            link.target = '_blank';
-            link.download = 'movie.mp4'; // Set this as the default file name
+            link.target = '_blank'; // Open in a new tab
+            link.download = ''; // Leave this empty since the file name is determined by the server
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
+    
+            // Inform the user about possible manual download steps
             alert('If the download did not start automatically, please right-click on the video player in the new tab and select "Save video as" or use a video downloader extension in your browser.');
         });
     </script>

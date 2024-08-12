@@ -18,7 +18,7 @@ body, html {
     background-color: #141414;
     color: #fff;
     font-size: 16px;
-    overflow-x: hidden; /* Prevent horizontal overflow */
+    overflow-x: hidden;
 }
 
 /* Header styles */
@@ -38,7 +38,7 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 20px;
-    box-sizing: border-box; /* Include padding in width calculations */
+    box-sizing: border-box;
 }
 
 .navbar a {
@@ -89,21 +89,34 @@ header {
     max-width: 1200px;
     margin: 0 auto;
     padding: 80px 20px 20px;
-    box-sizing: border-box; /* Include padding in width calculations */
+    box-sizing: border-box;
 }
 
 /* Movie details container */
 .movie-details-container {
-    display: flex;
-    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    position: relative;
     margin-bottom: 40px;
+    padding-top: 20px;
 }
 
-/* Movie poster */
+/* Large background poster */
+.background-poster {
+    width: 100%;
+    height: 400px;
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.3);
+    border-radius: 8px;
+}
+
+/* Smaller foreground poster */
 .movie-poster {
-    flex: 0 0 30%;
-    padding-right: 30px;
-    box-sizing: border-box; /* Include padding in width calculations */
+    position: absolute;
+    width: 220px;
+    left: 40px;
+    top: 50%;
+    transform: translateY(-25%);
+    z-index: 2;
 }
 
 .movie-poster img {
@@ -114,7 +127,13 @@ header {
 
 /* Movie details content */
 .movie-details-content {
-    flex: 1;
+    position: absolute;
+    left: 300px;
+    right: 40px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    color: #fff;
 }
 
 .movie-details-content h2 {
@@ -199,7 +218,7 @@ header {
     }
 
     .search-container input[type="text"] {
-        width: 180px; /* Adjust width */
+        width: 180px;
     }
 
     .search-container button {
@@ -207,7 +226,6 @@ header {
     }
 }
 
-/* Header styles */
 @media screen and (max-width: 768px) {
     header {
         padding: 5px 0;
@@ -238,34 +256,34 @@ header {
         padding: 10px 0;
     }
 
-    .movie-poster {
-        flex: 0 0 100%;
-        margin-bottom: 20px;
-        padding-right: 0;
+    .background-poster {
+        height: 300px;
     }
 
-    .movie-poster img {
-        max-width: 100%; /* Ensure image fits within container */
-        margin: 0 auto;
-        display: block;
+    .movie-poster {
+        width: 160px;
+        left: 20px;
+    }
+
+    .movie-details-content {
+        left: 200px;
+        right: 20px;
     }
 
     .movie-details-content h2 {
-        font-size: 2.2rem; /* Adjust title size */
+        font-size: 2rem;
     }
 
     .movie-details-content p {
         font-size: 1rem;
-        line-height: 1.6;
     }
 
     .watch-button, .download-button {
         font-size: 1rem;
-        padding: 10px 20px; /* Adjust button padding */
+        padding: 10px 20px;
     }
 }
 
-/* Additional improvements for very small screens */
 @media screen and (max-width: 480px) {
     .navbar {
         padding: 0 10px;
@@ -275,8 +293,32 @@ header {
         font-size: 14px;
     }
 
-    .movie-details-content h2 {
-        font-size: 2rem; /* Adjust title size */
+    .movie-details-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .background-poster {
+        height: 200px;
+    }
+
+    .movie-poster {
+        position: relative;
+        left: auto;
+        top: -60px;
+        transform: none;
+        margin-bottom: -60px;
+    }
+
+    .movie-details-content {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        transform: none;
+        text-align: center;
+        padding: 0 20px;
     }
 
     .recommended-movie-title h3 {
@@ -316,6 +358,7 @@ header {
     </header>
     <div class="container">
         <div class="movie-details-container">
+            <div class="background-poster" style="background-image: url('https://image.tmdb.org/t/p/w500{{ movie.poster_path }}');"></div>
             <div class="movie-poster">
                 <img src="https://image.tmdb.org/t/p/w500{{ movie.poster_path }}" alt="{{ movie.title }}">
             </div>

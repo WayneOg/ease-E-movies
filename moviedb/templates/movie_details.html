@@ -332,6 +332,7 @@ header {
                 </p>
                 <p><strong>Runtime:</strong> {{ movie.runtime }} minutes</p>
                 <a href="#" class="download-button" id="downloadButton">Watch Now</a>
+                <a href="#" class="download-button" id="download">Download</a>
             </div>
         </div>
         
@@ -375,7 +376,7 @@ header {
                 return;
             {% endif %}
 
-            var downloadUrl = 'https://multiembed.mov/directstream.php?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : '');
+            var downloadUrl = 'https://dl.vidsrc.vip/?video_id=' + videoId + (type === 'tmdb' ? '&tmdb=1' : '');
 
             var link = document.createElement('a');
             link.href = downloadUrl;

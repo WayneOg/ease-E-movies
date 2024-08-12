@@ -405,6 +405,7 @@ header {
                                     <p class="episode-info">Air Date: {{ episode.airdate }}</p>
                                     <p class="episode-info">Rating: {{ episode.vote_average }} / 10</p>
                                     <a href="#" class="watch-button" data-season="{{ season_data.season.number }}" data-episode="{{ episode.number }}">Watch Episode</a>
+                                    <a href="#" class="download-button" id="download">Download</a>
                                 </div>
                             {% endfor %}
                         </div>
@@ -421,7 +422,29 @@ header {
         </div>
         {% endif %}
     </div>
+    <script>
+        document.getElementById('download').addEventListener('click', function(e) {
+            e.preventDefault();
+       
+            // Assuming movie.tmdb_id is already passed to the template context and is available here
+            var videoId = '{{ movie.tmdb_id }}';
+           
+            // Construct the download URL for vidsrc.vip using the TMDB ID
+            var downloadUrl = 'https://dl.vidsrc.vip/movie/' + videoId;
     
+            // Create a temporary link element to trigger the download
+            var link = document.createElement('a');
+            link.href = downloadUrl;
+            link.target = '_blank'; // Open in a new tab
+            link.download = ''; // Leave this empty since the file name is determined by the server
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+    
+            // Inform the user about possible manual download steps
+            alert('If the download did not start automatically, please right-click on the video player in the new tab and select "Save video as" or use a video downloader extension in your browser.');
+        });
+    </script>
     <script>
         document.querySelectorAll('.watch-button').forEach(button => {
             button.addEventListener('click', function(e) {

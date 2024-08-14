@@ -250,40 +250,33 @@ header {
         align-items: center;
         text-align: center;
         padding-top: 30px;
-        position: relative;
-    }
-
-    .background-poster {
-        position: relative;
-        width: 100%;
-        height: 400px; /* Adjust height for responsiveness */
-        background-size: cover;
-        background-position: center;
-        filter: brightness(0.4);
-        border-radius: 8px;
     }
 
     .movie-poster {
-        position: absolute;
-        width: 150px; /* Adjust poster size */
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 2;
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin-bottom: 20px;
+        width: 180px; /* Adjust poster width */
+        height: 270px; /* Adjust poster height to maintain aspect ratio */
     }
 
     .movie-details-content {
         position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        transform: none;
         width: 100%;
-        padding: 20px;
-        box-sizing: border-box;
         text-align: center;
-        margin-top: 20px;
+        padding: 0 20px;
+        font-size: 1rem;
     }
 
     .movie-details-content h2 {
         font-size: 2rem; /* Adjust heading size */
-        margin-bottom: 10px;
+        margin-bottom: 15px;
     }
 
     .movie-details-content p {

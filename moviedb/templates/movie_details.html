@@ -244,21 +244,50 @@ header {
         width: 60px;
     }
 
+    .movie-details-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding-top: 30px;
+    }
+
+    .movie-poster {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        margin-bottom: 20px;
+        width: 180px; /* Adjust poster width */
+        height: 270px; /* Adjust poster height to maintain aspect ratio */
+    }
+
     .movie-details-content {
-        font-size: 4rem; /* Adjust font size for better readability */
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        transform: none;
+        width: 100%;
+        text-align: center;
+        padding: 0 20px;
+        font-size: 1rem;
     }
 
     .movie-details-content h2 {
-        font-size: 3rem; /* Adjust heading size */
+        font-size: 2rem; /* Adjust heading size */
+        margin-bottom: 15px;
     }
 
     .movie-details-content p {
-        font-size: 2.5rem; /* Adjust paragraph size */
+        font-size: 1rem; /* Adjust paragraph size */
+        margin-bottom: 15px;
     }
 
     .watch-button, .download-button {
-        font-size: 2rem; /* Adjust button font size */
+        font-size: 1rem; /* Adjust button font size */
         padding: 10px 20px; /* Adjust button padding */
+        margin-top: 15px;
     }
 }
 

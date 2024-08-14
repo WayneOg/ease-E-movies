@@ -232,16 +232,37 @@ header {
 
 /* Responsive styles */
 @media screen and (max-width: 1024px) {
-    .container {
-        padding: 60px 15px 15px;
+    .background-poster {
+        height: 400px; /* Adjust background poster height */
     }
 
-    .search-container input[type="text"] {
-        width: 180px;
+    .movie-poster {
+        width: 180px; /* Adjust movie poster width */
+        height: 270px; /* Adjust height to maintain aspect ratio */
+        left: 30px; /* Adjust left position */
+        top: 25%; /* Adjust vertical position */
+        transform: translateY(-25%);
     }
 
-    .search-container button {
-        width: 60px;
+    .movie-details-content {
+        left: 220px; /* Adjust left position for content */
+        right: 20px; /* Adjust right position */
+        top: 10%; /* Adjust top position */
+        transform: translateY(-10%);
+        font-size: 1.4rem; /* Adjust font size for better readability */
+    }
+
+    .movie-details-content h2 {
+        font-size: 2.2rem; /* Adjust heading size */
+    }
+
+    .movie-details-content p {
+        font-size: 1rem; /* Adjust paragraph size */
+    }
+
+    .watch-button, .download-button {
+        font-size: 1.3rem; /* Adjust button font size */
+        padding: 10px 20px; /* Adjust button padding */
     }
 }
 

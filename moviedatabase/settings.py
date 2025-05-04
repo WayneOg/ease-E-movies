@@ -83,7 +83,7 @@ WSGI_APPLICATION = 'moviedatabase.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://postgres.wwvqkcairszlzbkopksj:Edd8zoHCQBO7CaoD@aws-0-us-west-1.pooler.supabase.com:6543/postgres',
+        default='postgresql://postgres:Nikki2022@@db.sdqarqsdcufnjmruolai.supabase.co:5432/postgres',
         conn_max_age=600,
         conn_health_checks=True,
     )

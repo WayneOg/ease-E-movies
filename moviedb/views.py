@@ -343,14 +343,16 @@ def generate_movie_token(movie_id):
 
 def movie_details(request, pk):
     try:
-        # Fetch movie details from the TMDB API
-        tmdb_api_key = API_KEY  # Replace with your actual API key
-        url = f'https://api.themoviedb.org/3/movie/{pk}?api_key={tmdb_api_key}&language=en-US'
-        response = requests.get(url)
-        response.raise_for_status()  # Raise an exception for bad status codes
-        movie_data = response.json()
+        tmdb_api_key = API_KEY
+        tmdb_base_url = 'https://api.themoviedb.org/3'
 
-        # Extract movie details from API response
+        # Fetch movie details from TMDB
+        movie_url = f'{tmdb_base_url}/movie/{pk}?api_key={tmdb_api_key}&language=en-US'
+        movie_response = requests.get(movie_url)
+        movie_response.raise_for_status()
+        movie_data = movie_response.json()
+
+        # Extract movie details
         movie_title = movie_data.get('title')
         movie_overview = movie_data.get('overview', '')
         movie_poster_path = movie_data.get('poster_path', '')
@@ -359,10 +361,7 @@ def movie_details(request, pk):
         movie_genres = [genre['name'] for genre in movie_data.get('genres', [])]
         movie_runtime = movie_data.get('runtime', 0)
         movie_tagline = movie_data.get('tagline', '')
-        movie_imdb_id = movie_data.get('imdb_id')
-        movie_tmdb_id = movie_data.get('id')
-
-        # Create the full URL for the poster image
+        movie_status = movie_data.get('status', '')
         full_poster_url = f'https://image.tmdb.org/t/p/w500{movie_poster_path}'
 
         # Create or update the Movie instance
@@ -376,9 +375,9 @@ def movie_details(request, pk):
                 'vote_average': movie_vote_average,
                 'runtime': movie_runtime,
                 'tagline': movie_tagline,
-                'imdb_id': movie_imdb_id,
-                'tmdb_id': movie_tmdb_id,
-                # Add other fields as needed
+                'imdb_id': movie_data.get('imdb_id'),
+                'tmdb_id': movie_data.get('id'),
+                'status': movie_status,
             }
         )
 
@@ -409,35 +408,18 @@ def category_movies(request, category_slug):
 
 def latest_movies(request):
     try:
-        headers = {
-            'Content-Type': 'application/json',
-            'trakt-api-version': '2',
-            'trakt-api-key': settings.TRAKT_CLIENT_ID,
-        }
-        url = 'https://api.trakt.tv/movies/trending'
-        response = requests.get(url, headers=headers)
-        response.raise_for_status()  # Raise an exception for bad status codes
+        today = datetime.today().strftime('%Y-%m-%d')
+        url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&sort_by=release_date.desc&release_date.lte={today}&page=1'
+        response = requests.get(url)
+        response.raise_for_status()
+        movies = response.json().get('results', [])
+        movies_with_posters = [movie for movie in movies if movie.get('poster_path')]
         
-        data = response.json()
-        print("API Response Data:", data)  # Debugging: Print the API response
-        
-        latest_movies = [
-            {
-                'id': movie['movie']['ids']['trakt'],  # Use Trakt ID for URL
-                'title': movie['movie']['title'],
-                'year': movie['movie']['year'],
-                'overview': movie['movie']['overview'],
-                'poster': movie['movie'].get('images', {}).get('poster', {}).get('full', 'default_poster_url')  # Handle missing poster
-            }
-            for movie in data
-        ]
-        print("Parsed Latest Movies:", latest_movies)  # Debugging: Print the parsed movie data
-        
-        context = {'latest_movies': latest_movies}
+        context = {'latest_movies': movies_with_posters}
         return render(request, 'home.html', context)
 
     except requests.RequestException as e:
-        return render(request, 'error.html', {'error_message': f'Error fetching data from Trakt.tv: {str(e)}'})
+        return render(request, 'error.html', {'error_message': f'Error fetching data from TMDb: {str(e)}'})
     
     
 def get_movies_by_category(category_id, page_number):

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ease-E-movies - Modern Movie Streaming</title>
+    
+    <!-- Popup and Ad Blocker Script -->
+    <script>
+      // Global popup blocker
+      (function() {
+        // Override window.open to block popups
+        const originalOpen = window.open;
+        window.open = function(...args) {
+          console.log('🚫 Blocked popup attempt');
+          return null;
+        };
+
+        // Block popup attempts via various methods
+        window.addEventListener('click', function(e) {
+          // Block suspicious clicks that might trigger popups
+          if (e.isTrusted === false) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log('🚫 Blocked untrusted click');
+          }
+        }, true);
+
+        // Prevent new window/tab opening
+        document.addEventListener('click', function(e) {
+          const target = e.target.closest('a');
+          if (target && target.target === '_blank' && !target.classList.contains('allowed-link')) {
+            const href = target.href || '';
+            // Allow only our own domain links
+            if (!href.includes(window.location.hostname)) {
+              e.preventDefault();
+              e.stopPropagation();
+              console.log('🚫 Blocked external link in new tab');
+            }
+          }
+        }, true);
+
+        // Block focus stealing (common ad technique)
+        let userInteracted = false;
+        document.addEventListener('click', () => { userInteracted = true; }, true);
+        
+        window.addEventListener('blur', function(e) {
+          if (!userInteracted) {
+            window.focus();
+            console.log('🚫 Prevented focus stealing');
+          }
+          userInteracted = false;
+        });
+
+        console.log('✅ Popup blocker initialized');
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

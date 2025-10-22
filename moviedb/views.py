@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import os
+import logging
 from django.core.cache import cache
 from django.core.cache.utils import make_template_fragment_key as make_key
 from django.shortcuts import get_object_or_404, render
@@ -17,167 +18,92 @@ import hashlib
 from django.http import JsonResponse
 import urllib.parse
 from django.db import transaction
-#from .service import SearchService
 
+# Import utility functions
+from .utils import (
+    make_api_request,
+    fetch_movies_by_genre,
+    fetch_latest_movies,
+    fetch_popular_movies,
+    fetch_series_by_genre,
+    fetch_movie_details,
+    fetch_series_details,
+    search_movies,
+    search_series,
+    GENRE_IDS,
+    get_genre_id,
+    TMDB_API_KEY,
+    TRAKT_CLIENT_ID,
+    OMDB_API_KEY,
+    TMDB_BASE_URL
+)
 
+# Setup logger
+logger = logging.getLogger(__name__)
 
-# Store API key as an environment variable
-TRAKT_CLIENT_ID = settings.TRAKT_CLIENT_ID
+# API Configuration (using settings)
+API_KEY = TMDB_API_KEY
 
-os.environ['TMDb_API_KEY'] = '6bd5cd084c256cd81499c0dfc1e050d2'
-API_KEY = os.environ.get('TMDb_API_KEY')
-
-os.environ['OMDB_API_KEY'] = '39087f'
-OMDB_API_KEY = os.environ.get('OMDb_API_KEY')
-
-TMDB_BASE_URL = "https://api.themoviedb.org/3"
-
-def make_api_request(url):
-    cache_key = make_key('api_request', url)
-    cache_timeout = 60 * 60  # 1 hour cache timeout
-
-    cached_response = cache.get(cache_key)
-    if cached_response:
-        return cached_response
-
-    response = requests.get(url)
-    response.raise_for_status()  # Raise an exception for bad status codes
-
-    cache.set(cache_key, response.json(), cache_timeout)
-    return response.json()
-
-
+# Legacy function wrappers for backward compatibility
 def fetch_action_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=28&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch action movies (Genre ID: 28)"""
+    return fetch_movies_by_genre(GENRE_IDS['action'], page)
+
 def fetch_horror_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=27&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch horror movies (Genre ID: 27)"""
+    return fetch_movies_by_genre(GENRE_IDS['horror'], page)
+
 def fetch_animation_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=16&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch animation movies (Genre ID: 16)"""
+    return fetch_movies_by_genre(GENRE_IDS['animation'], page)
+
 def fetch_scifi_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=878&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch sci-fi movies (Genre ID: 878)"""
+    return fetch_movies_by_genre(GENRE_IDS['science_fiction'], page)
+
 def fetch_romance_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=10749&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch romance movies (Genre ID: 10749)"""
+    return fetch_movies_by_genre(GENRE_IDS['romance'], page)
+
 def fetch_investigative_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=9648&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch mystery movies (Genre ID: 9648)"""
+    return fetch_movies_by_genre(GENRE_IDS['mystery'], page)
+
 def fetch_family_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=10751&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch family movies (Genre ID: 10751)"""
+    return fetch_movies_by_genre(GENRE_IDS['family'], page)
+
 def fetch_drama_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=18&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch drama movies (Genre ID: 18)"""
+    return fetch_movies_by_genre(GENRE_IDS['drama'], page)
+
 def fetch_comedy_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=35&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch comedy movies (Genre ID: 35)"""
+    return fetch_movies_by_genre(GENRE_IDS['comedy'], page)
+
 def fetch_history_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=36&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch history movies (Genre ID: 36)"""
+    return fetch_movies_by_genre(GENRE_IDS['history'], page)
+
 def fetch_thriller_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=53&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch thriller movies (Genre ID: 53)"""
+    return fetch_movies_by_genre(GENRE_IDS['thriller'], page)
+
 def fetch_documentary_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=99&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch documentary movies (Genre ID: 99)"""
+    return fetch_movies_by_genre(GENRE_IDS['documentary'], page)
+
 def fetch_fantasy_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=14&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
+    """Fetch fantasy movies (Genre ID: 14)"""
+    return fetch_movies_by_genre(GENRE_IDS['fantasy'], page)
+
 def fetch_adventure_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=12&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
+    """Fetch adventure movies (Genre ID: 12)"""
+    return fetch_movies_by_genre(GENRE_IDS['adventure'], page)
 
 def fetch_crime_movies(page=1):
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&with_genres=80&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json().get('results', [])
-    else:
-        response.raise_for_status()
-        
-def fetch_latest_movies(page=1):
-    today = datetime.today().strftime('%Y-%m-%d')
-    url = f'https://api.themoviedb.org/3/discover/movie?api_key={API_KEY}&language=en-US&sort_by=release_date.desc&release_date.lte={today}&page={page}'
-    response = requests.get(url)
-    if response.status_code == 200:
-        movies = response.json().get('results', [])
-        # Filter out movies without posters
-        movies_with_posters = [movie for movie in movies if movie.get('poster_path')]
-        return movies_with_posters
-    else:
-        response.raise_for_status()
+    """Fetch crime movies (Genre ID: 80)"""
+    return fetch_movies_by_genre(GENRE_IDS['crime'], page)
 
 
 def home(request):
@@ -361,7 +287,6 @@ def movie_details(request, pk):
         movie_genres = [genre['name'] for genre in movie_data.get('genres', [])]
         movie_runtime = movie_data.get('runtime', 0)
         movie_tagline = movie_data.get('tagline', '')
-        movie_status = movie_data.get('status', '')
         full_poster_url = f'https://image.tmdb.org/t/p/w500{movie_poster_path}'
 
         # Create or update the Movie instance
@@ -377,7 +302,6 @@ def movie_details(request, pk):
                 'tagline': movie_tagline,
                 'imdb_id': movie_data.get('imdb_id'),
                 'tmdb_id': movie_data.get('id'),
-                'status': movie_status,
             }
         )
 

@@ -1,7 +1,21 @@
 from django.urls import path
 from . import views
+from . import api_views
 
 urlpatterns = [
+    # API Endpoints for React Frontend
+    path('api/movies/', api_views.api_movies_list, name='api_movies_list'),
+    path('api/movie/<int:pk>/', api_views.api_movie_detail, name='api_movie_detail'),
+    path('api/series/', api_views.api_series_list, name='api_series_list'),
+    path('api/series/<int:pk>/', api_views.api_series_detail, name='api_series_detail'),
+    path('api/search/', api_views.api_search, name='api_search'),
+    path('api/trending/', api_views.api_trending, name='api_trending'),
+    path('api/popular/', api_views.api_popular, name='api_popular'),
+    path('api/top-rated/', api_views.api_top_rated, name='api_top_rated'),
+    path('api/latest/', api_views.api_latest, name='api_latest'),
+    path('api/genre/<str:genre_name>/', api_views.api_genre_movies, name='api_genre_movies'),
+    
+    # Original Template-based URLs
     path('', views.home, name='home'),
     path('series/', views.home_series, name='series'),
     path('anime/', views.home_anime, name='anime'),

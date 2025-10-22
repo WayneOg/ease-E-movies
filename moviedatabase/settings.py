@@ -13,8 +13,13 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 import dj_database_url
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
@@ -24,7 +29,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6wsyy1#f^r%@@qdq)l04hd&$xus!!leqyo14+v6j-uqudffomi'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# Set DEBUG based on environment (True for local, False for production)
+DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
     'https://9pxz8dlq-8000.use.devtunnels.ms/',
@@ -44,11 +50,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',  # Added for React frontend
     'moviedb',
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # Added for React frontend - must be before CommonMiddleware
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -81,13 +89,26 @@ WSGI_APPLICATION = 'moviedatabase.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://postgres:Nikki2022@@db.sdqarqsdcufnjmruolai.supabase.co:5432/postgres',
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+# Check if DATABASE_URL is set (production) or use SQLite (local development)
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    # Production: Use PostgreSQL from environment variable
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+else:
+    # Local development: Use SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
@@ -136,14 +157,82 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-TMDb_API_KEY = '6bd5cd084c256cd81499c0dfc1e050d2'
-TMDb_API_URL = 'https://api.themoviedb.org/3'
+# API Keys - Load from environment variables with fallback defaults
+TMDB_API_KEY = os.environ.get('TMDB_API_KEY', '6bd5cd084c256cd81499c0dfc1e050d2')
+TMDB_API_URL = 'https://api.themoviedb.org/3'
+OMDB_API_KEY = os.environ.get('OMDB_API_KEY', '39087f')
 
+TRAKT_CLIENT_ID = os.environ.get('TRAKT_CLIENT_ID', '2ee18be50fdd6de3809e54c7415dd71fe33f6e4c720676190df324db6aa7cef2')
+TRAKT_CLIENT_SECRET = os.environ.get('TRAKT_CLIENT_SECRET', 'affbb6723f87ca290c18c5b414af351e6355af55a101bbb2fecf0af15333337a')
+
+# Cache Configuration
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'unique-snowflake',
+        'OPTIONS': {
+            'MAX_ENTRIES': 1000,
+        }
     }
 }
 
-TRAKT_CLIENT_ID = '2ee18be50fdd6de3809e54c7415dd71fe33f6e4c720676190df324db6aa7cef2'
-TRAKT_CLIENT_SECRET = 'affbb6723f87ca290c18c5b414af351e6355af55a101bbb2fecf0af15333337a'
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file': {
+            'class': 'logging.FileHandler',
+            'filename': BASE_DIR / 'debug.log',
+            'formatter': 'verbose',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'moviedb': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# CORS Configuration for React Frontend
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://localhost:5173",  # Vite default port
+    "http://127.0.0.1:5173",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]

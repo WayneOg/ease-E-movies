@@ -33,11 +33,13 @@ SECRET_KEY = 'django-insecure-6wsyy1#f^r%@@qdq)l04hd&$xus!!leqyo14+v6j-uqudffomi
 DEBUG = os.environ.get('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = [
+    'ease-e-movies-1-flap.onrender.com',
     'https://9pxz8dlq-8000.use.devtunnels.ms/',
     '127.0.0.1',
     'localhost',
     '.vercel.app',
     '.now.sh',
+    '.onrender.com',
     '*',
 ]
 
@@ -221,6 +223,7 @@ LOGGING = {
 
 # CORS Configuration for React Frontend
 CORS_ALLOWED_ORIGINS = [
+    "https://ease-e-movies-1-flap.onrender.com",
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",  # Vite default port

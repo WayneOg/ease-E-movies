@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: ease-e-movies-frontend
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm run preview
+    staticPublicPath: dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://ease-e-movies-1-flap.onrender.com

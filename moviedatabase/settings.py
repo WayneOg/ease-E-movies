@@ -223,7 +223,8 @@ LOGGING = {
 
 # CORS Configuration for React Frontend
 CORS_ALLOWED_ORIGINS = [
-    "https://ease-e-movies-1-flap.onrender.com",
+    "https://ease-e-movies-t7bj.onrender.com",  # Current production frontend
+    "https://ease-e-movies-1-flap.onrender.com",  # Old frontend URL (keep for compatibility)
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://localhost:5173",  # Vite default port
